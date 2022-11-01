@@ -10,4 +10,7 @@ public class Model {
     private void notifyView(){
 
     }
+
+    public void addView(Frame frame) {
+    }
 }
