@@ -50,15 +50,9 @@ public class Frame extends JFrame implements View, ActionListener {
 
 
 
+    public Frame(Model model){
+        super("ERP");
 
-
-
-    public Frame(){
-        super("EMS");
-
-
-        //adding the view to the model
-        model = new Model();
         model.addView(this);
 
         //To communicate with the model
@@ -132,8 +126,6 @@ public class Frame extends JFrame implements View, ActionListener {
        pagePanel.add(menuPanel,BorderLayout.NORTH);
        pagePanel.add(sidePanel,BorderLayout.WEST);
        pagePanel.add(centerPanel,BorderLayout.CENTER);
-
-
 
         //Display the window
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -284,28 +276,12 @@ public class Frame extends JFrame implements View, ActionListener {
 
     @Override
     public void systemUpdate(String command, String info) {
-
     }
 
 
     @Override
     public void actionPerformed(ActionEvent e) {
         //could be replaced wit a switch case here
-
-
-
-
     }
-
-
-
-
-    public static void main(String args[])
-    {
-        Frame f = new Frame();
-
-
-    }
-
 
 }
