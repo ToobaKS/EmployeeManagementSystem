@@ -10,15 +10,9 @@ public class Frame extends JFrame implements View, ActionListener {
     private JMenu employees, reports, projects, requests, salary;
     private JMenuItem listEmp, timeTracking, history, tasks, vReq, wfoReq, eReq, T4, stub, cForms, benefits, payScale, clockIn;
 
-
-    //The model
-    private Model model;
-
-    public Frame(){
+    public Frame(Model model){
         super("ERP");
 
-        //adding the view to the model
-        model = new Model();
         model.addView(this);
 
         //To communicate with the model
@@ -27,8 +21,6 @@ public class Frame extends JFrame implements View, ActionListener {
         //Initializing the menu bar
         mainMB = new JMenuBar();
         initMainMenu();
-
-
 
         //Add menu bar to the frame
         this.setJMenuBar(mainMB);
@@ -102,17 +94,9 @@ public class Frame extends JFrame implements View, ActionListener {
 
     @Override
     public void systemUpdate(String command, String info) {
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
     }
-
-    public static void main(String args[])
-    {
-        Frame f = new Frame();
-    }
-
 }
