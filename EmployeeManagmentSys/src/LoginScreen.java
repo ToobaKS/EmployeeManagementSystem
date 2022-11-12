@@ -17,7 +17,7 @@ public class LoginScreen extends JFrame implements ActionListener {
      * Initializes the start screen
      */
     public LoginScreen() {
-        super("ERP");
+        super("EMS");
 
         //reference to the model and controller
         model = new Model();
