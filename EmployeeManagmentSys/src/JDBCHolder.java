@@ -8,6 +8,7 @@ public class JDBCHolder {
     static String username = "team24TZ";
     static String password = "erp1998TZ";
 
+    private Statement stmt = null;
     public JDBCHolder(){
         initializer();
     }
@@ -23,6 +24,19 @@ public class JDBCHolder {
             connection.close();
         } catch(Exception e){ System.out.println(e);}
     }
+
+    public void getNotification(){
+
+    }
+
+    public void getEquipRequest(){
+
+    }
+    public void getVacRequest(){
+
+    }
+
+
 
     public static void main(String[] args) {
         JDBCHolder j = new JDBCHolder();
