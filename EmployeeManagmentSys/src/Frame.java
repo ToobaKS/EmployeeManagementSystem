@@ -15,6 +15,8 @@ public class Frame extends JFrame implements View, ActionListener {
     private JPanel sidePanel;
     private JPanel centerPanel;
     private JPanel pagePanel;
+    private JPanel dashboardPage;
+    private JPanel newEmpPage;
     private JPanel timeTrackingPage;
     private JPanel listofEmployees;
     private JPanel payScalePage;
@@ -29,11 +31,13 @@ public class Frame extends JFrame implements View, ActionListener {
     private JPanel benefitPage;
     private JPanel contractPage;
     private JMenuBar mainMB;
-    private JMenu employees, reports, projects, requests, salary;
-    private JMenuItem listEmp, timeTracking, history, tasks, vReq, wfoReq, eReq, T4, stub, cForms, benefits, payScale, clockIn;
+    private JMenu dashboard, employees, reports, projects, requests, salary;
+    private JMenuItem listEmp, timeTracking, history, tasks, vReq, wfoReq, eReq, T4, stub, cForms, benefits, payScale, clockIn, addNewEmp;
     private CardLayout cardLayout;
     private JButton buttonTest;
     private JLabel test;
+    final static String ADDNEWEMP = "addNewEmp";
+    final static String DASHBOARD = "dashboard";
     final static String SHOW_LIST = "listEmp";
     final static String TIME_TRACK = "timeTracking";
     final static String PAYSCALE = "Payscale Charts";
@@ -63,6 +67,8 @@ public class Frame extends JFrame implements View, ActionListener {
         sidePanel = new JPanel();
         centerPanel = new JPanel();
         pagePanel = new JPanel();
+        dashboardPage = new JPanel();
+        newEmpPage = new JPanel();
         listofEmployees = new JPanel();
         timeTrackingPage = new JPanel();
         cardLayout = new CardLayout();
@@ -83,6 +89,7 @@ public class Frame extends JFrame implements View, ActionListener {
         test = new JLabel("test");
         listofEmployees.add(buttonTest);
         timeTrackingPage.add(test);
+        dashboardPage.add(test);
 
         // setting the layout
         pagePanel.setLayout(new BorderLayout(0,0));
@@ -106,6 +113,8 @@ public class Frame extends JFrame implements View, ActionListener {
         centerPanel.setLayout(cardLayout);
 
         // adding components to the panel
+        centerPanel.add(dashboardPage, DASHBOARD);
+        centerPanel.add(newEmpPage, ADDNEWEMP);
         centerPanel.add(listofEmployees, SHOW_LIST);
         centerPanel.add(timeTrackingPage, TIME_TRACK);
         centerPanel.add(payScalePage, PAYSCALE);
@@ -137,6 +146,9 @@ public class Frame extends JFrame implements View, ActionListener {
 
     private void initMainMenu(){
 
+        dashboard = new JMenu("Dashboard");
+        dashboard.addActionListener(this::showDashBoard);
+
         //Initializing the Employee DropDown Menu
         employees = new JMenu("Employees");
 
@@ -144,10 +156,12 @@ public class Frame extends JFrame implements View, ActionListener {
         listEmp.addActionListener(this::showListEmp);
         timeTracking = new JMenuItem("TimeTracking");
         timeTracking.addActionListener(this::showTimeTrack);
+        addNewEmp = new JMenuItem("Add Employee");
+        addNewEmp.addActionListener(this::showNewEmp);
 
         employees.add(listEmp);
         employees.add(timeTracking);
-
+        employees.add(addNewEmp);
         //Initializing the Report DropDown Menu
         reports = new JMenu("Reports");
 
@@ -204,18 +218,38 @@ public class Frame extends JFrame implements View, ActionListener {
 
 
         //Adding all the menus to the menu bar
+        mainMB.add(dashboard);
         mainMB.add(employees);
         mainMB.add(reports);
         mainMB.add(projects);
         mainMB.add(requests);
         mainMB.add(salary);
 
+    }
 
+    private void newEmployeePageDisplay(){
 
     }
 
+    private void wfhPageDisplay(){
+
+    }
+
+    private void notificationPageDisplay(){
+
+    }
+
+
+
+
     private void showView(String name) {
         ((CardLayout)centerPanel.getLayout()).show(centerPanel, name);
+    }
+    private void showNewEmp(ActionEvent event) {
+        showView(ADDNEWEMP);
+    }
+    public void showDashBoard(ActionEvent event) {
+        showView(DASHBOARD);
     }
 
     public void showListEmp(ActionEvent event) {
@@ -270,10 +304,6 @@ public class Frame extends JFrame implements View, ActionListener {
         showView(CONTRACT_FORM);
     }
 
-
-
-
-
     @Override
     public void systemUpdate(String command, String info) {
     }
@@ -282,6 +312,10 @@ public class Frame extends JFrame implements View, ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         //could be replaced wit a switch case here
+    }
+
+    public static void main(String[] args) {
+        Frame start = new Frame(new Model());
     }
 
 }
