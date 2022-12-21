@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class Frame extends JFrame implements View, ActionListener {
+public class oldFrameCode extends JFrame implements View, ActionListener {
 
     //The model
     private Model model;
@@ -54,7 +54,7 @@ public class Frame extends JFrame implements View, ActionListener {
 
 
 
-    public Frame(Model model){
+    public oldFrameCode(Model model){
         super("ERP");
 
         model.addView(this);
@@ -313,9 +313,9 @@ public class Frame extends JFrame implements View, ActionListener {
     public void actionPerformed(ActionEvent e) {
         //could be replaced wit a switch case here
     }
-
+/**
     public static void main(String[] args) {
-        Frame start = new Frame(new Model());
+        oldFrameCode start = new oldFrameCode(new Model());
     }
-
+**/
 }
