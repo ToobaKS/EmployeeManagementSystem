@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -62,6 +61,6 @@ public class LoginScreen extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         this.dispose();
         //Frame f = new Frame(model);
-        EMSFrame f = new EMSFrame();
+        ManagerFrame f = new ManagerFrame();
     }
 }
