@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class EMSFrame extends JFrame implements View, ActionListener{
+public class ManagerFrame extends JFrame implements View, ActionListener{
     private JPanel FramePage;
     private JPanel MainPage;
     private JPanel menubarPanel;
@@ -55,7 +55,7 @@ public class EMSFrame extends JFrame implements View, ActionListener{
     //The model
     private Model model;
 
-    public EMSFrame (){
+    public ManagerFrame(){
         super("ERP");
         //model.addView(this);
 
@@ -241,7 +241,7 @@ public class EMSFrame extends JFrame implements View, ActionListener{
     }
 
     public static void main(String[] args) {
-        EMSFrame myEMSFrame = new EMSFrame();
+        ManagerFrame myManagerFrame = new ManagerFrame();
     }
 
 
