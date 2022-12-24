@@ -61,6 +61,6 @@ public class LoginScreen extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         this.dispose();
         //Frame f = new Frame(model);
-        ManagerFrame f = new ManagerFrame();
+        Frame f = new Frame();
     }
 }
