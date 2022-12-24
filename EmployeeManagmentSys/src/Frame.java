@@ -3,44 +3,47 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class HumanResourceFrame extends JFrame implements View, ActionListener {
+public class Frame extends JFrame implements View, ActionListener{
     private JPanel FramePage;
-    private JPanel mainPage;
+    private JPanel MainPage;
     private JPanel menubarPanel;
     private JButton Dashboard;
     private JPanel sidebarPanel;
-    private JPanel CardholderPanel;
-    private JButton profileButton;
-    private JButton notificationsButton;
-    private JButton settingsButton;
+    private JButton Profile;
+    private JButton Notifications;
+    private JButton Settings;
+    private JPanel cardlayoutHolder;
     private JMenuBar menubar;
     private JMenu Employees;
-    private JMenu Salary;
-    private JMenu Requests;
     private JMenu Reports;
-    private JPanel ListofEmpPage;
-    private JPanel addEmpPage;
-    private JPanel empDetailsPage;
-    private JPanel addNotesPage;
-    private JPanel empSchedulePage;
-    private JPanel notesPage;
-    private JPanel benefitsPage;
+    private JMenu Projects;
+    private JMenu Requests;
+    private JMenu Salary;
+    private JMenuItem listEmp, timeTracking, history, tasks, vReq, wfoReq, eReq, T4, stub, cForms, benefits, payScale, clockIn;
+    private JPanel dashboardPage;
+    private JPanel newEmpPage;
+    private JPanel timeTrackingPage;
+    private JPanel listofEmployees;
     private JPanel payScalePage;
-    private JPanel clockInOutPage;
+    private JPanel timeChartPage;
+    private JPanel historyPage;
+    private JPanel tasksPage;
     private JPanel vacationPage;
     private JPanel wfoPage;
     private JPanel equipmentPage;
-    private JPanel T4Page;
-    private JPanel payStubPage;
-    private JPanel formsPage;
-    private JPanel BenefitsPage;
-    private JSpinner spinner1;
-    private JMenuItem listEmp,addEmp, vReq, wfoReq, eReq, T4, stub, cForms, benefits, payScale, clockIn, payScaleChart, timeTrackingChart;
+    private JPanel t4Page;
+    private JPanel payStub;
+    private JPanel benefitPage;
+    private JPanel contractPage;
+    private JMenu Schedule;
 
-    final static String SHOW_LIST = "List of Employees";
-    final static String ADD_EMP = "Add Employees";
+
+    final static String SHOW_LIST = "listEmp";
+    final static String TIME_TRACK = "timeTracking";
     final static String PAYSCALE = "Payscale Charts";
     final static String TIME_CHARTS = "Time Charts";
+    final static String HISTORY = "History";
+    final static String TASKS = "Tasks";
     final static String VACATION_REQUESTS = "Vacation Requests";
     final static String WFO_REQUESTS = "WFO Requests";
     final static String EQUIPMENT_REQUESTS = "Equipment Requests";
@@ -49,35 +52,41 @@ public class HumanResourceFrame extends JFrame implements View, ActionListener {
     final static String CONTRACT_FORM = "Contract Forms";
     final static String BENEFITS = "Benefits";
 
+
     //The model
     private Model model;
 
-    public HumanResourceFrame (){
+    public Frame(){
+        super("ERP");
+        //model.addView(this);
+
+        //To communicate with the model
+        //Controller c = new Controller(model);
 
         //initializing the drop down menues
         initMainMenu();
 
 
         // adding components to the panel
-        CardholderPanel.add(ListofEmpPage, SHOW_LIST);
-        CardholderPanel.add(addEmpPage, ADD_EMP);
-        CardholderPanel.add(payScalePage, PAYSCALE);
-        CardholderPanel.add(clockInOutPage, TIME_CHARTS);
-        CardholderPanel.add(vacationPage, VACATION_REQUESTS);
-        CardholderPanel.add(wfoPage, WFO_REQUESTS);
-        CardholderPanel.add(equipmentPage, EQUIPMENT_REQUESTS);
-        CardholderPanel.add(T4Page, T4_FORM);
-        CardholderPanel.add(payStubPage, PAYSTUB);
-        CardholderPanel.add(BenefitsPage, BENEFITS);
-        CardholderPanel.add(formsPage, CONTRACT_FORM);
+        cardlayoutHolder.add(listofEmployees, SHOW_LIST);
+        cardlayoutHolder.add(timeTrackingPage, TIME_TRACK);
+        cardlayoutHolder.add(payScalePage, PAYSCALE);
+        cardlayoutHolder.add(timeChartPage, TIME_CHARTS);
+        cardlayoutHolder.add(historyPage, HISTORY);
+        cardlayoutHolder.add(tasksPage, TASKS);
+        cardlayoutHolder.add(vacationPage, VACATION_REQUESTS);
+        cardlayoutHolder.add(wfoPage, WFO_REQUESTS);
+        cardlayoutHolder.add(equipmentPage, EQUIPMENT_REQUESTS);
+        cardlayoutHolder.add(t4Page, T4_FORM);
+        cardlayoutHolder.add(payStub, PAYSTUB);
+        cardlayoutHolder.add(benefitPage, BENEFITS);
+        cardlayoutHolder.add(contractPage, CONTRACT_FORM);
 
         //Display the window
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(500, 500);
         this.setContentPane(FramePage);
         this.setVisible(true);
-
-
 
     }
 
@@ -90,12 +99,12 @@ public class HumanResourceFrame extends JFrame implements View, ActionListener {
 
         listEmp = new JMenuItem("List of Employees");
         listEmp.addActionListener(this::showListEmp);
-        addEmp = new JMenuItem("Add Employee");
-        addEmp.addActionListener(this::addEmp);
+        timeTracking = new JMenuItem("TimeTracking");
+        timeTracking.addActionListener(this::showTimeTrack);
 
 
         Employees.add(listEmp);
-        Employees.add(addEmp);
+        Employees.add(timeTracking);
 
 
         //Initializing the Report DropDown Menu
@@ -109,6 +118,19 @@ public class HumanResourceFrame extends JFrame implements View, ActionListener {
         Reports.add(payScale);
         Reports.add(clockIn);
 
+        //Initializing the Employee DropDown Menu
+        //Projects = new JMenu("Projects");
+
+        history = new JMenuItem("History");
+        history.addActionListener(this::showHistory);
+        tasks = new JMenuItem("Tasks");
+        tasks.addActionListener(this::showTasks);
+
+        Projects.add(history);
+        Projects.add(tasks);
+
+        //Initializing the Employee DropDown Menu
+        //Requests = new JMenu("Requests");
 
         vReq = new JMenuItem("Vacation Requests");
         vReq.addActionListener(this::showVacation);
@@ -121,6 +143,9 @@ public class HumanResourceFrame extends JFrame implements View, ActionListener {
         Requests.add(wfoReq);
         Requests.add(eReq);
 
+
+        //Initializing the Employee DropDown Menu
+        //Salary = new JMenu("Salary");
 
         T4 = new JMenuItem("T4");
         T4.addActionListener(this::showT4);
@@ -137,11 +162,20 @@ public class HumanResourceFrame extends JFrame implements View, ActionListener {
         Salary.add(benefits);
 
 
+        //Adding all the menus to the menu bar
+        //mainMB.add(dashboard);
+        //mainMB.add(employees);
+        //mainMB.add(reports);
+        //mainMB.add(projects);
+        //mainMB.add(requests);
+        //mainMB.add(salary);
+
 
 
     }
+
     private void showView(String name) {
-        ((CardLayout)CardholderPanel.getLayout()).show(CardholderPanel, name);
+        ((CardLayout)cardlayoutHolder.getLayout()).show(cardlayoutHolder, name);
     }
 
 
@@ -149,10 +183,9 @@ public class HumanResourceFrame extends JFrame implements View, ActionListener {
         showView(SHOW_LIST);
     }
 
-    public void addEmp(ActionEvent event) {
-        showView(ADD_EMP);
+    public void showTimeTrack(ActionEvent event) {
+        showView(TIME_TRACK);
     }
-
 
     public void showPayScale(ActionEvent event) {
         showView(PAYSCALE);
@@ -162,6 +195,13 @@ public class HumanResourceFrame extends JFrame implements View, ActionListener {
         showView(TIME_CHARTS);
     }
 
+    public void showHistory(ActionEvent event) {
+        showView(HISTORY);
+    }
+
+    public void showTasks(ActionEvent event) {
+        showView(TASKS);
+    }
 
     public void showVacation(ActionEvent event) {
         showView(VACATION_REQUESTS);
@@ -191,7 +231,6 @@ public class HumanResourceFrame extends JFrame implements View, ActionListener {
         showView(CONTRACT_FORM);
     }
 
-
     @Override
     public void systemUpdate(String command, String info) {
 
@@ -203,7 +242,8 @@ public class HumanResourceFrame extends JFrame implements View, ActionListener {
     }
 
     public static void main(String[] args) {
-        HumanResourceFrame myHumanResourceFrame = new HumanResourceFrame();
+        Frame myManagerFrame = new Frame();
     }
+
 
 }
