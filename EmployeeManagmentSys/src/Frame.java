@@ -1,7 +1,10 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class Frame extends JFrame implements View, ActionListener{
     private JPanel FramePage;
@@ -36,7 +39,23 @@ public class Frame extends JFrame implements View, ActionListener{
     private JPanel benefitPage;
     private JPanel contractPage;
     private JMenu Schedule;
-
+    private JList empList;
+    private JLabel listEmpLabel;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JTextField textField4;
+    private JButton submitButton;
+    private JTextField textField3;
+    private JLabel startDateLabel;
+    private JLabel endDateLabel;
+    private JLabel totalHoursLabel;
+    private JLabel vacationTypeLabel;
+    private JComboBox vacationComboBox;
+    private JLabel vacationRequestLabel;
+    private JPanel headlinePanel;
+    private JPanel componentsPanel;
+    private ArrayList<String> Names; // this array list will store the names of the employees
+    private DefaultListModel listModel;
 
     final static String SHOW_LIST = "listEmp";
     final static String TIME_TRACK = "timeTracking";
@@ -53,6 +72,9 @@ public class Frame extends JFrame implements View, ActionListener{
     final static String BENEFITS = "Benefits";
 
 
+
+    //JLabel label = new JLabel();
+
     //The model
     private Model model;
 
@@ -63,8 +85,17 @@ public class Frame extends JFrame implements View, ActionListener{
         //To communicate with the model
         //Controller c = new Controller(model);
 
+        //initializing the list model
+        listModel = new DefaultListModel();
+        //attaching the model to the employee list
+        empList.setModel(listModel);
+
+
         //initializing the drop down menues
         initMainMenu();
+
+        //initiliazing a dummy list
+        populateList();
 
 
         // adding components to the panel
@@ -82,16 +113,37 @@ public class Frame extends JFrame implements View, ActionListener{
         cardlayoutHolder.add(benefitPage, BENEFITS);
         cardlayoutHolder.add(contractPage, CONTRACT_FORM);
 
+
         //Display the window
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(500, 500);
         this.setContentPane(FramePage);
         this.setVisible(true);
 
+        empList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                //when you click on any element name it will take you to the employee frame
+                // problem here when you click on it it displays two frames instead of one
+
+                int empNumber = empList.getSelectedIndex();
+                if(empNumber >= 0){
+                    EmployeeFrame myEmpFrame = new EmployeeFrame(model);
+                }
+
+            }
+        });
     }
 
-    private void initMainMenu(){
 
+    public void populateList(){
+        listModel.addElement(new Employee("Sam", "lavigne", "Sam Lavigne") );
+
+
+    }
+
+
+    private void initMainMenu(){
 
 
         //Initializing the Employee DropDown Menu
@@ -241,8 +293,15 @@ public class Frame extends JFrame implements View, ActionListener{
 
     }
 
+
+
+
+
     public static void main(String[] args) {
         Frame myManagerFrame = new Frame();
+
+
+
     }
 
 
