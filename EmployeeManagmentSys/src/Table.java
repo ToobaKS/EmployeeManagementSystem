@@ -1,35 +1,55 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.Vector;
 
 
-//still in the work
 
-public class Table {
 
-    public static DefaultTableModel buildTableModel(ResultSet rs)
-            throws SQLException{
+public class Table extends DefaultTableModel {
 
-        ResultSetMetaData rsmd = rs.getMetaData();
+    Connection connection;
+    private Statement stmt = null;
+    private JDBCHolder jdbcHolder;
 
-        // names of columns will always be a string
-        Vector<String> columnNames = new Vector<String>(); // creating a vector of col names
-        int columnCount = rsmd.getColumnCount(); // get the length
-        for (int column = 1; column <= columnCount; column++) {// go through each col
-            columnNames.add(rsmd.getColumnName(column));// add the names to the vector columns
-        }
-
-        // data of the table
-        Vector<Vector<Object>> data = new Vector<Vector<Object>>(); // creating a vector of objects to store the values inside the rows
-        while (rs.next()) {// go by each row
-            Vector<Object> vector = new Vector<Object>();// create a new vector to store the whole row
-            for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-                vector.add(rs.getObject(columnIndex));// add the rows to the vector
-            }
-            data.add(vector);// add the set of rows to the origial data vector
-        }
-        return new DefaultTableModel(data, columnNames);
+    public Table(Connection connection) {
+        this.connection = connection;
 
     }
+
+    public DefaultTableModel buildTableModel(String sql)
+            throws SQLException {
+
+        stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        ResultSet rs = stmt.executeQuery(sql);
+        ResultSetMetaData rsmd = rs.getMetaData();
+
+
+        int c = rsmd.getColumnCount();
+        Vector column = new Vector(c);
+        for(int i = 1; i<=c; i++){
+            column.add(rsmd.getColumnName(i));
+        }
+        Vector data = new Vector();
+        Vector row = new Vector(c);
+        while(rs.next()){
+            //row = new Vector(c);
+            for(int i =1; i<=c; i++){
+                row.add(rs.getString(i));
+            }
+            data.add(row);
+        }
+
+        return new DefaultTableModel(data, column);// returning a new table with rows and coulmns populated from the schema
+
+    }
+
+
+
+
 }
+
+
+
+

@@ -4,6 +4,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Frame extends JFrame implements View, ActionListener{
@@ -22,7 +23,7 @@ public class Frame extends JFrame implements View, ActionListener{
     private JMenu Projects;
     private JMenu Requests;
     private JMenu Salary;
-    private JMenuItem listEmp, timeTracking, history, tasks, vReq, wfoReq, eReq, T4, stub, cForms, benefits, payScale, clockIn;
+    private JMenuItem listEmp, timeTracking, history, tasks, vReq, wfoReq, eReq, T4, stub, cForms, benefits, payScale, clockIn, addEmp;
     private JPanel dashboardPage;
     private JPanel newEmpPage;
     private JPanel timeTrackingPage;
@@ -54,8 +55,28 @@ public class Frame extends JFrame implements View, ActionListener{
     private JLabel vacationRequestLabel;
     private JPanel headlinePanel;
     private JPanel componentsPanel;
+    private JPanel addNewEmpPage;
+    private JComboBox comboBox1;
+    private JComboBox comboBox2;
+    private JButton SubmitButton;
+    private JLabel typeLabel;
+    private JPanel equipmentLabel;
+    private JLabel versionLabel;
+    private JLabel reasonLabel;
+    private JPanel equipmentComponentPanel;
+    private JLabel EquipmentReqLabel;
+    private JTable T4Table;
+    private JLabel T4Label;
+    private JPanel contractsHeaderPanel;
+    private JPanel searchBarPanel;
+    private JPanel listFromsPanel;
+    private JLabel contractsLabel;
+    private JButton searchButton;
+    private JTextField searchTextField;
+    private JList formsList;
+    private JLabel resultsLabel;
     private ArrayList<String> Names; // this array list will store the names of the employees
-    private DefaultListModel listModel;
+    //private DefaultListModel listModel;
 
     final static String SHOW_LIST = "listEmp";
     final static String TIME_TRACK = "timeTracking";
@@ -70,32 +91,44 @@ public class Frame extends JFrame implements View, ActionListener{
     final static String PAYSTUB = "PayStub";
     final static String CONTRACT_FORM = "Contract Forms";
     final static String BENEFITS = "Benefits";
+    final static String ADD = "Add New Employee";
 
 
 
-    //JLabel label = new JLabel();
 
-    //The model
+    //The models
     private Model model;
+    private Table table;
+    private JDBCHolder jdbcHolder;
+    private List list;
 
-    public Frame(){
+    public Frame(Model model) throws SQLException {
         super("ERP");
-        //model.addView(this);
+        this.model = model;
+        model.addView(this);
+
+
+       // testing populating table from the schema -> failed
+        jdbcHolder = new JDBCHolder();
+        jdbcHolder.initializer();
+        table = new Table(jdbcHolder.getConnection());
+        table.buildTableModel("select * from Employee");
+        T4Table = new JTable(table);
+        // did not work!
+
+        //testing populating list of employees from database
+        jdbcHolder.fillEmpJList(empList);
+
 
         //To communicate with the model
         //Controller c = new Controller(model);
 
-        //initializing the list model
-        listModel = new DefaultListModel();
-        //attaching the model to the employee list
-        empList.setModel(listModel);
+
 
 
         //initializing the drop down menues
         initMainMenu();
 
-        //initiliazing a dummy list
-        populateList();
 
 
         // adding components to the panel
@@ -112,6 +145,7 @@ public class Frame extends JFrame implements View, ActionListener{
         cardlayoutHolder.add(payStub, PAYSTUB);
         cardlayoutHolder.add(benefitPage, BENEFITS);
         cardlayoutHolder.add(contractPage, CONTRACT_FORM);
+        cardlayoutHolder.add(newEmpPage, ADD);
 
 
         //Display the window
@@ -125,22 +159,20 @@ public class Frame extends JFrame implements View, ActionListener{
             public void valueChanged(ListSelectionEvent e) {
                 //when you click on any element name it will take you to the employee frame
                 // problem here when you click on it it displays two frames instead of one
-
-                int empNumber = empList.getSelectedIndex();
-                if(empNumber >= 0){
-                    EmployeeFrame myEmpFrame = new EmployeeFrame(model);
+                if (!e.getValueIsAdjusting()) {
+                    int empNumber = empList.getSelectedIndex();
+                    System.out.println(empNumber);
+                    if (empNumber >= 0) {
+                        EmployeeFrame myEmpFrame = new EmployeeFrame(model);
+                    }
                 }
-
             }
         });
     }
 
 
-    public void populateList(){
-        listModel.addElement(new Employee("Sam", "lavigne", "Sam Lavigne") );
 
 
-    }
 
 
     private void initMainMenu(){
@@ -151,12 +183,18 @@ public class Frame extends JFrame implements View, ActionListener{
 
         listEmp = new JMenuItem("List of Employees");
         listEmp.addActionListener(this::showListEmp);
+        // add a new action listenr to add the populate list methid
+        // make sure it gets the latest list from database
         timeTracking = new JMenuItem("TimeTracking");
         timeTracking.addActionListener(this::showTimeTrack);
+        addEmp = new JMenuItem("Add New Employee");
+        addEmp.addActionListener(this::addNewEmp);
+
 
 
         Employees.add(listEmp);
         Employees.add(timeTracking);
+        Employees.add(addEmp);
 
 
         //Initializing the Report DropDown Menu
@@ -214,15 +252,6 @@ public class Frame extends JFrame implements View, ActionListener{
         Salary.add(benefits);
 
 
-        //Adding all the menus to the menu bar
-        //mainMB.add(dashboard);
-        //mainMB.add(employees);
-        //mainMB.add(reports);
-        //mainMB.add(projects);
-        //mainMB.add(requests);
-        //mainMB.add(salary);
-
-
 
     }
 
@@ -233,6 +262,10 @@ public class Frame extends JFrame implements View, ActionListener{
 
     public void showListEmp(ActionEvent event) {
         showView(SHOW_LIST);
+    }
+
+    public void addNewEmp(ActionEvent event) {
+        showView(ADD);
     }
 
     public void showTimeTrack(ActionEvent event) {
@@ -297,8 +330,8 @@ public class Frame extends JFrame implements View, ActionListener{
 
 
 
-    public static void main(String[] args) {
-        Frame myManagerFrame = new Frame();
+    public static void main(String[] args) throws SQLException {
+        Frame myManagerFrame = new Frame(new Model());
 
 
 
