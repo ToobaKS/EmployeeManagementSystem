@@ -1,8 +1,8 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 /**
  * Login Screen
@@ -61,6 +61,11 @@ public class LoginScreen extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         this.dispose();
-        Frame f = new Frame(model);
+        //Frame f = new Frame(model);
+        try {
+            Frame f = new Frame(new Model());
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }

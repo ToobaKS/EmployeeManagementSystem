@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,7 +9,7 @@ public class JDBCHolder {
 
 
     static Connection connection = null;
-    static String databaseName = "empdatabase";
+    static String databaseName = "mydb";
     static String url = "jdbc:mysql://database-ems.csd6bruhg1kp.ca-central-1.rds.amazonaws.com:3306/" + databaseName;
     static String username = "team24TZ";
     static String password = "erp1998TZ";
@@ -35,7 +36,7 @@ public class JDBCHolder {
     public String[][] getTable(String tableName) throws SQLException {
 
         String[][] table = null;
-        String sql = "select * from Employees";
+        String sql = "select * from Employee";
 
         ResultSet rs = stmt.executeQuery(sql);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -69,13 +70,35 @@ public class JDBCHolder {
         return rs.getString(1);
     }
 
+    public void fillEmpJList(JList jList)
+            throws SQLException {
+
+        stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        ResultSet rs = stmt.executeQuery("select * from Employee");
+        DefaultListModel listModel = new DefaultListModel();
+
+        while(rs.next()) {
+            String FirstName = rs.getString("FirstName");
+            String LastName  = rs.getString("LastName");
+            String result = FirstName + " " + LastName;
+            listModel.addElement(result);
+        }
+        jList.setModel(listModel);
+    }
+
+
+
+    public static Connection getConnection() {
+        return connection;
+    }
+
     public static void main(String[] args) throws SQLException {
         JDBCHolder j = new JDBCHolder();
-        String[][] tempTable = j.getTable("Employees");
+        String[][] tempTable = j.getTable("Employee");
         System.out.println(Arrays.deepToString(tempTable));
 
-        String temp= j.getValue(1, "id", "lName","Employees");
-        System.out.println(temp);
+        //String temp= j.getValue(1, "id", "lName","Employee");
+        //System.out.println(temp);
 
         j.exit();
     }

@@ -1,20 +1,29 @@
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
+import java.util.ArrayList;
 
-
-public class Frame extends JFrame implements View, ActionListener {
-
-    //The model
-    private Model model;
-
-   // panel that will contain the borderlayout
-    //private JPanel pagePanel;
-    private JPanel menuPanel;
-    private JPanel sidePanel;
-    private JPanel centerPanel;
-    private JPanel pagePanel;
+public class Frame extends JFrame implements View, ActionListener{
+    private JPanel FramePage;
+    private JPanel MainPage;
+    private JPanel menubarPanel;
+    private JButton Dashboard;
+    private JPanel sidebarPanel;
+    private JButton Profile;
+    private JButton Notifications;
+    private JButton Settings;
+    private JPanel cardlayoutHolder;
+    private JMenuBar menubar;
+    private JMenu Employees;
+    private JMenu Reports;
+    private JMenu Projects;
+    private JMenu Requests;
+    private JMenu Salary;
+    private JMenuItem listEmp, timeTracking, history, tasks, vReq, wfoReq, eReq, T4, stub, cForms, benefits, payScale, clockIn, addEmp;
     private JPanel dashboardPage;
     private JPanel newEmpPage;
     private JPanel timeTrackingPage;
@@ -30,14 +39,45 @@ public class Frame extends JFrame implements View, ActionListener {
     private JPanel payStub;
     private JPanel benefitPage;
     private JPanel contractPage;
-    private JMenuBar mainMB;
-    private JMenu dashboard, employees, reports, projects, requests, salary;
-    private JMenuItem listEmp, timeTracking, history, tasks, vReq, wfoReq, eReq, T4, stub, cForms, benefits, payScale, clockIn, addNewEmp;
-    private CardLayout cardLayout;
-    private JButton buttonTest;
-    private JLabel test;
-    final static String ADDNEWEMP = "addNewEmp";
-    final static String DASHBOARD = "dashboard";
+    private JMenu Schedule;
+    private JList empList;
+    private JLabel listEmpLabel;
+    private JTextField textField1;
+    private JTextField textField2;
+    private JTextField textField4;
+    private JButton submitButton;
+    private JTextField textField3;
+    private JLabel startDateLabel;
+    private JLabel endDateLabel;
+    private JLabel totalHoursLabel;
+    private JLabel vacationTypeLabel;
+    private JComboBox vacationComboBox;
+    private JLabel vacationRequestLabel;
+    private JPanel headlinePanel;
+    private JPanel componentsPanel;
+    private JPanel addNewEmpPage;
+    private JComboBox comboBox1;
+    private JComboBox comboBox2;
+    private JButton SubmitButton;
+    private JLabel typeLabel;
+    private JPanel equipmentLabel;
+    private JLabel versionLabel;
+    private JLabel reasonLabel;
+    private JPanel equipmentComponentPanel;
+    private JLabel EquipmentReqLabel;
+    private JTable T4Table;
+    private JLabel T4Label;
+    private JPanel contractsHeaderPanel;
+    private JPanel searchBarPanel;
+    private JPanel listFromsPanel;
+    private JLabel contractsLabel;
+    private JButton searchButton;
+    private JTextField searchTextField;
+    private JList formsList;
+    private JLabel resultsLabel;
+    private ArrayList<String> Names; // this array list will store the names of the employees
+    //private DefaultListModel listModel;
+
     final static String SHOW_LIST = "listEmp";
     final static String TIME_TRACK = "timeTracking";
     final static String PAYSCALE = "Payscale Charts";
@@ -51,141 +91,136 @@ public class Frame extends JFrame implements View, ActionListener {
     final static String PAYSTUB = "PayStub";
     final static String CONTRACT_FORM = "Contract Forms";
     final static String BENEFITS = "Benefits";
+    final static String ADD = "Add New Employee";
 
 
 
-    public Frame(Model model){
+
+    //The models
+    private Model model;
+    private Table table;
+    private JDBCHolder jdbcHolder;
+    private List list;
+
+    public Frame(Model model) throws SQLException {
         super("ERP");
-
+        this.model = model;
         model.addView(this);
 
+
+       // testing populating table from the schema -> failed
+        jdbcHolder = new JDBCHolder();
+        jdbcHolder.initializer();
+        table = new Table(jdbcHolder.getConnection());
+        table.buildTableModel("select * from Employee");
+        T4Table = new JTable(table);
+        // did not work!
+
+        //testing populating list of employees from database
+        jdbcHolder.fillEmpJList(empList);
+
+
         //To communicate with the model
-        Controller c = new Controller(model);
+        //Controller c = new Controller(model);
 
-        // initializing
-        menuPanel = new JPanel();
-        sidePanel = new JPanel();
-        centerPanel = new JPanel();
-        pagePanel = new JPanel();
-        dashboardPage = new JPanel();
-        newEmpPage = new JPanel();
-        listofEmployees = new JPanel();
-        timeTrackingPage = new JPanel();
-        cardLayout = new CardLayout();
-        payScalePage = new JPanel();
-        timeChartPage = new JPanel();
-        historyPage = new JPanel();
-        tasksPage = new JPanel();
-        vacationPage = new JPanel();
-        wfoPage = new JPanel();
-        equipmentPage = new JPanel();
-        t4Page = new JPanel();
-        payStub = new JPanel();
-        benefitPage = new JPanel();
-        contractPage = new JPanel();
 
-        //test stuff initilizer(i only created these to test the cardlayout)
-        buttonTest = new JButton();
-        test = new JLabel("test");
-        listofEmployees.add(buttonTest);
-        timeTrackingPage.add(test);
-        dashboardPage.add(test);
 
-        // setting the layout
-        pagePanel.setLayout(new BorderLayout(0,0));
 
-        //setting the size and dimensions for the components
-        menuPanel.setBackground(Color.blue);
-        menuPanel.setPreferredSize(new Dimension(100, 50));
-        sidePanel.setBackground(Color.blue);
-        sidePanel.setPreferredSize(new Dimension(40, 100));
-
-        //Initializing the menu bar
-        mainMB = new JMenuBar();
+        //initializing the drop down menues
         initMainMenu();
 
-        //Add menu bar to the frame
-        menuPanel.add(mainMB);
 
-
-
-        //setting the layout for the center panel
-        centerPanel.setLayout(cardLayout);
 
         // adding components to the panel
-        centerPanel.add(dashboardPage, DASHBOARD);
-        centerPanel.add(newEmpPage, ADDNEWEMP);
-        centerPanel.add(listofEmployees, SHOW_LIST);
-        centerPanel.add(timeTrackingPage, TIME_TRACK);
-        centerPanel.add(payScalePage, PAYSCALE);
-        centerPanel.add(timeChartPage, TIME_CHARTS);
-        centerPanel.add(historyPage, HISTORY);
-        centerPanel.add(tasksPage, TASKS);
-        centerPanel.add(vacationPage, VACATION_REQUESTS);
-        centerPanel.add(wfoPage, WFO_REQUESTS);
-        centerPanel.add(equipmentPage, EQUIPMENT_REQUESTS);
-        centerPanel.add(t4Page, T4_FORM);
-        centerPanel.add(payStub, PAYSTUB);
-        centerPanel.add(benefitPage, BENEFITS);
-        centerPanel.add(contractPage, CONTRACT_FORM);
+        cardlayoutHolder.add(listofEmployees, SHOW_LIST);
+        cardlayoutHolder.add(timeTrackingPage, TIME_TRACK);
+        cardlayoutHolder.add(payScalePage, PAYSCALE);
+        cardlayoutHolder.add(timeChartPage, TIME_CHARTS);
+        cardlayoutHolder.add(historyPage, HISTORY);
+        cardlayoutHolder.add(tasksPage, TASKS);
+        cardlayoutHolder.add(vacationPage, VACATION_REQUESTS);
+        cardlayoutHolder.add(wfoPage, WFO_REQUESTS);
+        cardlayoutHolder.add(equipmentPage, EQUIPMENT_REQUESTS);
+        cardlayoutHolder.add(t4Page, T4_FORM);
+        cardlayoutHolder.add(payStub, PAYSTUB);
+        cardlayoutHolder.add(benefitPage, BENEFITS);
+        cardlayoutHolder.add(contractPage, CONTRACT_FORM);
+        cardlayoutHolder.add(newEmpPage, ADD);
 
-
-
-        // adding the panels to the pane
-       pagePanel.add(menuPanel,BorderLayout.NORTH);
-       pagePanel.add(sidePanel,BorderLayout.WEST);
-       pagePanel.add(centerPanel,BorderLayout.CENTER);
 
         //Display the window
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(500,500);
-        this.setContentPane(pagePanel);
+        this.setSize(500, 500);
+        this.setContentPane(FramePage);
         this.setVisible(true);
 
+        empList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                //when you click on any element name it will take you to the employee frame
+                // problem here when you click on it it displays two frames instead of one
+                if (!e.getValueIsAdjusting()) {
+                    int empNumber = empList.getSelectedIndex();
+                    System.out.println(empNumber);
+                    if (empNumber >= 0) {
+                        EmployeeFrame myEmpFrame = new EmployeeFrame(model);
+                    }
+                }
+            }
+        });
     }
+
+
+
+
+
 
     private void initMainMenu(){
 
-        dashboard = new JMenu("Dashboard");
-        dashboard.addActionListener(this::showDashBoard);
 
         //Initializing the Employee DropDown Menu
-        employees = new JMenu("Employees");
+        //Employees = new JMenu("Employees");
 
         listEmp = new JMenuItem("List of Employees");
         listEmp.addActionListener(this::showListEmp);
+        // add a new action listenr to add the populate list methid
+        // make sure it gets the latest list from database
         timeTracking = new JMenuItem("TimeTracking");
         timeTracking.addActionListener(this::showTimeTrack);
-        addNewEmp = new JMenuItem("Add Employee");
-        addNewEmp.addActionListener(this::showNewEmp);
+        addEmp = new JMenuItem("Add New Employee");
+        addEmp.addActionListener(this::addNewEmp);
 
-        employees.add(listEmp);
-        employees.add(timeTracking);
-        employees.add(addNewEmp);
+
+
+        Employees.add(listEmp);
+        Employees.add(timeTracking);
+        Employees.add(addEmp);
+
+
         //Initializing the Report DropDown Menu
-        reports = new JMenu("Reports");
+        //Reports = new JMenu("Reports");
 
         payScale = new JMenuItem("Payscale Charts");
         payScale.addActionListener(this::showPayScale);
         clockIn = new JMenuItem("Time Charts");
         clockIn.addActionListener(this::showTimeChart);
 
-        reports.add(payScale);
-        reports.add(clockIn);
+        Reports.add(payScale);
+        Reports.add(clockIn);
 
         //Initializing the Employee DropDown Menu
-        projects = new JMenu("Projects");
+        //Projects = new JMenu("Projects");
 
         history = new JMenuItem("History");
         history.addActionListener(this::showHistory);
         tasks = new JMenuItem("Tasks");
         tasks.addActionListener(this::showTasks);
 
-        projects.add(history);
-        projects.add(tasks);
+        Projects.add(history);
+        Projects.add(tasks);
 
         //Initializing the Employee DropDown Menu
-        requests = new JMenu("Requests");
+        //Requests = new JMenu("Requests");
 
         vReq = new JMenuItem("Vacation Requests");
         vReq.addActionListener(this::showVacation);
@@ -194,13 +229,13 @@ public class Frame extends JFrame implements View, ActionListener {
         eReq = new JMenuItem("Equipment Requests");
         eReq.addActionListener(this::showEquipment);
 
-        requests.add(vReq);
-        requests.add(wfoReq);
-        requests.add(eReq);
+        Requests.add(vReq);
+        Requests.add(wfoReq);
+        Requests.add(eReq);
 
 
         //Initializing the Employee DropDown Menu
-        salary = new JMenu("Salary");
+        //Salary = new JMenu("Salary");
 
         T4 = new JMenuItem("T4");
         T4.addActionListener(this::showT4);
@@ -211,49 +246,26 @@ public class Frame extends JFrame implements View, ActionListener {
         benefits = new JMenuItem("Benefits");
         benefits.addActionListener(this::showContract);
 
-        salary.add(T4);
-        salary.add(stub);
-        salary.add(cForms);
-        salary.add(benefits);
+        Salary.add(T4);
+        Salary.add(stub);
+        Salary.add(cForms);
+        Salary.add(benefits);
 
 
-        //Adding all the menus to the menu bar
-        mainMB.add(dashboard);
-        mainMB.add(employees);
-        mainMB.add(reports);
-        mainMB.add(projects);
-        mainMB.add(requests);
-        mainMB.add(salary);
 
     }
-
-    private void newEmployeePageDisplay(){
-
-    }
-
-    private void wfhPageDisplay(){
-
-    }
-
-    private void notificationPageDisplay(){
-
-    }
-
-
-
 
     private void showView(String name) {
-        ((CardLayout)centerPanel.getLayout()).show(centerPanel, name);
+        ((CardLayout)cardlayoutHolder.getLayout()).show(cardlayoutHolder, name);
     }
-    private void showNewEmp(ActionEvent event) {
-        showView(ADDNEWEMP);
-    }
-    public void showDashBoard(ActionEvent event) {
-        showView(DASHBOARD);
-    }
+
 
     public void showListEmp(ActionEvent event) {
         showView(SHOW_LIST);
+    }
+
+    public void addNewEmp(ActionEvent event) {
+        showView(ADD);
     }
 
     public void showTimeTrack(ActionEvent event) {
@@ -306,16 +318,24 @@ public class Frame extends JFrame implements View, ActionListener {
 
     @Override
     public void systemUpdate(String command, String info) {
-    }
 
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //could be replaced wit a switch case here
+
     }
 
-    public static void main(String[] args) {
-        Frame start = new Frame(new Model());
+
+
+
+
+    public static void main(String[] args) throws SQLException {
+        Frame myManagerFrame = new Frame(new Model());
+
+
+
     }
+
 
 }
