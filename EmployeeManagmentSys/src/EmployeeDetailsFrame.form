@@ -179,7 +179,7 @@
                     <properties>
                       <borderPainted value="false"/>
                       <contentAreaFilled value="false"/>
-                      <icon value="Icons/next.png"/>
+                      <icon value="icons/next.png"/>
                       <maximumSize width="60" height="60"/>
                       <minimumSize width="60" height="60"/>
                       <opaque value="false"/>
@@ -192,7 +192,7 @@
                     <properties>
                       <borderPainted value="false"/>
                       <contentAreaFilled value="false"/>
-                      <icon value="Icons/back.png"/>
+                      <icon value="icons/back.png"/>
                       <maximumSize width="60" height="60"/>
                       <minimumSize width="60" height="60"/>
                       <opaque value="false"/>
@@ -475,7 +475,7 @@
                     <properties>
                       <borderPainted value="false"/>
                       <contentAreaFilled value="false"/>
-                      <icon value="Icons/back.png"/>
+                      <icon value="icons/back.png"/>
                       <maximumSize width="60" height="60"/>
                       <minimumSize width="60" height="60"/>
                       <opaque value="false"/>
@@ -490,7 +490,7 @@
                     <properties>
                       <borderPainted value="false"/>
                       <contentAreaFilled value="false"/>
-                      <icon value="Icons/next.png"/>
+                      <icon value="icons/next.png"/>
                       <maximumSize width="60" height="60"/>
                       <minimumSize width="60" height="60"/>
                       <opaque value="false"/>
