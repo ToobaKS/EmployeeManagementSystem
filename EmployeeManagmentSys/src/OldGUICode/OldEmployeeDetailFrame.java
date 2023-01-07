@@ -1,9 +1,12 @@
+package OldGUICode;
+
+/*
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class EmployeeFrame extends JFrame implements View, ActionListener {
+public class OldEmployeeDetailFrame extends JFrame implements View, ActionListener {
 
     private Model model;
 
@@ -26,7 +29,7 @@ public class EmployeeFrame extends JFrame implements View, ActionListener {
     final static String SCHEDULEP = "Schedule";
     final static String TIMEP = "Time Cards";
     final static String BENEFITSP = "Benefits";
-    public EmployeeFrame(Model model) {
+    public OldEmployeeDetailFrame(Model model) {
         super("Employee Information");
         
         this.model = model;
@@ -104,7 +107,7 @@ public class EmployeeFrame extends JFrame implements View, ActionListener {
     }
 
     private void initNotesPage() {
-      notesPage.add(new NotesPage());
+      notesPage.add(new OldNotesPage());
     }
     private void initSchedulePage() {
         //Tutorial following: https://www.youtube.com/watch?v=YivaMCfichQ&ab_channel=RaVen
@@ -136,6 +139,9 @@ public class EmployeeFrame extends JFrame implements View, ActionListener {
     }
 
     public static void main(String[] args) {
-        EmployeeFrame start = new EmployeeFrame(new Model());
+        OldEmployeeDetailFrame start = new OldEmployeeDetailFrame(new Model());
     }
 }
+
+
+ */
