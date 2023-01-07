@@ -60,7 +60,7 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
         initPage();
 
         this.add(mainPanel);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setSize(600,500);
         this.setVisible(true);
         create.addActionListener(new ActionListener() {

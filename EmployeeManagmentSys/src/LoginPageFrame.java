@@ -31,10 +31,11 @@ public class LoginPageFrame extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         this.dispose();
+            System.out.println("here");
         try {
             Frame f = new Frame(model);
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+
         }
     }
 }

@@ -126,8 +126,7 @@ public class Frame extends JFrame implements View, ActionListener{
         //To communicate with the model
         //Controller c = new Controller(model);
 
-
-
+        Notifications = new JButton();
 
         //initializing the drop down menues
         initMainMenu();
@@ -161,7 +160,7 @@ public class Frame extends JFrame implements View, ActionListener{
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 //when you click on any element name it will take you to the employee frame
-                // problem here when you click on it it displays two frames instead of one
+                // problem here when you click on it displays two frames instead of one
                 if (!e.getValueIsAdjusting()) {
                     int empNumber = empList.getSelectedIndex();
                     System.out.println(empNumber);
@@ -169,6 +168,12 @@ public class Frame extends JFrame implements View, ActionListener{
                         EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model);
                     }
                 }
+            }
+        });
+        Notifications.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new NotificationsFrame();
             }
         });
     }
@@ -326,7 +331,6 @@ public class Frame extends JFrame implements View, ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
     }
 
 
