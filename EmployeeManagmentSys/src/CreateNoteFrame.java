@@ -16,7 +16,7 @@ public class CreateNoteFrame extends JFrame {
         this.add(mainPanel);
 
         this.setSize(600,500);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setVisible(true);
     }
 }
