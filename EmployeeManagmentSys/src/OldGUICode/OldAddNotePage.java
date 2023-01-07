@@ -1,10 +1,12 @@
+package OldGUICode;
+
+/*
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-public class AddNotePage extends JFrame implements ActionListener {
+public class OldAddNotePage extends JFrame implements ActionListener {
 
     private String writtenFor;
     private String writtenBy;
@@ -18,12 +20,9 @@ public class AddNotePage extends JFrame implements ActionListener {
     private JTextField title;
     private JTextField description;
 
-    private NotesPage p;
-
-    public AddNotePage(String writtenBy, String writtenFor, NotesPage p){
+    public OldAddNotePage(String writtenBy, String writtenFor){
         super("Add Note");
 
-        this.p = p;
         this.writtenBy = writtenBy;
         this.writtenFor = writtenFor;
 
@@ -36,10 +35,9 @@ public class AddNotePage extends JFrame implements ActionListener {
         init();
     }
 
-    public AddNotePage(Note existingNote, NotesPage p){
+    public OldAddNotePage(Note existingNote){
         super("Add Note");
 
-        this.p = p;
         this.writtenBy = existingNote.getCreatedby();
         this.writtenFor = existingNote.getCreatedfor();
 
@@ -74,8 +72,6 @@ public class AddNotePage extends JFrame implements ActionListener {
 
     private void createNote(ActionEvent actionEvent) {
         Note note = new Note(writtenBy, writtenFor, String.valueOf(java.time.LocalDate.now()), title.getText(), description.getText());
-        p.addNote(note);
-        p.repaint();
         this.dispose();
     }
 
@@ -83,4 +79,7 @@ public class AddNotePage extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
     }
+
 }
+
+ */

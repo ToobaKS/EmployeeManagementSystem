@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -75,6 +76,8 @@ public class Frame extends JFrame implements View, ActionListener{
     private JTextField searchTextField;
     private JList formsList;
     private JLabel resultsLabel;
+    private JList list1;
+    private JList list2;
     private ArrayList<String> Names; // this array list will store the names of the employees
     //private DefaultListModel listModel;
 
@@ -163,7 +166,7 @@ public class Frame extends JFrame implements View, ActionListener{
                     int empNumber = empList.getSelectedIndex();
                     System.out.println(empNumber);
                     if (empNumber >= 0) {
-                        EmployeeFrame myEmpFrame = new EmployeeFrame(model);
+                        EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model);
                     }
                 }
             }

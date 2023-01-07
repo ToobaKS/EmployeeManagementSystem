@@ -1,3 +1,5 @@
+package OldGUICode;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,19 +11,19 @@ import java.sql.SQLException;
  *
  * @author Tooba
  */
-public class LoginScreen extends JFrame implements ActionListener {
+public class OldLoginScreen extends JFrame implements ActionListener {
 
-    Model model = new Model();
+    //Model model = new Model();
 
     /**
      * Initializes the start screen
      */
-    public LoginScreen() {
+    public OldLoginScreen() {
         super("EMS");
 
         //reference to the model and controller
-        model = new Model();
-        model.addView(this);
+        //model = new Model();
+        //model.addView(this);
 
         this.setLayout(new FlowLayout());
 
@@ -53,7 +55,7 @@ public class LoginScreen extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        LoginScreen start = new LoginScreen();
+        OldLoginScreen start = new OldLoginScreen();
 
 
     }
@@ -62,10 +64,6 @@ public class LoginScreen extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         this.dispose();
         //Frame f = new Frame(model);
-        try {
-            Frame f = new Frame(new Model());
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
+        // Frame f = new Frame(new Model());
     }
 }

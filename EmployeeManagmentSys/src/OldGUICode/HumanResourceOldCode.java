@@ -1,9 +1,11 @@
+package OldGUICode;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class HumanResourceOldCode extends JFrame implements View, ActionListener {
+public class HumanResourceOldCode extends JFrame implements ActionListener {
     private JPanel FramePage;
     private JPanel mainPage;
     private JPanel menubarPanel;
@@ -50,7 +52,7 @@ public class HumanResourceOldCode extends JFrame implements View, ActionListener
     final static String BENEFITS = "Benefits";
 
     //The model
-    private Model model;
+    //private Model model;
 
     public HumanResourceOldCode(){
 
@@ -192,7 +194,7 @@ public class HumanResourceOldCode extends JFrame implements View, ActionListener
     }
 
 
-    @Override
+
     public void systemUpdate(String command, String info) {
 
     }

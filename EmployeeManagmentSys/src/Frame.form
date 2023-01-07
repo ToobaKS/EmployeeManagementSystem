@@ -193,7 +193,55 @@
                   <background color="-1907998"/>
                 </properties>
                 <border type="none"/>
-                <children/>
+                <children>
+                  <grid id="2de70" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <card name="Card1"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <grid id="23df8" layout-manager="BorderLayout" hgap="0" vgap="0">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="74db0" class="javax.swing.JLabel">
+                            <constraints border-constraint="North"/>
+                            <properties>
+                              <text value="Label"/>
+                            </properties>
+                          </component>
+                          <component id="a1d8a" class="javax.swing.JList" binding="list1" default-binding="true">
+                            <constraints border-constraint="Center"/>
+                            <properties/>
+                          </component>
+                        </children>
+                      </grid>
+                      <grid id="4d8a0" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="cb4f4" class="javax.swing.JList" binding="list2" default-binding="true">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                                <preferred-size width="150" height="50"/>
+                              </grid>
+                            </constraints>
+                            <properties/>
+                          </component>
+                        </children>
+                      </grid>
+                    </children>
+                  </grid>
+                </children>
               </grid>
               <grid id="81d88" binding="newEmpPage" layout-manager="CardLayout" hgap="0" vgap="0">
                 <constraints>

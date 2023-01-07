@@ -1,10 +1,12 @@
+package OldGUICode;
+/*
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
-public class oldFrameCode extends JFrame implements View, ActionListener {
+public class OldFrameCode extends JFrame implements View, ActionListener {
 
     //The model
     private Model model;
@@ -54,7 +56,7 @@ public class oldFrameCode extends JFrame implements View, ActionListener {
 
 
 
-    public oldFrameCode(Model model){
+    public OldFrameCode(Model model){
         super("ERP");
 
         model.addView(this);
@@ -313,9 +315,6 @@ public class oldFrameCode extends JFrame implements View, ActionListener {
     public void actionPerformed(ActionEvent e) {
         //could be replaced wit a switch case here
     }
-/**
-    public static void main(String[] args) {
-        oldFrameCode start = new oldFrameCode(new Model());
-    }
-**/
 }
+
+*/
