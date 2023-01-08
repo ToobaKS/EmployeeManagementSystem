@@ -17,12 +17,14 @@ public class Model {
     private final String VACREQ = "request vacation";   //to request vacation
 
     private final List<View> views;
+    private final List<LoginView> loginViews;
 
     private String employeeLevel = "";
     private String employeeID = "";
     private JDBCHolder jdbc;
     public Model(){
         views = new ArrayList<>();
+        loginViews = new ArrayList<>();
         jdbc = new JDBCHolder();
     }
 
@@ -80,7 +82,7 @@ public class Model {
                 result = "valid";
             }
         }
-        notifyView(result);
+        notifyLoginView(result);
     }
 
     private void notifyView(String info){
@@ -95,6 +97,19 @@ public class Model {
 
     public void removeView(View view){
         views.remove(view);
+    }
+
+    public void notifyLoginView(String info) {
+        for (LoginView view : loginViews) {
+            view.systemUpdate(info);
+        }
+    }
+
+    public void addLoginView(LoginView view) {
+        loginViews.add(view);
+    }
+    public void removeLoginView(LoginView view) {
+        loginViews.remove(view);
     }
 
     public String getEmployeeLevel() {
@@ -112,4 +127,5 @@ public class Model {
     public void setEmployeeID(String employeeID) {
         this.employeeID = employeeID;
     }
+
 }

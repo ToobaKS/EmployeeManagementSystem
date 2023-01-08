@@ -2,15 +2,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginPageFrame extends JFrame implements View, ActionListener{
+public class LoginPageFrame extends JFrame implements LoginView{
     private JPanel mainPanel;
     private JPasswordField password;
     private JTextField id;
     private JButton login;
 
-    private String buttonText = "";
-
-    private Controller control;
+    private LoginController control;
     private Model model;
 
 
@@ -18,8 +16,8 @@ public class LoginPageFrame extends JFrame implements View, ActionListener{
         super("ERP");
 
         model = new Model();
-        model.addView(this);
-        control = new Controller(model, this);
+        model.addLoginView(this);
+        control = new LoginController(model, this);
 
         // creates instance of JButton
         //login.addActionListener(this);
@@ -39,36 +37,18 @@ public class LoginPageFrame extends JFrame implements View, ActionListener{
         return password.getText();
     }
 
-    public void setPassword(JPasswordField password) {
-        this.password = password;
-    }
-
-    /*
-    public void setId(JTextField id) {
-        this.id = id;
-    }*/
-
-    @Override
-    public void systemUpdate(String info) {
-        if(info.equals("valid")){
-            this.dispose();
-            Frame f = new Frame(model, control);
-        } else{
-            JOptionPane.showMessageDialog(this, info);
-        }
-    }
-
     @Override
     public String getID() {
         return id.getText();
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        //idInput = id.getText();
-        buttonText = login.getText();
-        //passwordInput = password.getText();
-
-        //login.setActionCommand(idInput);
+    public void systemUpdate(String info) {
+        if(info.equals("valid")){
+            this.dispose();
+            Frame f = new Frame(model);
+        } else{
+            JOptionPane.showMessageDialog(this, info);
+        }
     }
 }
