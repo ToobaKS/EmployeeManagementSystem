@@ -20,7 +20,7 @@ public class Model {
     private final List<LoginView> loginViews;
 
     private String employeeLevel = "";
-    private String employeeID = "";
+    private int employeeID = 0;
     private JDBCHolder jdbc;
     public Model(){
         views = new ArrayList<>();
@@ -85,7 +85,7 @@ public class Model {
                 if(!pass.equals(temp[1])){
                     result = "Invalid Password";
                 }else{
-                    init();
+                    init(Integer.parseInt(temp[0]));
                     result = "valid";
                 }
             }
@@ -94,7 +94,16 @@ public class Model {
         notifyLoginView(result);
     }
 
-    private void init() {
+    private void init(int id) throws SQLException {
+        this.employeeID = id;
+        String temp = jdbc.getValue(id, "idEmployee", "Position","Employee");
+        if(temp.contains("HR")){
+            this.employeeLevel = "HR";
+        }else if(temp.contains("Manager")){
+            this.employeeLevel = "manager";
+        }else{
+            this.employeeLevel= "employee";
+        }
     }
 
     private void notifyView(String info){
@@ -132,11 +141,11 @@ public class Model {
         this.employeeLevel = employeeLevel;
     }
 
-    public String getEmployeeID() {
+    public int getEmployeeID() {
         return employeeID;
     }
 
-    public void setEmployeeID(String employeeID) {
+    public void setEmployeeID(int employeeID) {
         this.employeeID = employeeID;
     }
 
