@@ -135,8 +135,6 @@ public class Frame extends JFrame implements View, ActionListener{
             throw new RuntimeException(e);
         }
 
-        Notifications = new JButton();
-
         //initializing the drop down menues
         initMainMenu();
 
@@ -179,7 +177,7 @@ public class Frame extends JFrame implements View, ActionListener{
         Notifications.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new NotificationsFrame();
+                new NotificationsFrame(model, control);
             }
         });
     }
