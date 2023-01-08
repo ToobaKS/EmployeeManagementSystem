@@ -107,13 +107,13 @@ public class Frame extends JFrame implements View, ActionListener{
     private JDBCHolder jdbcHolder;
     private List list;
 
-    public Frame(Model model, Controller control) {
+    public Frame(Model model) {
         super("ERP");
 
         //establishing communication to model and controller
         this.model = model;
-        //model.addView(this);
-        this.control = control;
+        model.addView(this);
+        this.control = new Controller(model, this);
 
 
        // testing populating table from the schema -> failed
@@ -336,37 +336,10 @@ public class Frame extends JFrame implements View, ActionListener{
     }
 
     public static void main(String[] args) throws SQLException {
-        Frame myManagerFrame = new Frame(new Model(), new Controller(new Model(), new View() {
-            @Override
-            public void systemUpdate(String info) {
-
-            }
-
-            @Override
-            public String getID() {
-                return null;
-            }
-
-            @Override
-            public String getPassword() {
-                return null;
-            }
-        }));
     }
 
 
     @Override
     public void systemUpdate(String info) {
-
-    }
-
-    @Override
-    public String getID() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
     }
 }
