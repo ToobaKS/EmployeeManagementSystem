@@ -8,6 +8,7 @@ public class NotificationDetailFrame extends JFrame implements View {
     private JLabel notifTitle;
     private JLabel notifBy;
     private JLabel notifType;
+    private JLabel notifDate;
 
     private Model model;
     private Controller controller;

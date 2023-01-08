@@ -3,6 +3,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class NotificationsFrame extends JFrame implements View, ActionListener {
 
@@ -22,10 +23,16 @@ public class NotificationsFrame extends JFrame implements View, ActionListener {
         this.model = model;
         this.controller = controller;
         model.addView(this);
+
+        init();
+
+
         notifList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-
+                if (!e.getValueIsAdjusting()) {
+                    new NotificationDetailFrame(model, controller);
+                }
             }
         });
 
@@ -35,8 +42,16 @@ public class NotificationsFrame extends JFrame implements View, ActionListener {
         this.setVisible(true);
     }
 
+    private void init() {
+        try {
+            notifList.setModel(model.listNotifications());
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+
+    }
+
     public static void main(String[] args) {
-        LoginPageFrame start = new LoginPageFrame();
     }
 
     public void actionPerformed(ActionEvent e) {

@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -36,7 +37,7 @@ public class JDBCHolder {
     public String[][] getTable(String tableName) throws SQLException {
 
         String[][] table = null;
-        String sql = "select * from Employee";
+        String sql = "select * from " + tableName +";";
 
         ResultSet rs = stmt.executeQuery(sql);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -58,6 +59,31 @@ public class JDBCHolder {
             i++;
         }
 
+        return table;
+    }
+
+
+    public ArrayList<HashMap> getPreciseTable(String tableName, String attribute, int id) throws SQLException {
+
+        ArrayList<HashMap> table = new ArrayList<>();
+
+        String sql = "select * from " + tableName + " where " + attribute +" = '" +id +"';";
+
+        ResultSet rs = stmt.executeQuery(sql);
+        ResultSetMetaData rsmd = rs.getMetaData();
+
+        int columnS = rsmd.getColumnCount();
+
+        if(rs.next() != false){
+            rs.beforeFirst();
+            while(rs.next()) {
+                HashMap<String, String> data = new HashMap<>();
+                for (int i = 1; i <= columnS; i++) {
+                    data.put(rsmd.getColumnName(i), rs.getString(i));
+                }
+                table.add(data);
+            }
+        }
         return table;
     }
 
