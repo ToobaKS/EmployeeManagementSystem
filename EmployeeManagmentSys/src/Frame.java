@@ -255,9 +255,6 @@ public class Frame extends JFrame implements View, ActionListener{
         Salary.add(stub);
         Salary.add(cForms);
         Salary.add(benefits);
-
-
-
     }
 
     private void showView(String name) {

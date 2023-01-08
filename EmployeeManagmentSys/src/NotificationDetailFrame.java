@@ -1,6 +1,8 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class NotificationDetailFrame extends JFrame implements View {
+public class NotificationDetailFrame extends JFrame implements View, ActionListener {
     private JPanel mainPanel;
     private JButton approveButton;
     private JButton rejectButton;
@@ -12,16 +14,24 @@ public class NotificationDetailFrame extends JFrame implements View {
 
     private Model model;
     private Controller controller;
-    public NotificationDetailFrame(Model model, Controller controller) {
+    private String data;
+    public NotificationDetailFrame(Model model, Controller controller, String data) {
 
         this.model = model;
         this.controller = controller;
+        this.data = data;
         model.addView(this);
+
+        init();
 
         this.add(mainPanel);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setSize(600,500);
         this.setVisible(true);
+    }
+
+    private void init() {
+        model.showNotificationDetails();
     }
 
     @Override
@@ -30,6 +40,11 @@ public class NotificationDetailFrame extends JFrame implements View {
     }
 
     public static void main(String[] args) {
-        NotificationDetailFrame start = new NotificationDetailFrame(new Model(), new Controller(new Model(), null));
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 }

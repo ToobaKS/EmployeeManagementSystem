@@ -87,6 +87,8 @@ public class JDBCHolder {
         return table;
     }
 
+
+
     /**
      *
      * Returns the attribute wanted based on the ID entered
@@ -105,6 +107,20 @@ public class JDBCHolder {
         rs.next();
 
         return rs.getString(1);
+    }
+
+    public String getNameFromDB(int id) throws SQLException {
+        String name = "";
+
+        ResultSet rs = stmt.executeQuery("SELECT FirstName, LastName from Employee where idEmployee = " + id);
+
+        rs.next();
+
+        System.out.println(rs.getString(1));
+
+        name = rs.getString(1) + " " + rs.getString(2);
+
+        return name;
     }
 
     public boolean verifyID(int id) throws SQLException {
@@ -147,6 +163,9 @@ public class JDBCHolder {
 
         boolean temp2= j.verifyID(1);
         System.out.println(temp2);
+
+        String name = j.getNameFromDB(1);
+        System.out.println(name);
 
         j.exit();
     }

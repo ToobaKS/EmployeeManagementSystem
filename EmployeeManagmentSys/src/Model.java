@@ -20,11 +20,14 @@ public class Model {
     private final List<View> views;
     private final List<LoginView> loginViews;
 
+    private String receiver = "";
     private String employeeLevel = "";
     private int employeeID = 2;
     private JDBCHolder jdbc;
 
     private ArrayList<HashMap> holderArray;
+
+    private HashMap<String, String> current;
 
     public Model(){
         views = new ArrayList<>();
@@ -110,6 +113,14 @@ public class Model {
         }
     }
 
+    public String getReceiver(int tempID) throws SQLException {
+
+        receiver = jdbc.getValue(tempID, "Employee_idEmployee", "Receiver", "Notification");
+
+        System.out.println(receiver);
+
+        return receiver;
+    }
 
     public DefaultListModel listNotifications() throws SQLException {
         holderArray = jdbc.getPreciseTable("Notification", "Receiver", employeeID);
@@ -125,7 +136,8 @@ public class Model {
             for (int i = 0; i < holderArray.size(); i++){
                 temp = holderArray.get(i);
                 data = temp.get("NotificationTitle");
-                data += " ";
+                data += " from ";
+                data += temp.get("Employee_idEmployee");
                 data += temp.get("NotificationDate");
 
                 listModel.addElement(data);
@@ -137,6 +149,9 @@ public class Model {
 
     public ArrayList<HashMap> getHolderArray() {
         return holderArray;
+    }
+
+    public void showNotificationDetails() {
     }
 
     private void notifyView(String info){
@@ -185,5 +200,8 @@ public class Model {
     public static void main(String[] args) throws SQLException {
         Model m = new Model();
         m.listNotifications();
+        m.getReceiver(1);
     }
+
+
 }

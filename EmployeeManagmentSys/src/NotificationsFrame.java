@@ -25,13 +25,12 @@ public class NotificationsFrame extends JFrame implements View, ActionListener {
         model.addView(this);
 
         init();
-
-
         notifList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    new NotificationDetailFrame(model, controller);
+                    String data = notifList.getSelectedValue().toString();
+                    new NotificationDetailFrame(model, controller, data);
                 }
             }
         });
@@ -48,7 +47,6 @@ public class NotificationsFrame extends JFrame implements View, ActionListener {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
-
     }
 
     public static void main(String[] args) {
