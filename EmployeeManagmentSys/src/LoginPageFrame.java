@@ -1,27 +1,32 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
-public class LoginPageFrame extends JFrame implements ActionListener {
+public class LoginPageFrame extends JFrame implements View, ActionListener{
     private JPanel mainPanel;
     private JPasswordField password;
-    private JButton login;
     private JTextField id;
+    private JButton login;
 
-    private Model model = new Model();
+    private String buttonText = "";
 
-    public LoginPageFrame(){
+    private Controller control;
+    private Model model;
 
-        login = new JButton();
-        id = new JTextField();
-        password = new JPasswordField();
 
-        login.addActionListener(this);
+    public LoginPageFrame() {
+        super("ERP");
+
+        model = new Model();
+        model.addView(this);
+        control = new Controller(model, this);
+
+        // creates instance of JButton
+        //login.addActionListener(this);
+        login.addActionListener(control);
 
         this.add(mainPanel);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(600,500);
+        this.setSize(800, 500);
         this.setVisible(true);
     }
 
@@ -29,13 +34,41 @@ public class LoginPageFrame extends JFrame implements ActionListener {
         LoginPageFrame start = new LoginPageFrame();
     }
 
-    public void actionPerformed(ActionEvent e) {
-        this.dispose();
-            System.out.println("here");
-        try {
-            Frame f = new Frame(model);
-        } catch (SQLException ex) {
+    @Override
+    public String getPassword() {
+        return password.getText();
+    }
 
+    public void setPassword(JPasswordField password) {
+        this.password = password;
+    }
+
+    /*
+    public void setId(JTextField id) {
+        this.id = id;
+    }*/
+
+    @Override
+    public void systemUpdate(String info) {
+        if(info.equals("valid")){
+            this.dispose();
+            Frame f = new Frame(model, control);
+        } else{
+            JOptionPane.showMessageDialog(this, info);
         }
+    }
+
+    @Override
+    public String getID() {
+        return id.getText();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        //idInput = id.getText();
+        buttonText = login.getText();
+        //passwordInput = password.getText();
+
+        //login.setActionCommand(idInput);
     }
 }

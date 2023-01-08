@@ -99,39 +99,46 @@ public class Frame extends JFrame implements View, ActionListener{
 
 
 
+
     //The models
+    private Controller control;
     private Model model;
     private Table table;
     private JDBCHolder jdbcHolder;
     private List list;
 
-    public Frame(Model model) throws SQLException {
+    public Frame(Model model, Controller control) {
         super("ERP");
+
+        //establishing communication to model and controller
         this.model = model;
-        model.addView(this);
+        //model.addView(this);
+        this.control = control;
 
 
        // testing populating table from the schema -> failed
         jdbcHolder = new JDBCHolder();
         jdbcHolder.initializer();
         table = new Table(jdbcHolder.getConnection());
-        table.buildTableModel("select * from Employee");
+        try {
+            table.buildTableModel("select * from Employee");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         T4Table = new JTable(table);
         // did not work!
 
         //testing populating list of employees from database
-        jdbcHolder.fillEmpJList(empList);
-
-
-        //To communicate with the model
-        //Controller c = new Controller(model);
+        try {
+            jdbcHolder.fillEmpJList(empList);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         Notifications = new JButton();
 
         //initializing the drop down menues
         initMainMenu();
-
-
 
         // adding components to the panel
         cardlayoutHolder.add(listofEmployees, SHOW_LIST);
@@ -148,7 +155,6 @@ public class Frame extends JFrame implements View, ActionListener{
         cardlayoutHolder.add(benefitPage, BENEFITS);
         cardlayoutHolder.add(contractPage, CONTRACT_FORM);
         cardlayoutHolder.add(newEmpPage, ADD);
-
 
         //Display the window
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -324,25 +330,43 @@ public class Frame extends JFrame implements View, ActionListener{
         showView(CONTRACT_FORM);
     }
 
-    @Override
-    public void systemUpdate(String command, String info) {
-
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
     }
 
-
-
-
-
     public static void main(String[] args) throws SQLException {
-        Frame myManagerFrame = new Frame(new Model());
+        Frame myManagerFrame = new Frame(new Model(), new Controller(new Model(), new View() {
+            @Override
+            public void systemUpdate(String info) {
 
+            }
 
+            @Override
+            public String getID() {
+                return null;
+            }
 
+            @Override
+            public String getPassword() {
+                return null;
+            }
+        }));
     }
 
 
+    @Override
+    public void systemUpdate(String info) {
+
+    }
+
+    @Override
+    public String getID() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
 }
