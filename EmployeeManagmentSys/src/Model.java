@@ -1,7 +1,9 @@
 import javax.swing.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 
 public class Model {
 
@@ -15,6 +17,19 @@ public class Model {
     private final String EQUIPREQ = "request equipment";//to request equipment
     private final String WFOREQ = "request WFO";        //to request WFO
     private final String VACREQ = "request vacation";   //to request vacation
+
+    private String LeaveType;
+    private int LeaveDays;
+    private Date StartDate;
+    private Date endDate;
+    private String vacationStatus;
+    private String notificationStatus;
+    private Date notificationDate;
+    private String notificationTitle;
+    private String notificationContent;
+    private String requestType;
+
+
 
     private final List<View> views;
     private final List<LoginView> loginViews;
@@ -62,6 +77,35 @@ public class Model {
         }
     }
 
+    /*
+     private String LeaveType;
+    private int LeaveDays;
+    private Date StartDate;
+    private Date endDate;
+    private String vacationStatus;
+    private String notificationStatus;
+    private Date notificationDate;
+    private String notificationTitle;
+    private String notificationContent;
+    private String requestType;
+     */
+/*
+    // logic to insert data into both vacation and notification table
+    public void saveToLeaveTable(String LeaveType, int LeaveDays, Date StartDate,Date endDate, String vacationStatus, String notificationStatus,   ){
+
+        try{
+
+            //jdbc.insertData("insert into Leave(LeaveType, LeaveDays, LeaveStartDate, LeaveEndDate, LeaveStatus, Employee_idEmployee )"+
+                    //"Values ('"+ + ","+  "')");
+
+
+            System.out.println("submitted to database");
+
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null,e);
+        }
+    }
+*/
     public void login(String info) throws SQLException {
 
         System.out.println(info);

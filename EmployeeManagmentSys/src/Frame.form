@@ -157,7 +157,6 @@
                 <properties>
                   <background color="-16751474"/>
                   <foreground color="-16751474"/>
-                  <hideActionText value="true"/>
                   <icon value="Icons/notification.png"/>
                   <text value=""/>
                 </properties>
@@ -194,55 +193,7 @@
                   <background color="-1907998"/>
                 </properties>
                 <border type="none"/>
-                <children>
-                  <grid id="2de70" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
-                    <constraints>
-                      <card name="Card1"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <grid id="23df8" layout-manager="BorderLayout" hgap="0" vgap="0">
-                        <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="74db0" class="javax.swing.JLabel">
-                            <constraints border-constraint="North"/>
-                            <properties>
-                              <text value="Label"/>
-                            </properties>
-                          </component>
-                          <component id="a1d8a" class="javax.swing.JList" binding="list1" default-binding="true">
-                            <constraints border-constraint="Center"/>
-                            <properties/>
-                          </component>
-                        </children>
-                      </grid>
-                      <grid id="4d8a0" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
-                        <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties/>
-                        <border type="none"/>
-                        <children>
-                          <component id="cb4f4" class="javax.swing.JList" binding="list2" default-binding="true">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                                <preferred-size width="150" height="50"/>
-                              </grid>
-                            </constraints>
-                            <properties/>
-                          </component>
-                        </children>
-                      </grid>
-                    </children>
-                  </grid>
-                </children>
+                <children/>
               </grid>
               <grid id="81d88" binding="newEmpPage" layout-manager="CardLayout" hgap="0" vgap="0">
                 <constraints>
@@ -332,7 +283,16 @@
                   <background color="-1907998"/>
                 </properties>
                 <border type="none"/>
-                <children/>
+                <children>
+                  <component id="e060b" class="javax.swing.JTextField" binding="textField5" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                  </component>
+                </children>
               </grid>
               <grid id="a9078" binding="vacationPage" layout-manager="GridLayoutManager" row-count="4" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
@@ -395,7 +355,7 @@
                           <text value="Start Date "/>
                         </properties>
                       </component>
-                      <component id="7c10f" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+                      <component id="7c10f" class="javax.swing.JTextField" binding="StartTextField">
                         <constraints>
                           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
@@ -411,7 +371,7 @@
                           <text value="Total Hours"/>
                         </properties>
                       </component>
-                      <component id="a33be" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+                      <component id="a33be" class="javax.swing.JTextField" binding="TotalDaysTextField">
                         <constraints>
                           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
@@ -419,7 +379,7 @@
                         </constraints>
                         <properties/>
                       </component>
-                      <component id="da28c" class="javax.swing.JTextField" binding="textField4" default-binding="true">
+                      <component id="da28c" class="javax.swing.JTextField" binding="endTextField">
                         <constraints>
                           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="150" height="-1"/>
@@ -492,7 +452,123 @@
                 <border type="none"/>
                 <children/>
               </grid>
-              <grid id="4d8fa" binding="t4Page" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="9f80b" binding="equipmentPage" layout-manager="GridLayoutManager" row-count="3" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <card name="Card11"/>
+                </constraints>
+                <properties>
+                  <background color="-1907998"/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <grid id="c3125" binding="equipmentLabel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <background color="-1"/>
+                    </properties>
+                    <border type="none" title=""/>
+                    <children>
+                      <component id="b8d93" class="javax.swing.JLabel" binding="EquipmentReqLabel">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Equipment Request"/>
+                        </properties>
+                      </component>
+                      <hspacer id="1490">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                      </hspacer>
+                    </children>
+                  </grid>
+                  <grid id="15a78" binding="equipmentComponentPanel" layout-manager="GridLayoutManager" row-count="9" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <background color="-1"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <hspacer id="cbad2">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                      </hspacer>
+                      <component id="36bf0" class="javax.swing.JComboBox" binding="EquipmentType">
+                        <constraints>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="ab7ac" class="javax.swing.JComboBox" binding="EqVersionComboBox">
+                        <constraints>
+                          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="459fd" class="javax.swing.JLabel" binding="typeLabel">
+                        <constraints>
+                          <grid row="1" column="0" row-span="2" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Choose Equipment type"/>
+                        </properties>
+                      </component>
+                      <component id="853be" class="javax.swing.JLabel" binding="versionLabel">
+                        <constraints>
+                          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Choose Equipment Version"/>
+                        </properties>
+                      </component>
+                      <component id="e1282" class="javax.swing.JTextField" binding="ReasonTextField">
+                        <constraints>
+                          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                            <preferred-size width="150" height="-1"/>
+                          </grid>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="874b" class="javax.swing.JLabel" binding="reasonLabel">
+                        <constraints>
+                          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="Reason for Request"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                  <vspacer id="6a60c">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </vspacer>
+                  <hspacer id="da7db">
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </hspacer>
+                  <component id="7365b" class="javax.swing.JButton" binding="EqSubmitButton">
+                    <constraints>
+                      <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Button"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="4d8fa" binding="t4Page" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <card name="Card12"/>
@@ -528,123 +604,6 @@
                       <text value="T4 forms "/>
                     </properties>
                   </component>
-                  <grid id="9f80b" binding="equipmentPage" layout-manager="GridLayoutManager" row-count="3" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="0" left="0" bottom="0" right="0"/>
-                    <constraints>
-                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <background color="-1907998"/>
-                    </properties>
-                    <border type="none"/>
-                    <children>
-                      <grid id="c3125" binding="equipmentLabel" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
-                        <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <background color="-1"/>
-                        </properties>
-                        <border type="none" title=""/>
-                        <children>
-                          <component id="b8d93" class="javax.swing.JLabel" binding="EquipmentReqLabel">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="Equipment Request"/>
-                            </properties>
-                          </component>
-                          <hspacer id="1490">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                          </hspacer>
-                        </children>
-                      </grid>
-                      <grid id="15a78" binding="equipmentComponentPanel" layout-manager="GridLayoutManager" row-count="9" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
-                        <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <background color="-1"/>
-                        </properties>
-                        <border type="none"/>
-                        <children>
-                          <hspacer id="cbad2">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                          </hspacer>
-                          <component id="36bf0" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
-                            <constraints>
-                              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties/>
-                          </component>
-                          <component id="ab7ac" class="javax.swing.JComboBox" binding="comboBox2" default-binding="true">
-                            <constraints>
-                              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties/>
-                          </component>
-                          <component id="459fd" class="javax.swing.JLabel" binding="typeLabel">
-                            <constraints>
-                              <grid row="1" column="0" row-span="2" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="Choose Equipment type"/>
-                            </properties>
-                          </component>
-                          <component id="853be" class="javax.swing.JLabel" binding="versionLabel">
-                            <constraints>
-                              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="Choose Equipment Version"/>
-                            </properties>
-                          </component>
-                          <component id="e1282" class="javax.swing.JTextField" binding="textField3" default-binding="true">
-                            <constraints>
-                              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                                <preferred-size width="150" height="-1"/>
-                              </grid>
-                            </constraints>
-                            <properties/>
-                          </component>
-                          <component id="874b" class="javax.swing.JLabel" binding="reasonLabel">
-                            <constraints>
-                              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <text value="Reason for Request"/>
-                            </properties>
-                          </component>
-                        </children>
-                      </grid>
-                      <vspacer id="6a60c">
-                        <constraints>
-                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                      </vspacer>
-                      <component id="25693" class="javax.swing.JButton" binding="SubmitButton">
-                        <constraints>
-                          <grid row="2" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <background color="-1"/>
-                          <text value="Submit"/>
-                        </properties>
-                      </component>
-                      <hspacer id="da7db">
-                        <constraints>
-                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                      </hspacer>
-                    </children>
-                  </grid>
                 </children>
               </grid>
               <grid id="5103f" binding="payStub" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

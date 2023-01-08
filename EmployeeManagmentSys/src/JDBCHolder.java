@@ -105,7 +105,11 @@ public class JDBCHolder {
         jList.setModel(listModel);
     }
 
+    // inserting data from program to sql database
+    public static void insertData(String sql) throws Exception{
+        getConnection().createStatement().executeUpdate(sql);
 
+    }
 
     public static Connection getConnection() {
         return connection;
