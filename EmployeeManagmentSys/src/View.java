@@ -1,3 +1,6 @@
 public interface View {
-    void systemUpdate(String command, String info);
+    void systemUpdate(String info);
+
+    String getID();
+    String getPassword();
 }

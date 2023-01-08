@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class EmployeeDetailsFrame extends JFrame implements View, ActionListener {
+public class EmployeeDetailsFrame extends JFrame implements ActionListener {
 
     private JButton notes;
     private JButton details;
@@ -100,11 +100,6 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
     }
 
     @Override
-    public void systemUpdate(String command, String info) {
-
-    }
-
-    @Override
     public void actionPerformed(ActionEvent e) {
 
     }
@@ -112,4 +107,5 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
     public static void main(String[] args) {
         EmployeeDetailsFrame start = new EmployeeDetailsFrame(new Model());
     }
+
 }

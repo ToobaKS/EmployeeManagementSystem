@@ -61,6 +61,17 @@ public class JDBCHolder {
         return table;
     }
 
+    /**
+     *
+     * Returns the attribute wanted based on the ID entered
+     *
+     * @param id
+     * @param primaryKey
+     * @param attribute
+     * @param tableName
+     * @return
+     * @throws SQLException
+     */
     public String getValue(int id, String primaryKey, String attribute, String tableName) throws SQLException {
         ResultSet rs = stmt.executeQuery("SELECT " + attribute + " FROM " + tableName +
                 " WHERE " + primaryKey + "= '" + id + "';");
@@ -68,6 +79,17 @@ public class JDBCHolder {
         rs.next();
 
         return rs.getString(1);
+    }
+
+    public boolean verifyID(int id) throws SQLException {
+        ResultSet rs = stmt.executeQuery("SELECT idEmployee from Employee where idEmployee = " + id);
+
+        rs.next();
+        System.out.println(rs.getString(1));
+
+        if(rs !=null)
+            return true;
+        return false;
     }
 
     public void fillEmpJList(JList jList)
@@ -98,7 +120,10 @@ public class JDBCHolder {
         System.out.println(Arrays.deepToString(tempTable));
 
         //String temp= j.getValue(1, "id", "lName","Employee");
-        //System.out.println(temp);
+       // System.out.println(temp);
+
+        boolean temp2= j.verifyID(1);
+        System.out.println(temp2);
 
         j.exit();
     }
