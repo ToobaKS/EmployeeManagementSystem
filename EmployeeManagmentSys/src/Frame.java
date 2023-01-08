@@ -184,11 +184,6 @@ public class Frame extends JFrame implements View, ActionListener{
         });
     }
 
-
-
-
-
-
     private void initMainMenu(){
 
 
@@ -203,8 +198,6 @@ public class Frame extends JFrame implements View, ActionListener{
         timeTracking.addActionListener(this::showTimeTrack);
         addEmp = new JMenuItem("Add New Employee");
         addEmp.addActionListener(this::addNewEmp);
-
-
 
         Employees.add(listEmp);
         Employees.add(timeTracking);

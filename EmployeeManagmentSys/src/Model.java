@@ -57,10 +57,9 @@ public class Model {
         if(WFOREQ.equals(command)){
 
         }
-        if(VACREQ.equals(command)){
+        if(VACREQ.equals(command)) {
 
         }
-        //notifyView(login(command));
     }
 
     public void login(String info) throws SQLException {
@@ -70,19 +69,32 @@ public class Model {
         String result = "";
         String[] temp = info.split(" ");
 
-        boolean b = jdbc.verifyID(Integer.parseInt(temp[0]));
+        if(temp.length < 2){
+            result = "Invalid Input";
+        }
+        else if (temp[0].equals("")){
+            result = "Invalid Input";
+        }
+        else{
+            boolean b = jdbc.verifyID(Integer.parseInt(temp[0]));
 
-        if(!b){
-            result = "Invalid Id";
-        }else if(b){
-            String pass = jdbc.getValue((Integer.parseInt(temp[0])), "idEmployee", "Password","Employee");
-            if(!pass.equals(temp[1])){
-                result = "Invalid Password";
-            }else{
-                result = "valid";
+            if(!b){
+                result = "Invalid Id";
+            }else if(b){
+                String pass = jdbc.getValue((Integer.parseInt(temp[0])), "idEmployee", "Password","Employee");
+                if(!pass.equals(temp[1])){
+                    result = "Invalid Password";
+                }else{
+                    init();
+                    result = "valid";
+                }
             }
         }
+
         notifyLoginView(result);
+    }
+
+    private void init() {
     }
 
     private void notifyView(String info){

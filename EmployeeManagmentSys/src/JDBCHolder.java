@@ -84,10 +84,7 @@ public class JDBCHolder {
     public boolean verifyID(int id) throws SQLException {
         ResultSet rs = stmt.executeQuery("SELECT idEmployee from Employee where idEmployee = " + id);
 
-        rs.next();
-        System.out.println(rs.getString(1));
-
-        if(rs !=null)
+        if(rs.next() != false)
             return true;
         return false;
     }
