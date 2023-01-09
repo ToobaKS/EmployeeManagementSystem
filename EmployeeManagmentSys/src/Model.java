@@ -27,7 +27,7 @@ public class Model {
 
     private ArrayList<HashMap> holderArray;
 
-    private HashMap<String, String> current;
+    private HashMap<HashMap, String> dataPairs = new HashMap<>();
 
     public Model(){
         views = new ArrayList<>();
@@ -122,29 +122,12 @@ public class Model {
         return receiver;
     }
 
-    public DefaultListModel listNotifications() throws SQLException {
+    public void setListNotifications() throws SQLException {
         holderArray = jdbc.getPreciseTable("Notification", "Receiver", employeeID);
-        HashMap<String,String> temp = new HashMap<>();
+    }
 
-        DefaultListModel listModel = new DefaultListModel();
-        String data = "";
-
-        if (holderArray.size() == 0){
-            data = "Nothing to show here";
-            listModel.addElement(data);
-        }else{
-            for (int i = 0; i < holderArray.size(); i++){
-                temp = holderArray.get(i);
-                data = temp.get("NotificationTitle");
-                data += " from ";
-                data += temp.get("Employee_idEmployee");
-                data += temp.get("NotificationDate");
-
-                listModel.addElement(data);
-            }
-        }
-
-        return listModel;
+    public String getEmployeeName(int employeeIdEmployee) throws SQLException {
+        return jdbc.getNameFromDB(employeeIdEmployee);
     }
 
     public ArrayList<HashMap> getHolderArray() {
@@ -152,6 +135,7 @@ public class Model {
     }
 
     public void showNotificationDetails() {
+
     }
 
     private void notifyView(String info){
@@ -199,9 +183,9 @@ public class Model {
 
     public static void main(String[] args) throws SQLException {
         Model m = new Model();
-        m.listNotifications();
         m.getReceiver(1);
     }
+
 
 
 }

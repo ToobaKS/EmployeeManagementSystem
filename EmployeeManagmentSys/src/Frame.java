@@ -177,7 +177,11 @@ public class Frame extends JFrame implements View, ActionListener{
         Notifications.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new NotificationsFrame(model, control);
+                try {
+                    new NotificationsFrame(model, control);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }
