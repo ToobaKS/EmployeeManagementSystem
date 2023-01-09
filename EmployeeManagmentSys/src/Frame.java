@@ -177,7 +177,11 @@ public class Frame extends JFrame implements View, ActionListener{
         Notifications.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new NotificationsFrame(model, control);
+                try {
+                    new NotificationsFrame(model, control);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }
@@ -255,9 +259,6 @@ public class Frame extends JFrame implements View, ActionListener{
         Salary.add(stub);
         Salary.add(cForms);
         Salary.add(benefits);
-
-
-
     }
 
     private void showView(String name) {

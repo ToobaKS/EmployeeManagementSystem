@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Model {
@@ -19,9 +20,15 @@ public class Model {
     private final List<View> views;
     private final List<LoginView> loginViews;
 
+    private String receiver = "";
     private String employeeLevel = "";
-    private int employeeID = 0;
+    private int employeeID = 2;
     private JDBCHolder jdbc;
+
+    private ArrayList<HashMap> holderArray;
+
+    private HashMap<HashMap, String> dataPairs = new HashMap<>();
+
     public Model(){
         views = new ArrayList<>();
         loginViews = new ArrayList<>();
@@ -85,7 +92,7 @@ public class Model {
                 if(!pass.equals(temp[1])){
                     result = "Invalid Password";
                 }else{
-                    init(Integer.parseInt(temp[0]));
+                    initLogin(Integer.parseInt(temp[0]));
                     result = "valid";
                 }
             }
@@ -94,7 +101,7 @@ public class Model {
         notifyLoginView(result);
     }
 
-    private void init(int id) throws SQLException {
+    private void initLogin(int id) throws SQLException {
         this.employeeID = id;
         String temp = jdbc.getValue(id, "idEmployee", "Position","Employee");
         if(temp.contains("HR")){
@@ -104,6 +111,31 @@ public class Model {
         }else{
             this.employeeLevel= "employee";
         }
+    }
+
+    public String getReceiver(int tempID) throws SQLException {
+
+        receiver = jdbc.getValue(tempID, "Employee_idEmployee", "Receiver", "Notification");
+
+        System.out.println(receiver);
+
+        return receiver;
+    }
+
+    public void setListNotifications() throws SQLException {
+        holderArray = jdbc.getPreciseTable("Notification", "Receiver", employeeID);
+    }
+
+    public String getEmployeeName(int employeeIdEmployee) throws SQLException {
+        return jdbc.getNameFromDB(employeeIdEmployee);
+    }
+
+    public ArrayList<HashMap> getHolderArray() {
+        return holderArray;
+    }
+
+    public void showNotificationDetails() {
+
     }
 
     private void notifyView(String info){
@@ -148,5 +180,12 @@ public class Model {
     public void setEmployeeID(int employeeID) {
         this.employeeID = employeeID;
     }
+
+    public static void main(String[] args) throws SQLException {
+        Model m = new Model();
+        m.getReceiver(1);
+    }
+
+
 
 }

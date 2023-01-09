@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -36,7 +37,7 @@ public class JDBCHolder {
     public String[][] getTable(String tableName) throws SQLException {
 
         String[][] table = null;
-        String sql = "select * from Employee";
+        String sql = "select * from " + tableName +";";
 
         ResultSet rs = stmt.executeQuery(sql);
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -61,6 +62,33 @@ public class JDBCHolder {
         return table;
     }
 
+
+    public ArrayList<HashMap> getPreciseTable(String tableName, String attribute, int id) throws SQLException {
+
+        ArrayList<HashMap> table = new ArrayList<>();
+
+        String sql = "select * from " + tableName + " where " + attribute +" = '" +id +"';";
+
+        ResultSet rs = stmt.executeQuery(sql);
+        ResultSetMetaData rsmd = rs.getMetaData();
+
+        int columnS = rsmd.getColumnCount();
+
+        if(rs.next() != false){
+            rs.beforeFirst();
+            while(rs.next()) {
+                HashMap<String, String> data = new HashMap<>();
+                for (int i = 1; i <= columnS; i++) {
+                    data.put(rsmd.getColumnName(i), rs.getString(i));
+                }
+                table.add(data);
+            }
+        }
+        return table;
+    }
+
+
+
     /**
      *
      * Returns the attribute wanted based on the ID entered
@@ -79,6 +107,20 @@ public class JDBCHolder {
         rs.next();
 
         return rs.getString(1);
+    }
+
+    public String getNameFromDB(int id) throws SQLException {
+        String name = "";
+
+        ResultSet rs = stmt.executeQuery("SELECT FirstName, LastName from Employee where idEmployee = " + id);
+
+        rs.next();
+
+        System.out.println(rs.getString(1));
+
+        name = rs.getString(1) + " " + rs.getString(2);
+
+        return name;
     }
 
     public boolean verifyID(int id) throws SQLException {
@@ -121,6 +163,9 @@ public class JDBCHolder {
 
         boolean temp2= j.verifyID(1);
         System.out.println(temp2);
+
+        String name = j.getNameFromDB(1);
+        System.out.println(name);
 
         j.exit();
     }
