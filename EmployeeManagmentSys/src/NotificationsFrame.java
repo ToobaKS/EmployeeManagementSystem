@@ -42,11 +42,17 @@ public class NotificationsFrame extends JFrame implements View, ActionListener {
                     for(HashMap h : notificationAttributes){
                         if(h.get("NotificationNo").equals(t)){
                             try {
-                                new NotificationDetailFrame(model, controller, h);
+                                new NotificationDetailFrame(model, controller, h, t);
                             } catch (SQLException ex) {
                                 throw new RuntimeException(ex);
                             }
                         }
+                    }
+
+                    try{
+                        notifList.clearSelection();
+                    } catch (NullPointerException exception){
+
                     }
                 }
             }
@@ -56,6 +62,10 @@ public class NotificationsFrame extends JFrame implements View, ActionListener {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setSize(600,500);
         this.setVisible(true);
+    }
+
+    private void clear(){
+        notifList.clearSelection();
     }
 
     private void init() {
@@ -92,7 +102,6 @@ public class NotificationsFrame extends JFrame implements View, ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-
     }
 
     @Override

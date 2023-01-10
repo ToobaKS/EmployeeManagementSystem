@@ -6,17 +6,6 @@ import java.util.List;
 
 public class Model {
 
-    private final String ADD = "add";                   //to add an employee
-    private final String REM = "remove";                //to remove an employee
-    private final String UPDATE = "update";             //to update the employees information
-    private final String LOGIN = "Login";               //to check the login
-    private final String ACCESS = "access";             //to check the level of access to the system
-    private final String ADDNOTE = "add note";          //to add notes to employee file
-    private final String REMNOTE = "remove note";       //to remove notes from employee file
-    private final String EQUIPREQ = "request equipment";//to request equipment
-    private final String WFOREQ = "request WFO";        //to request WFO
-    private final String VACREQ = "request vacation";   //to request vacation
-
     private final List<View> views;
     private final List<LoginView> loginViews;
 
@@ -33,40 +22,6 @@ public class Model {
         views = new ArrayList<>();
         loginViews = new ArrayList<>();
         jdbc = new JDBCHolder();
-    }
-
-    public void run(String command) throws SQLException {
-
-        if(ADD.equals(command)){
-
-        }
-        if(REM.equals(command)){
-
-        }
-        if(UPDATE.equals(command)){
-
-        }
-        if(LOGIN.equals(command.split(" ")[0])){
-
-        }
-        if(ACCESS.equals(command)){
-
-        }
-        if(ADDNOTE.equals(command)){
-
-        }
-        if(REMNOTE.equals(command)){
-
-        }
-        if(EQUIPREQ.equals(command)){
-
-        }
-        if(WFOREQ.equals(command)){
-
-        }
-        if(VACREQ.equals(command)) {
-
-        }
     }
 
     public void login(String info) throws SQLException {
@@ -134,8 +89,84 @@ public class Model {
         return holderArray;
     }
 
-    public void showNotificationDetails() {
+    public void approveRequest(String notifNo) throws SQLException {
+        HashMap<String, String> notificationRow = jdbc.getOneRow("Notification", "NotificationNo", Integer.parseInt(notifNo));
+        int requestNo = getRequestNo(notificationRow);
 
+        String attribute = notificationRow.get("RequestType") + "Status";
+        String keyAtrributeName = notificationRow.get("RequestType") + "No";
+
+        String tableName = notificationRow.get("RequestType");
+
+        if(tableName.equals("Leave")){
+            tableName = "'Leave'";
+        } else if(tableName.equals("WFO")){
+            keyAtrributeName = "CubicleID";
+        }
+
+        boolean b = jdbc.updateStringAttributes(tableName, attribute, "Approved", requestNo, keyAtrributeName);
+
+        if(b){
+            notifyView("Approved");
+        }else{
+            System.out.println(b);
+        }
+
+    }
+
+    public void rejectRequest(String notifNo) throws SQLException {
+        HashMap<String, String> notificationRow = jdbc.getOneRow("Notification", "NotificationNo", Integer.parseInt(notifNo));
+        int requestNo = getRequestNo(notificationRow);
+
+        String attribute = notificationRow.get("RequestType") + "Status";
+        String keyAtrributeName = notificationRow.get("RequestType") + "No";
+
+        String tableName = notificationRow.get("RequestType");
+
+        if(tableName.equals("Leave")){
+            tableName = "'Leave'";
+        } else if(tableName.equals("WFO")){
+            keyAtrributeName = "CubicleID";
+        }
+
+        boolean b = jdbc.updateStringAttributes(tableName, attribute, "Rejected", requestNo, keyAtrributeName);
+
+        if(!notificationRow.get("RequestType").equals("Leave")){
+            attribute = "Employee_idEmployee";
+            jdbc.updateStringAttributes(tableName, attribute, null, requestNo, keyAtrributeName);
+        }
+
+        if(b){
+            notifyView("Rejected");
+        }else{
+            System.out.println(b);
+        }
+    }
+
+    private int getRequestNo(HashMap<String, String> notificationRow){
+        String content = notificationRow.get("NotificationContent");
+        String temp[] = notificationRow.get("NotificationContent").split(" ");
+
+        String substring = content.substring(content.length() - 1, content.length());
+        System.out.println(substring);
+
+        int requestNo = Integer.parseInt(substring);
+
+        return requestNo;
+    }
+
+    public HashMap<String, String> getRow(String tableName, String keyAttributeName, int key) throws SQLException {
+        HashMap<String, String> row = jdbc.getOneRow(tableName, keyAttributeName, key);
+        return row;
+    }
+
+    public String getAttributeValue(int id, String primaryKeyAttribute, String attribute, String tableName) throws SQLException {
+        if(tableName.equals("Leave")){
+            tableName = "'Leave'";
+        }
+
+        String value = jdbc.getValue(id, primaryKeyAttribute, attribute, tableName);
+        return value;
     }
 
     private void notifyView(String info){
