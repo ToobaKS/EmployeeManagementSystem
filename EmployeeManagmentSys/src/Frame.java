@@ -12,7 +12,7 @@ public class Frame extends JFrame implements View, ActionListener{
     private JPanel FramePage;
     private JPanel MainPage;
     private JPanel menubarPanel;
-    private JButton Dashboard;
+    private JButton dashboard;
     private JPanel sidebarPanel;
     private JButton Profile;
     private JButton Notifications;
@@ -76,8 +76,29 @@ public class Frame extends JFrame implements View, ActionListener{
     private JTextField searchTextField;
     private JList formsList;
     private JLabel resultsLabel;
-    private JList list1;
-    private JList list2;
+    private JList unreadNotifList;
+    private JList tasksList;
+    private JComboBox dateCombo;
+    private JButton submit;
+    private JComboBox cubicleCombo;
+
+    private JPanel background;
+    private JPanel contactInfo;
+    private JPanel hireDetails;
+    private JButton contactDetailsButton;
+    private JTextField textField5;
+    private JTextField textField6;
+    private JTextField textField7;
+    private JTextField textField8;
+    private JTextField textField9;
+    private JTextField textField10;
+    private JButton hireDetailsButton;
+    private JButton submitNewEmp;
+    private JTextField textField11;
+    private JTextField textField12;
+    private JTextField textField13;
+    private JTextField textField14;
+    private JPanel addEmpCardLayout;
     private ArrayList<String> Names; // this array list will store the names of the employees
     //private DefaultListModel listModel;
 
@@ -95,9 +116,11 @@ public class Frame extends JFrame implements View, ActionListener{
     final static String CONTRACT_FORM = "Contract Forms";
     final static String BENEFITS = "Benefits";
     final static String ADD = "Add New Employee";
+    final static String DASHBOARD = "Dashboard";
 
-
-
+    final static String BACKGROUND = "Submit New Employee";
+    final static String CONTACTINFO = "Next: Contact Details";
+    final static String HIREDETAILS = "Next: Hire Details";
 
 
     //The models
@@ -139,6 +162,7 @@ public class Frame extends JFrame implements View, ActionListener{
         initMainMenu();
 
         // adding components to the panel
+        cardlayoutHolder.add(dashboardPage, DASHBOARD);
         cardlayoutHolder.add(listofEmployees, SHOW_LIST);
         cardlayoutHolder.add(timeTrackingPage, TIME_TRACK);
         cardlayoutHolder.add(payScalePage, PAYSCALE);
@@ -152,11 +176,21 @@ public class Frame extends JFrame implements View, ActionListener{
         cardlayoutHolder.add(payStub, PAYSTUB);
         cardlayoutHolder.add(benefitPage, BENEFITS);
         cardlayoutHolder.add(contractPage, CONTRACT_FORM);
-        cardlayoutHolder.add(newEmpPage, ADD);
+        cardlayoutHolder.add(addNewEmpPage, ADD);
+
+        addEmpCardLayout.add(background, BACKGROUND);
+        addEmpCardLayout.add(contactInfo,CONTACTINFO);
+        addEmpCardLayout.add(hireDetails,HIREDETAILS);
+
+        hireDetailsButton.addActionListener(this::showHireDetails);
+        contactDetailsButton.addActionListener(this::showContactDetails);
+        submitNewEmp.addActionListener(this::showBackground);
+
+        dashboard.doClick();
 
         //Display the window
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(500, 500);
+        this.setSize(800, 500);
         this.setContentPane(FramePage);
         this.setVisible(true);
 
@@ -188,13 +222,16 @@ public class Frame extends JFrame implements View, ActionListener{
 
     private void initMainMenu(){
 
+        dashboard.addActionListener(this::showDashboard);
 
         //Initializing the Employee DropDown Menu
         //Employees = new JMenu("Employees");
 
+
+
         listEmp = new JMenuItem("List of Employees");
         listEmp.addActionListener(this::showListEmp);
-        // add a new action listenr to add the populate list methid
+        // add a new action listener to add the populate list method
         // make sure it gets the latest list from database
         timeTracking = new JMenuItem("TimeTracking");
         timeTracking.addActionListener(this::showTimeTrack);
@@ -265,6 +302,22 @@ public class Frame extends JFrame implements View, ActionListener{
         ((CardLayout)cardlayoutHolder.getLayout()).show(cardlayoutHolder, name);
     }
 
+    private void showNewEmpView(String name) {
+        ((CardLayout)addEmpCardLayout.getLayout()).show(addEmpCardLayout, name);
+    }
+
+    public void showContactDetails(ActionEvent event) {
+        showNewEmpView(CONTACTINFO);
+    }
+    public void showBackground(ActionEvent event) {
+        showNewEmpView(BACKGROUND);
+    }
+    public void showHireDetails(ActionEvent event) {
+        showNewEmpView(HIREDETAILS);
+    }
+    public void showDashboard(ActionEvent event) {
+        showView(DASHBOARD);
+    }
 
     public void showListEmp(ActionEvent event) {
         showView(SHOW_LIST);
@@ -272,6 +325,7 @@ public class Frame extends JFrame implements View, ActionListener{
 
     public void addNewEmp(ActionEvent event) {
         showView(ADD);
+        submitNewEmp.doClick();
     }
 
     public void showTimeTrack(ActionEvent event) {
@@ -328,8 +382,8 @@ public class Frame extends JFrame implements View, ActionListener{
     }
 
     public static void main(String[] args) throws SQLException {
+        Frame f = new Frame(new Model());
     }
-
 
     @Override
     public void systemUpdate(String info) {
