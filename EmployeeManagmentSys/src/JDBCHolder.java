@@ -88,21 +88,68 @@ public class JDBCHolder {
     }
 
 
+    public HashMap getOneRow(String tableName, String primaryAttribute, int primaryKey) throws SQLException {
+
+        HashMap<String, String> data = new HashMap<>();
+
+        String sql = "select * from " + tableName + " where " + primaryAttribute +" = '" + primaryKey +"';";
+
+        ResultSet rs = stmt.executeQuery(sql);
+        ResultSetMetaData rsmd = rs.getMetaData();
+
+        int columnS = rsmd.getColumnCount();
+
+        if(rs.next() != false){
+            rs.beforeFirst();
+            while(rs.next()) {
+                for (int i = 1; i <= columnS; i++) {
+                    data.put(rsmd.getColumnName(i), rs.getString(i));
+                }
+            }
+        }
+        return data;
+    }
+
+    public boolean updateStringAttributes(String tableName, String attribute, String info, int key, String keyAttributeName) throws SQLException {
+
+        boolean update = false;
+
+        String sql= "";
+
+        if(info != null){
+            sql = "update " + tableName + " set " + attribute + " = '" + info + "' where " + keyAttributeName + " = " + key + ";";
+            stmt.executeUpdate(sql);
+            if(info.equals(getValue(key, keyAttributeName, attribute, tableName))){
+                update = true;
+            }
+
+        }else{
+            sql = "update " + tableName + " set " + attribute + " = " + info + " where " + keyAttributeName + " = " + key + ";";
+            stmt.executeUpdate(sql);
+            update = true;
+        }
+
+        return update;
+    }
 
     /**
      *
      * Returns the attribute wanted based on the ID entered
      *
      * @param id
-     * @param primaryKey
      * @param attribute
      * @param tableName
      * @return
      * @throws SQLException
      */
-    public String getValue(int id, String primaryKey, String attribute, String tableName) throws SQLException {
-        ResultSet rs = stmt.executeQuery("SELECT " + attribute + " FROM " + tableName +
-                " WHERE " + primaryKey + "= '" + id + "';");
+    public String getValue(int id, String primaryKeyAttribute, String attribute, String tableName) throws SQLException {
+
+        String sql = "SELECT " + attribute + " FROM " + tableName + " WHERE " + primaryKeyAttribute + "= " + id + ";";
+
+        System.out.println(sql);
+        ResultSet rs = stmt.executeQuery(sql);
+
+
 
         rs.next();
 
@@ -155,11 +202,8 @@ public class JDBCHolder {
 
     public static void main(String[] args) throws SQLException {
         JDBCHolder j = new JDBCHolder();
-        String[][] tempTable = j.getTable("Employee");
+        String[][] tempTable = j.getTable("'Leave'");
         System.out.println(Arrays.deepToString(tempTable));
-
-        //String temp= j.getValue(1, "id", "lName","Employee");
-       // System.out.println(temp);
 
         boolean temp2= j.verifyID(1);
         System.out.println(temp2);

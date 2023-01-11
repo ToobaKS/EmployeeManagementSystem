@@ -23,7 +23,7 @@
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints border-constraint="North"/>
             <properties>
-              <background color="-16739118"/>
+              <background color="-16738561"/>
             </properties>
             <border type="none"/>
             <children>
@@ -32,7 +32,7 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-16739118"/>
+                  <background color="-16738561"/>
                   <enabled value="true"/>
                   <font size="16" style="1"/>
                   <text value="Dashboard"/>
@@ -44,7 +44,7 @@
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-16739118"/>
+                  <background color="-16738561"/>
                   <borderPainted value="false"/>
                 </properties>
                 <border type="none"/>
@@ -55,7 +55,7 @@
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <background color="-16739118"/>
+                      <background color="-16738561"/>
                       <foreground color="-1"/>
                       <text value="Reports"/>
                     </properties>
@@ -68,7 +68,7 @@
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <background color="-16739118"/>
+                      <background color="-16738561"/>
                       <foreground color="-1"/>
                       <text value="Employees"/>
                     </properties>
@@ -81,7 +81,7 @@
                       <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <background color="-16739118"/>
+                      <background color="-16738561"/>
                       <foreground color="-1"/>
                       <text value="Projects"/>
                     </properties>
@@ -94,7 +94,7 @@
                       <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <background color="-16739118"/>
+                      <background color="-16738561"/>
                       <foreground color="-1"/>
                       <text value="Requests"/>
                     </properties>
@@ -107,7 +107,7 @@
                       <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <background color="-16739118"/>
+                      <background color="-16738561"/>
                       <foreground color="-1"/>
                       <text value="Salary"/>
                     </properties>
@@ -120,7 +120,7 @@
                       <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <background color="-16739118"/>
+                      <background color="-16738561"/>
                       <foreground color="-1"/>
                       <text value="Schedule"/>
                     </properties>

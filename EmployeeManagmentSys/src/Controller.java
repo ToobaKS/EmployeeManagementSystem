@@ -18,8 +18,23 @@ public class Controller implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
-        switch (command){
-            case "Login":
+        switch (command.split(" ")[0]){
+            case "Approve":
+                try {
+                    model.approveRequest(command.split(" ")[1]);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                break;
+            case "Reject":
+                try {
+                    model.rejectRequest(command.split(" ")[1]);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                break;
+            default:
+                break;
         }
     }
 }
