@@ -1,8 +1,6 @@
-import javax.swing.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,6 +8,8 @@ public class Model {
 
     private final List<View> views;
     private final List<LoginView> loginViews;
+
+    private static final int NUMOFCUBICLES = 20;
 
     private String receiver = "";
     private String employeeLevel = "";
@@ -19,11 +19,29 @@ public class Model {
     private ArrayList<HashMap> holderArray;
 
     private HashMap<HashMap, String> dataPairs = new HashMap<>();
+    ArrayList<Integer> cubicles;
+
+    private LocalDate todayDate;
 
     public Model(){
         views = new ArrayList<>();
         loginViews = new ArrayList<>();
         jdbc = new JDBCHolder();
+        cubicles = new ArrayList<>();
+
+        initCubicles();
+
+        todayDate = LocalDate.now();
+    }
+
+    public void initCubicles(){
+        for(int i = 1; i<= NUMOFCUBICLES; i++){
+            cubicles.add(i);
+        }
+    }
+
+    public ArrayList<Integer> getCubicles(){
+       return cubicles;
     }
 
     public void login(String info) throws SQLException {
@@ -166,7 +184,6 @@ public class Model {
 
         jdbc.insertIntoTable(sql);
     }
-
     private int getRequestNo(HashMap<String, String> notificationRow){
         String content = notificationRow.get("NotificationContent");
         String temp[] = notificationRow.get("NotificationContent").split(" ");
@@ -178,6 +195,43 @@ public class Model {
 
         return requestNo;
     }
+
+    public void sendWFONotification(String CubicleNo, String date) throws SQLException {
+        String WFOStatus = "Pending";
+        LocalDate WFODate = LocalDate.parse(date);
+        int cub = Integer.parseInt(CubicleNo);
+
+        String sql = "INSERT INTO WFO(CubicleId, WFODate, WFOStatus, Employee_idEmployee) VALUES (" + cub + ", '"
+                + WFODate + "', '" + WFOStatus + "', " + employeeID + ")";
+
+        System.out.println(sql);
+
+        jdbc.insertIntoTable(sql);
+
+        String NotificationStatus = "unread";
+        LocalDate NotificationDate = LocalDate.now();
+        String NotificationTitle = "Work From Office Request";
+        String NotificationContent = "Requesting Cubicle " + cub + " on " + WFODate + " " + cub;
+        String RequestType = "WFO";
+        int Receiver = Integer.parseInt(jdbc.getValue(employeeID, "idEmployee","Employee_idEmployee", "Employee"));
+        int Employee_idEmployee = employeeID;
+
+        sql = "INSERT INTO Notification(NotificationStatus, NotificationDate, NotificationTitle, NotificationContent, RequestType, Receiver, Employee_idEmployee) VALUES ('" + NotificationStatus + "', '"
+                + NotificationDate + "', '" + NotificationTitle + "', '" + NotificationContent + "', '"
+                + RequestType + "', " + Receiver + ", " + Employee_idEmployee + ")";
+
+        System.out.println(sql);
+
+        jdbc.insertIntoTable(sql);
+
+        notifyView("WFO Request Successfully Submitted");
+    }
+
+    public LocalDate incrementDate(LocalDate date){
+        return date.plusDays(1);
+    }
+
+
 
     public HashMap<String, String> getRow(String tableName, String keyAttributeName, int key) throws SQLException {
         HashMap<String, String> row = jdbc.getOneRow(tableName, keyAttributeName, key);
@@ -243,6 +297,8 @@ public class Model {
     public static void main(String[] args) throws SQLException {
         Model m = new Model();
         m.getReceiver(1);
+
+        m.sendWFONotification("2", String.valueOf(LocalDate.now().plusDays(1)));
     }
 
 

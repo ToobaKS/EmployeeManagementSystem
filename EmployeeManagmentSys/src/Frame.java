@@ -5,7 +5,10 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -79,7 +82,7 @@ public class Frame extends JFrame implements View, ActionListener{
     private JLabel resultsLabel;
     private JList tasksList;
     private JComboBox dateCombo;
-    private JButton submit;
+    private JButton submitWFO;
     private JComboBox cubicleCombo;
 
     private JPanel background;
@@ -140,7 +143,6 @@ public class Frame extends JFrame implements View, ActionListener{
         this.model = model;
         model.addView(this);
         this.control = new Controller(model, this);
-
 
        // testing populating table from the schema -> failed
         jdbcHolder = new JDBCHolder();
@@ -223,6 +225,7 @@ public class Frame extends JFrame implements View, ActionListener{
         });
 
         fillDashboardNotificationList();
+        initWFOPage();
 
         unreadNotesList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -247,6 +250,36 @@ public class Frame extends JFrame implements View, ActionListener{
 
                     }
                 }
+            }
+        });
+        submitWFO.addActionListener(control);
+        submitWFO.addActionListener(this);
+    }
+
+
+    private void initWFOPage(){
+        ArrayList<Integer> cubicles = model.getCubicles();
+        LocalDate date = LocalDate.now();
+
+        for(int i = 1; i < 7; i++){
+            dateCombo.addItem(date);
+            date = model.incrementDate(date);
+        }
+
+        for(Integer i : cubicles){
+            cubicleCombo.addItem(i);
+        }
+
+        dateCombo.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
+            }
+        });
+        cubicleCombo.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
             }
         });
     }
@@ -445,6 +478,7 @@ public class Frame extends JFrame implements View, ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        submitWFO.setActionCommand("submit " + "2 " + String.valueOf(LocalDate.now()));
     }
 
     public static void main(String[] args) throws SQLException {
@@ -453,5 +487,8 @@ public class Frame extends JFrame implements View, ActionListener{
 
     @Override
     public void systemUpdate(String info) {
+        if(info.contains("WFO")){
+            JOptionPane.showMessageDialog(this, info);
+        }
     }
 }
