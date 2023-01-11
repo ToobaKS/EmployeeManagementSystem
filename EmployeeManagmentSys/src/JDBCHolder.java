@@ -7,8 +7,6 @@ import java.util.HashMap;
 public class JDBCHolder {
     //private HashMap<String,String> table=new HashMap<String,String>();
 
-
-
     static Connection connection = null;
     static String databaseName = "mydb";
     static String url = "jdbc:mysql://database-ems.csd6bruhg1kp.ca-central-1.rds.amazonaws.com:3306/" + databaseName;
@@ -175,6 +173,14 @@ public class JDBCHolder {
 
         if(rs.next() != false)
             return true;
+        return false;
+    }
+
+    public boolean insertIntoTable(String sql) throws SQLException {
+        boolean result = false;
+
+        stmt.executeUpdate(sql);
+
         return false;
     }
 

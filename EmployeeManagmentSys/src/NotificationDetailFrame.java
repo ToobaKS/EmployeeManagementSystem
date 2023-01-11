@@ -96,7 +96,7 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
     }
 
     private void updateNotifStatus() throws SQLException {
-        model.updateAttribute("Notification", "NotificationStatus", "read", notifNo, "NotifictationNo");
+        model.updateAttribute("Notification", "NotificationStatus", "read", notifNo, "NotificationNo");
     }
 
     private void disableButtons(){
