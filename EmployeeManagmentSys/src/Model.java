@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -147,7 +149,22 @@ public class Model {
         sendNotificationResponse(notificationRow, "Rejected");
     }
 
-    private void sendNotificationResponse(HashMap<String, String> notificationRow, String Status) {
+    private void sendNotificationResponse(HashMap<String, String> notificationRow, String Status) throws SQLException {
+        String NotificationStatus = "unread";
+        LocalDate NotificationDate = LocalDate.now();
+        String NotificationTitle = "Response to " + notificationRow.get("RequestType") + " Request";
+        String NotificationContent = "The following Request has been " + Status + ": " + notificationRow.get("NotificationContent") + " 0";
+        String RequestType = "Request Update";
+        String Receiver = notificationRow.get("Employee_idEmployee");
+        String Employee_idEmployee = notificationRow.get("Receiver");
+
+        String sql = "INSERT INTO Notification(NotificationStatus, NotificationDate, NotificationTitle, NotificationContent, RequestType, Receiver, Employee_idEmployee) VALUES ('" + NotificationStatus + "', '"
+                + NotificationDate + "', '" + NotificationTitle + "', '" + NotificationContent + "', '"
+                + RequestType + "', " + Receiver + ", " + Employee_idEmployee + ")";
+
+        System.out.println(sql);
+
+        jdbc.insertIntoTable(sql);
     }
 
     private int getRequestNo(HashMap<String, String> notificationRow){
