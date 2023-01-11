@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Frame extends JFrame implements View, ActionListener{
     private JPanel FramePage;
@@ -76,7 +77,6 @@ public class Frame extends JFrame implements View, ActionListener{
     private JTextField searchTextField;
     private JList formsList;
     private JLabel resultsLabel;
-    private JList unreadNotifList;
     private JList tasksList;
     private JComboBox dateCombo;
     private JButton submit;
@@ -99,6 +99,7 @@ public class Frame extends JFrame implements View, ActionListener{
     private JTextField textField13;
     private JTextField textField14;
     private JPanel addEmpCardLayout;
+    private JList unreadNotesList;
     private ArrayList<String> Names; // this array list will store the names of the employees
     //private DefaultListModel listModel;
 
@@ -130,7 +131,9 @@ public class Frame extends JFrame implements View, ActionListener{
     private JDBCHolder jdbcHolder;
     private List list;
 
-    public Frame(Model model) {
+    ArrayList<HashMap> notificationAttributes = new ArrayList<>();
+
+    public Frame(Model model) throws SQLException {
         super("ERP");
 
         //establishing communication to model and controller
@@ -218,7 +221,70 @@ public class Frame extends JFrame implements View, ActionListener{
                 }
             }
         });
+
+        fillDashboardNotificationList();
+
+        unreadNotesList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    String data = unreadNotesList.getSelectedValue().toString();
+                    String t = String.valueOf(data.charAt(data.length()-2));
+
+                    for(HashMap h : notificationAttributes){
+                        if(h.get("NotificationNo").equals(t)){
+                            try {
+                                new NotificationDetailFrame(model, control, h, t);
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+                    }
+
+                    try{
+                        unreadNotesList.clearSelection();
+                    } catch (NullPointerException exception){
+
+                    }
+                }
+            }
+        });
     }
+
+    private void fillDashboardNotificationList() throws SQLException {
+        model.setListNotifications();
+        notificationAttributes = model.getHolderArray();
+        try {
+
+            HashMap<String,String> temp = new HashMap<>();
+
+            DefaultListModel listModel = new DefaultListModel();
+            String data = "";
+
+            if (notificationAttributes.size() == 0){
+                data = "Nothing to show here";
+                listModel.addElement(data);
+            }else{
+                for (int i = 0; i < notificationAttributes.size(); i++){
+                    temp = notificationAttributes.get(i);
+                    if(temp.get("NotificationStatus").equals("unread")){
+                        data = temp.get("NotificationTitle");
+                        data += " from ";
+                        data += model.getEmployeeName(Integer.parseInt(temp.get("Employee_idEmployee")));
+                        data += " (Notification Id: " + temp.get("NotificationNo") + ")";
+                        listModel.addElement(data);
+                    }
+
+                }
+            }
+
+            unreadNotesList.setModel(listModel);
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
 
     private void initMainMenu(){
 
