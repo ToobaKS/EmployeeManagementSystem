@@ -5,8 +5,12 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Frame extends JFrame implements View, ActionListener{
     private JPanel FramePage;
@@ -76,10 +80,9 @@ public class Frame extends JFrame implements View, ActionListener{
     private JTextField searchTextField;
     private JList formsList;
     private JLabel resultsLabel;
-    private JList unreadNotifList;
     private JList tasksList;
     private JComboBox dateCombo;
-    private JButton submit;
+    private JButton submitWFO;
     private JComboBox cubicleCombo;
 
     private JPanel background;
@@ -99,6 +102,7 @@ public class Frame extends JFrame implements View, ActionListener{
     private JTextField textField13;
     private JTextField textField14;
     private JPanel addEmpCardLayout;
+    private JList unreadNotesList;
     private ArrayList<String> Names; // this array list will store the names of the employees
     //private DefaultListModel listModel;
 
@@ -130,14 +134,15 @@ public class Frame extends JFrame implements View, ActionListener{
     private JDBCHolder jdbcHolder;
     private List list;
 
-    public Frame(Model model) {
+    ArrayList<HashMap> notificationAttributes = new ArrayList<>();
+
+    public Frame(Model model) throws SQLException {
         super("ERP");
 
         //establishing communication to model and controller
         this.model = model;
         model.addView(this);
         this.control = new Controller(model, this);
-
 
        // testing populating table from the schema -> failed
         jdbcHolder = new JDBCHolder();
@@ -218,7 +223,101 @@ public class Frame extends JFrame implements View, ActionListener{
                 }
             }
         });
+
+        fillDashboardNotificationList();
+        initWFOPage();
+
+        unreadNotesList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    String data = unreadNotesList.getSelectedValue().toString();
+                    String t = String.valueOf(data.charAt(data.length()-2));
+
+                    for(HashMap h : notificationAttributes){
+                        if(h.get("NotificationNo").equals(t)){
+                            try {
+                                new NotificationDetailFrame(model, control, h, t);
+                            } catch (SQLException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                        }
+                    }
+
+                    try{
+                        unreadNotesList.clearSelection();
+                    } catch (NullPointerException exception){
+
+                    }
+                }
+            }
+        });
+        submitWFO.addActionListener(control);
+        submitWFO.addActionListener(this);
     }
+
+
+    private void initWFOPage(){
+        ArrayList<Integer> cubicles = model.getCubicles();
+        LocalDate date = LocalDate.now();
+
+        for(int i = 1; i < 7; i++){
+            dateCombo.addItem(date);
+            date = model.incrementDate(date);
+        }
+
+        for(Integer i : cubicles){
+            cubicleCombo.addItem(i);
+        }
+
+        dateCombo.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
+            }
+        });
+        cubicleCombo.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+
+            }
+        });
+    }
+
+    private void fillDashboardNotificationList() throws SQLException {
+        model.setListNotifications();
+        notificationAttributes = model.getHolderArray();
+        try {
+
+            HashMap<String,String> temp = new HashMap<>();
+
+            DefaultListModel listModel = new DefaultListModel();
+            String data = "";
+
+            if (notificationAttributes.size() == 0){
+                data = "Nothing to show here";
+                listModel.addElement(data);
+            }else{
+                for (int i = 0; i < notificationAttributes.size(); i++){
+                    temp = notificationAttributes.get(i);
+                    if(temp.get("NotificationStatus").equals("unread")){
+                        data = temp.get("NotificationTitle");
+                        data += " from ";
+                        data += model.getEmployeeName(Integer.parseInt(temp.get("Employee_idEmployee")));
+                        data += " (Notification Id: " + temp.get("NotificationNo") + ")";
+                        listModel.addElement(data);
+                    }
+
+                }
+            }
+
+            unreadNotesList.setModel(listModel);
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
 
     private void initMainMenu(){
 
@@ -379,6 +478,7 @@ public class Frame extends JFrame implements View, ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        submitWFO.setActionCommand("submit " + "2 " + String.valueOf(LocalDate.now()));
     }
 
     public static void main(String[] args) throws SQLException {
@@ -387,5 +487,8 @@ public class Frame extends JFrame implements View, ActionListener{
 
     @Override
     public void systemUpdate(String info) {
+        if(info.contains("WFO")){
+            JOptionPane.showMessageDialog(this, info);
+        }
     }
 }

@@ -2,6 +2,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class Controller implements ActionListener{
 
@@ -30,6 +31,16 @@ public class Controller implements ActionListener{
                 try {
                     model.rejectRequest(command.split(" ")[1]);
                 } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                break;
+            case "submit":
+                System.out.println(command.split(" ")[0]);
+
+                try {
+                    model.sendWFONotification("2", String.valueOf(LocalDate.now()));
+                } catch (SQLException ex) {
+                    System.out.println("Here");
                     throw new RuntimeException(ex);
                 }
                 break;

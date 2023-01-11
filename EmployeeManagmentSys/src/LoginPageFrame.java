@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class LoginPageFrame extends JFrame implements LoginView{
     private JPanel mainPanel;
@@ -46,7 +47,11 @@ public class LoginPageFrame extends JFrame implements LoginView{
     public void systemUpdate(String info) {
         if(info.equals("valid")){
             this.dispose();
-            Frame f = new Frame(model);
+            try {
+                Frame f = new Frame(model);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         } else{
             JOptionPane.showMessageDialog(this, info);
         }
