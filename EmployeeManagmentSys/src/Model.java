@@ -112,6 +112,8 @@ public class Model {
             System.out.println(b);
         }
 
+        sendNotificationResponse(notificationRow, "Approved");
+
     }
 
     public void rejectRequest(String notifNo) throws SQLException {
@@ -141,6 +143,11 @@ public class Model {
         }else{
             System.out.println(b);
         }
+
+        sendNotificationResponse(notificationRow, "Rejected");
+    }
+
+    private void sendNotificationResponse(HashMap<String, String> notificationRow, String Status) {
     }
 
     private int getRequestNo(HashMap<String, String> notificationRow){
@@ -158,6 +165,10 @@ public class Model {
     public HashMap<String, String> getRow(String tableName, String keyAttributeName, int key) throws SQLException {
         HashMap<String, String> row = jdbc.getOneRow(tableName, keyAttributeName, key);
         return row;
+    }
+
+    public void updateAttribute(String tableName, String attribute, String info, int key, String keyAttributeName) throws SQLException {
+        jdbc.updateStringAttributes(tableName, attribute, info, key, keyAttributeName);
     }
 
     public String getAttributeValue(int id, String primaryKeyAttribute, String attribute, String tableName) throws SQLException {

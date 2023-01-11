@@ -160,18 +160,23 @@
           <size top="10" left="0" bottom="10" right="0"/>
         </border>
         <children>
-          <component id="88246" class="javax.swing.JTextArea" binding="notifContent">
+          <scrollpane id="ead90">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="150" height="50"/>
-              </grid>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties>
-              <editable value="false"/>
-              <font name="Consolas" size="12"/>
-              <text value=""/>
-            </properties>
-          </component>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="88246" class="javax.swing.JTextArea" binding="notifContent">
+                <constraints/>
+                <properties>
+                  <editable value="false"/>
+                  <font name="Consolas" size="12"/>
+                  <text value=""/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </grid>
     </children>

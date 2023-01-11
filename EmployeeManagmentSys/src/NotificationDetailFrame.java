@@ -19,14 +19,14 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
     private Model model;
     private Controller controller;
     private HashMap<String, String> info;
-    private String notifNo; //primary key identifying the notification
+    private int notifNo; //primary key identifying the notification
     private int requestNo; //primary key identifying the row in the respective request table
     public NotificationDetailFrame(Model model, Controller controller, HashMap info, String notifNo) throws SQLException {
 
         this.model = model;
         this.controller = controller;
         this.info = info;
-        this.notifNo = notifNo;
+        this.notifNo = Integer.parseInt(notifNo);
 
         model.addView(this);
 
@@ -64,6 +64,8 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
         notifType.setText("Subject: " + info.get("RequestType"));
         notifDate.setText("Date Received: " + info.get("NotificationDate").split(" ")[0]);
 
+        updateNotifStatus();
+
         if(requestNo == 0){
             System.out.println(info.get("got here"));
 
@@ -91,6 +93,10 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
                 disableButtons();
             }
         }
+    }
+
+    private void updateNotifStatus() throws SQLException {
+        model.updateAttribute("Notification", "NotificationStatus", "read", notifNo, "NotifictationNo");
     }
 
     private void disableButtons(){
