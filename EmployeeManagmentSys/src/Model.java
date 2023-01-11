@@ -24,10 +24,16 @@ public class Model {
     private Date endDate;
     private String vacationStatus;
     private String notificationStatus;
-    private Date notificationDate;
+    private java.sql.Date notificationDate;
     private String notificationTitle;
     private String notificationContent;
     private String requestType;
+    private int reciver;
+    private String EquipmentType;
+
+
+
+
 
 
 
@@ -41,6 +47,19 @@ public class Model {
         views = new ArrayList<>();
         loginViews = new ArrayList<>();
         jdbc = new JDBCHolder();
+        long millis = System.currentTimeMillis();
+        this.notificationDate = new java.sql.Date(millis);
+
+    }
+
+
+    public void setNotificationDate(java.sql.Date notificationDate){
+        this.notificationDate = notificationDate;
+
+    }
+
+    public java.sql.Date getNotificationDate (){
+        return notificationDate;
     }
 
     public void run(String command) throws SQLException {
@@ -89,23 +108,85 @@ public class Model {
     private String notificationContent;
     private String requestType;
      */
-/*
-    // logic to insert data into both vacation and notification table
-    public void saveToLeaveTable(String LeaveType, int LeaveDays, Date StartDate,Date endDate, String vacationStatus, String notificationStatus,   ){
+
+    // logic to insert data into both leave and notification table
+    //not working
+    public void saveToLeaveTable(String LeaveType, int LeaveDays, Date StartDate,Date endDate,  int employeeID){
+
+        this.LeaveType = LeaveType;
+        this.LeaveDays = LeaveDays;
+        this.StartDate = StartDate;
+        this.endDate = endDate;
+        String LeaveStatus = "Pending";
+        String notificationStatus ="unread";
+        java.sql.Date notificationDate = getNotificationDate();
+        String notificationTitle = "Leave Request";
+        String notificationContent;
+        String requestType = "Leave";
+        this.employeeID = employeeID;
+
+
+
 
         try{
 
-            //jdbc.insertData("insert into Leave(LeaveType, LeaveDays, LeaveStartDate, LeaveEndDate, LeaveStatus, Employee_idEmployee )"+
-                    //"Values ('"+ + ","+  "')");
 
+            String temp = "insert into `Leave`(LeaveType, LeaveDays, LeaveStartDate, LeaveEndDate, LeaveStatus, Employee_idEmployee )"+
+                    " Values ('"+ LeaveType+ "',"+ LeaveDays +",'" + StartDate + "','"+ endDate + "','"+ LeaveStatus +"',"+ employeeID +")";
 
+            jdbc.insertData(temp);
+
+            notificationContent = employeeID + " has requested " + requestType+ " for" + LeaveDays + " from" + StartDate + " to " + endDate + "Status of request" + LeaveStatus;
+            //reciver is the manager
+            String reciver1 = jdbc.getValue(employeeID, "idEmployee","Employee_idEmployee", "Employee");
+            int reciver = Integer.parseInt(reciver1);
+            String temp2 = "insert into Notification(NotificationStatus, NotificationDate, NotificationTitle, NotificationContent, RequestType, Receiver, Employee_idEmployee)"+
+                    " Values ('" + notificationStatus + "','" + notificationDate + "','"+ notificationTitle + "','" + notificationContent + "','"+ requestType + "',"+ reciver + "," + employeeID + ")";
+
+            jdbc.insertData(temp2);
             System.out.println("submitted to database");
 
         }catch (Exception e){
             JOptionPane.showMessageDialog(null,e);
         }
+
+        notifyView();
+
     }
-*/
+
+
+
+    public void saveToEquipmentTable(String EquipmentType,int employeeID){
+        this.employeeID = employeeID;
+        this.EquipmentType = EquipmentType;
+        String requestType = "Equipment";
+        String notificationTitle = "Equipment Request";
+        String notificationStatus ="unread";
+
+        try{
+
+            String temp3 = "update Equipment " + "set Employee_idEmployee = " + employeeID + " where EquipmentType = " + "'"+ EquipmentType + "'";
+            jdbc.insertData(temp3);
+
+            System.out.println(temp3);
+
+            notificationContent = employeeID + "has requested" + requestType + "For Equipment" + EquipmentType;
+            String reciver1 = jdbc.getValue(employeeID, "idEmployee","Employee_idEmployee", "Employee");
+            int reciver = Integer.parseInt(reciver1);
+            String temp2 = "insert into Notification(NotificationStatus, NotificationDate, NotificationTitle, NotificationContent, RequestType, Receiver, Employee_idEmployee)"+
+                    " Values ('" + notificationStatus + "','" + notificationDate + "','"+ notificationTitle + "','" + notificationContent + "','"+ requestType + "',"+ reciver + "," + employeeID + ")";
+
+            jdbc.insertData(temp2);
+            System.out.println("submitted to database");
+
+
+
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null,e);
+        }
+    }
+
+
     public void login(String info) throws SQLException {
 
         System.out.println(info);
@@ -150,12 +231,6 @@ public class Model {
         }
     }
 
-    private void notifyView(String info){
-        for (View view : views) {
-            view.systemUpdate(info);
-        }
-    }
-
     public void addView(View view) {
         views.add(view);
     }
@@ -167,6 +242,12 @@ public class Model {
     public void notifyLoginView(String info) {
         for (LoginView view : loginViews) {
             view.systemUpdate(info);
+        }
+    }
+
+    public void notifyView() {
+        for (View view : views) {
+            //view.systemUpdate(info);
         }
     }
 

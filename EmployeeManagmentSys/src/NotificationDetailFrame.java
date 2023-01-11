@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class NotificationDetailFrame extends JFrame implements View {
+public class NotificationDetailFrame extends JFrame {
     private JPanel mainPanel;
     private JButton approveButton;
     private JButton rejectButton;
@@ -15,7 +15,7 @@ public class NotificationDetailFrame extends JFrame implements View {
 
         this.model = model;
         this.controller = controller;
-        model.addView(this);
+        //model.addView(this);
 
         this.add(mainPanel);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -23,10 +23,9 @@ public class NotificationDetailFrame extends JFrame implements View {
         this.setVisible(true);
     }
 
-    @Override
-    public void systemUpdate(String info) {
 
-    }
+
+
 
     public static void main(String[] args) {
         NotificationDetailFrame start = new NotificationDetailFrame(new Model(), new Controller(new Model(), null));

@@ -14,6 +14,7 @@ public class JDBCHolder {
     static String username = "team24TZ";
     static String password = "erp1998TZ";
 
+
     private Statement stmt = null;
     public JDBCHolder(){
         initializer();
@@ -81,6 +82,17 @@ public class JDBCHolder {
         return rs.getString(1);
     }
 
+
+    public int getEmpID(int id, String tableName, String name, String empName) throws SQLException {
+        ResultSet rs = stmt.executeQuery("SELECT " + id + " FROM " + tableName +  " WHERE " + name + "= '" + empName + "';");
+
+        //" WHERE " + primaryKey + "= '" + id + "';");
+
+        rs.next();
+
+        return rs.getRow();
+    }
+
     public boolean verifyID(int id) throws SQLException {
         ResultSet rs = stmt.executeQuery("SELECT idEmployee from Employee where idEmployee = " + id);
 
@@ -125,6 +137,8 @@ public class JDBCHolder {
 
         boolean temp2= j.verifyID(1);
         System.out.println(temp2);
+
+
 
         j.exit();
     }

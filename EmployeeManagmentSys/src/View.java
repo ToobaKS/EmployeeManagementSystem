@@ -1,3 +1,13 @@
+import java.util.Date;
+
 public interface View {
-    void systemUpdate(String info);
+
+
+    String getLeaveType();
+    String getEquipmentType();
+    java.sql.Date getStartDate();
+    java.sql.Date getEndDate();
+    int getLeaveDays();
+
 }
+

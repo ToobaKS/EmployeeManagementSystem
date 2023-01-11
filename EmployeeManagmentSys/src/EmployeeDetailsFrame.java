@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class EmployeeDetailsFrame extends JFrame implements ActionListener {
 
@@ -42,6 +43,31 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
     private JComboBox comboBox1;
     private JComboBox comboBox3;
     private JButton filter;
+    private JTextField firstNametextField;
+    private JTextField empNumTextField;
+    private JTextField middleNameTextField;
+    private JTextField DepartmentTestField;
+    private JTextField LastNametextField;
+    private JTextField PositiontextField;
+    private JTextField EmailtextField;
+    private JTextField BirthdaytextField;
+    private JTextField phoneNumtextField;
+    private JTextField hireDatetextField;
+    private JTextField AddresstextField;
+    private JTextField SalarytextField;
+    private JLabel firstNamelabel;
+    private JLabel middlenameLabel;
+    private JLabel lastNameLabel;
+    private JLabel empIDLabel;
+    private JLabel departmentLabel;
+    private JLabel PositionLabel;
+    private JLabel emailLabel;
+    private JLabel phoneNumLabel;
+    private JLabel addressLabel;
+    private JLabel birthdayLabel;
+    private JLabel hireDateLabel;
+    private JLabel salaryLabel;
+    private String name;
 
 
     //Constants
@@ -51,13 +77,25 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
     final static String TIMEP = "Time Cards";
     final static String BENEFITSP = "Benefits";
 
-    public EmployeeDetailsFrame(Model model) {
+    private JDBCHolder jdbcHolder;
+    private Frame frame;
+
+
+    public EmployeeDetailsFrame(Model model, String name) throws SQLException {
         super("Employee Information");
 
         this.model = model;
+        employeeName.setText(name);
+        jdbcHolder = new JDBCHolder();
+        jdbcHolder.initializer();
+        frame = new Frame(model);
+
+
+
 
         initMenu();
         initPage();
+        fillEmPDetails();
 
         this.add(mainPanel);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -72,7 +110,7 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
     }
     private void initMenu() {
 
-        employeeName.setText("Tooba");
+        //employeeName.setText("Tooba");
 
         details.addActionListener(this::showPage);
         notes.addActionListener(this::showPage);
@@ -81,6 +119,23 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
         benefits.addActionListener(this::showPage);
     }
 
+
+    private void fillEmPDetails() throws SQLException {
+
+
+
+        firstNametextField.setText(jdbcHolder.getValue(1, "idEmployee","FirstName", "Employee"));
+        //middleNameTextField.setText(jdbcHolder.getValue(idEmployee, "idEmployee","MiddleName", "Employee"));
+        //LastNametextField.setText(jdbcHolder.getValue(, "idEmployee","LastName", "Employee"));
+
+
+        // get the first, midde,  and last name from the jlist
+
+        // use one of the names to find the id
+        // use the id to get the rest of the information
+
+
+    }
     private void initPage() {
         // adding components to the panel
         page.add(detailsPage, DETAILS);
@@ -99,13 +154,19 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
 
     }
 
+
+    public String getName(){
+        return name;
+    }
+
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
     }
 
-    public static void main(String[] args) {
-        EmployeeDetailsFrame start = new EmployeeDetailsFrame(new Model());
+    public static void main(String[] args) throws SQLException {
+        EmployeeDetailsFrame start = new EmployeeDetailsFrame(new Model(), "");
     }
 
 }

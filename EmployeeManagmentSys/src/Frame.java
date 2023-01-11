@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class Frame extends JFrame implements View, ActionListener{
+public class Frame extends JFrame implements View {
     private JPanel FramePage;
     private JPanel MainPage;
     private JPanel menubarPanel;
@@ -77,13 +77,13 @@ public class Frame extends JFrame implements View, ActionListener{
     private JTextField textField5;
     private JComboBox EqVersionComboBox;
     private JTextField StartTextField;
-    private JLabel totalHoursLabel;
     private JTextField TotalDaysTextField;
     private JTextField endTextField;
     private JTextField totalDaysText;
     private JTextField EqVerText;
     private JTable linksTable;
     private ArrayList<String> Names; // this array list will store the names of the employees
+    private String name;
     //private DefaultListModel listModel;
 
     final static String SHOW_LIST = "listEmp";
@@ -102,21 +102,24 @@ public class Frame extends JFrame implements View, ActionListener{
     final static String ADD = "Add New Employee";
 
 
-
-
     //The models
     private Model model;
     private Table table;
     private Table table2;
     private JDBCHolder jdbcHolder;
     private List list;
+    private Controller control;
 
     public Frame(Model model) throws SQLException {
         super("ERP");
         this.model = model;
         model.addView(this);
+        control = new Controller(model, this);
 
-
+        // creates instance of JButton
+        //login.addActionListener(this);
+        submitButton.addActionListener(control);
+        EqSubmitButton.addActionListener(control);
 
         jdbcHolder = new JDBCHolder();
         jdbcHolder.initializer();
@@ -127,6 +130,8 @@ public class Frame extends JFrame implements View, ActionListener{
         //T4Table.setModel(table);
         //T4Table.setFillsViewportHeight(true);
         //T4Table.setVisible(true);
+        int idEmployee = 0;
+
 
 
         // did not work!
@@ -147,6 +152,7 @@ public class Frame extends JFrame implements View, ActionListener{
 
 
 
+
         // adding components to the panel
         cardlayoutHolder.add(listofEmployees, SHOW_LIST);
         cardlayoutHolder.add(timeTrackingPage, TIME_TRACK);
@@ -164,8 +170,6 @@ public class Frame extends JFrame implements View, ActionListener{
         cardlayoutHolder.add(newEmpPage, ADD);
 
 
-
-
         //listSelection Listener
         empList.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -176,28 +180,19 @@ public class Frame extends JFrame implements View, ActionListener{
                     int empNumber = empList.getSelectedIndex();
                     System.out.println(empNumber);
                     if (empNumber >= 0) {
-                        EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model);
+                        try {
+                            EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model, (String)(empList.getSelectedValue()));
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                        //myEmpFrame.setName();
                     }
                 }
             }
         });
 
-        // action listener for the button
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //saveToLeaveTable();
 
-            }
-        });
 
-        EqSubmitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveToEquipmentTable();
-
-            }
-        });
 
         //Display the window
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -206,28 +201,50 @@ public class Frame extends JFrame implements View, ActionListener{
         this.setVisible(true);
 
 
+    }
+
+
+
+    public void setName(String name){
+        this.name = (String)empList.getSelectedValue();
+
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public int getlistID() throws SQLException {
+
+        int idEmployee=0;
+        //int result = 0;
+        String[] temp2 = ((String)(empList.getSelectedValue())).split(" ");
+        int temp = jdbcHolder.getEmpID(idEmployee, "Employee","FirstName",temp2[1]);
+
+        return temp;
 
     }
 
 
 
 
-
-    private void saveToEquipmentTable(){
+/*
+    private void saveToEquipmentTable() {
         // unfinished: need the current employee logged into the system to set the value
-        try{
+        try {
 
-            jdbcHolder.insertData("insert into Equipment(Employee_idEmployee)"+
-                    "Values ('"+ 8 + "')");
+            jdbcHolder.insertData("insert into Equipment(Employee_idEmployee)" +
+                    "Values ('" + 8 + "')");
             System.out.println("submitted to database");
 
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(null,e);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
         }
     }
+*/
 
 
-    private void initComboBox(){
+    private void initComboBox() {
         //adding items to the vacation combobox
         vacationComboBox.addItem("Paid time off leave");
         vacationComboBox.addItem("Sick leave");
@@ -254,7 +271,8 @@ public class Frame extends JFrame implements View, ActionListener{
 
 
     }
-    private void initMainMenu(){
+
+    private void initMainMenu() {
 
 
         //Initializing the Employee DropDown Menu
@@ -268,7 +286,6 @@ public class Frame extends JFrame implements View, ActionListener{
         timeTracking.addActionListener(this::showTimeTrack);
         addEmp = new JMenuItem("Add New Employee");
         addEmp.addActionListener(this::addNewEmp);
-
 
 
         Employees.add(listEmp);
@@ -331,11 +348,12 @@ public class Frame extends JFrame implements View, ActionListener{
         Salary.add(benefits);
 
 
-
     }
 
+
+
     private void showView(String name) {
-        ((CardLayout)cardlayoutHolder.getLayout()).show(cardlayoutHolder, name);
+        ((CardLayout) cardlayoutHolder.getLayout()).show(cardlayoutHolder, name);
     }
 
 
@@ -379,7 +397,7 @@ public class Frame extends JFrame implements View, ActionListener{
         showView(EQUIPMENT_REQUESTS);
     }
 
-    public void showT4(ActionEvent event)  {
+    public void showT4(ActionEvent event) {
 
         // this is to make sure that we reload the table everythime we click the menu item to get the latest data not when we open the frame
         try {
@@ -393,7 +411,7 @@ public class Frame extends JFrame implements View, ActionListener{
             linksTable.setVisible(true);
 
             System.out.println("IN Show T4");
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("something happened.");
         }
         showView(T4_FORM);
@@ -413,33 +431,40 @@ public class Frame extends JFrame implements View, ActionListener{
     }
 
 
-    public void systemUpdate(String command, String info) {
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
-
-
 
 
     public static void main(String[] args) throws SQLException {
         Frame myManagerFrame = new Frame(new Model());
 
 
-
     }
 
 
     @Override
-    public void systemUpdate(String info) {
-
+    public String getLeaveType() {
+        return String.valueOf(vacationComboBox.getSelectedItem());
     }
 
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
+    public String getEquipmentType(){
+        return String.valueOf(EquipmentType.getSelectedItem());
+    }
+
+    @Override
+    public Date getStartDate() {
+        return Date.valueOf(StartTextField.getText());
+    }
+
+    @Override
+    public Date getEndDate() {
+        return Date.valueOf(endTextField.getText());
+    }
+
+    @Override
+    public int getLeaveDays() {
+        return Integer.parseInt(TotalDaysTextField.getText());
     }
 }
+
+
+
+
