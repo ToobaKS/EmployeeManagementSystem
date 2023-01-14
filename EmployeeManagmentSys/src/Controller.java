@@ -22,9 +22,11 @@ public class Controller implements ActionListener{
         switch (command){
             case "Submit":
                 vacationRequest();
+                break;
 
             case "Submit Equipment":
                 EquipmentRequest();
+                break;
 
         }
     }
@@ -42,7 +44,8 @@ public class Controller implements ActionListener{
     private void EquipmentRequest(){
         String EquipmentType = view.getEquipmentType();
         int employeeID = model.getEmployeeID();
-        model.saveToEquipmentTable(EquipmentType,employeeID);
+        String EquipmentVersion = view.getEquipmentVer();
+        model.saveToEquipmentTable(EquipmentType,employeeID,EquipmentVersion);
     }
 
 

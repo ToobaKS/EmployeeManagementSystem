@@ -97,6 +97,7 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="First Name"/>
                 </properties>
               </component>
@@ -106,13 +107,17 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="fa389" class="javax.swing.JLabel" binding="empIDLabel">
                 <constraints>
                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="Employee Number"/>
                 </properties>
               </component>
@@ -122,13 +127,17 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="2e87e" class="javax.swing.JLabel" binding="middlenameLabel">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="Middle Name"/>
                 </properties>
               </component>
@@ -138,13 +147,17 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="6d6cd" class="javax.swing.JLabel" binding="departmentLabel">
                 <constraints>
                   <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="Department"/>
                 </properties>
               </component>
@@ -154,13 +167,17 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="44bf9" class="javax.swing.JLabel" binding="lastNameLabel">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="Last Name"/>
                 </properties>
               </component>
@@ -170,13 +187,17 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="6765f" class="javax.swing.JLabel" binding="PositionLabel">
                 <constraints>
                   <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="Position"/>
                 </properties>
               </component>
@@ -186,13 +207,17 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="d8182" class="javax.swing.JLabel" binding="emailLabel">
                 <constraints>
                   <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="Email"/>
                 </properties>
               </component>
@@ -202,13 +227,17 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="d3559" class="javax.swing.JLabel" binding="birthdayLabel">
                 <constraints>
                   <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="Date of Birth"/>
                 </properties>
               </component>
@@ -218,13 +247,17 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="e355d" class="javax.swing.JLabel" binding="phoneNumLabel">
                 <constraints>
                   <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="Phone Number"/>
                 </properties>
               </component>
@@ -234,13 +267,17 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="fa6fd" class="javax.swing.JLabel" binding="hireDateLabel">
                 <constraints>
                   <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="Hire Date"/>
                 </properties>
               </component>
@@ -250,13 +287,17 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="4105e" class="javax.swing.JLabel" binding="addressLabel">
                 <constraints>
                   <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="Address"/>
                 </properties>
               </component>
@@ -266,7 +307,10 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="e439e" class="javax.swing.JTextField" binding="SalarytextField">
                 <constraints>
@@ -274,28 +318,30 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
-              </component>
-              <component id="6417f" class="javax.swing.JSeparator">
-                <constraints>
-                  <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties/>
-              </component>
-              <component id="b8a1e" class="javax.swing.JSeparator">
-                <constraints>
-                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties/>
+                <properties>
+                  <background color="-1710619"/>
+                  <foreground color="-16777216"/>
+                </properties>
               </component>
               <component id="5aff6" class="javax.swing.JLabel" binding="salaryLabel">
                 <constraints>
                   <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <foreground color="-16777216"/>
                   <text value="Salary"/>
                 </properties>
               </component>
+              <vspacer id="973b5">
+                <constraints>
+                  <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </vspacer>
+              <vspacer id="dd136">
+                <constraints>
+                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </vspacer>
             </children>
           </grid>
           <grid id="e96b2" binding="notesPage" layout-manager="BorderLayout" hgap="10" vgap="10">

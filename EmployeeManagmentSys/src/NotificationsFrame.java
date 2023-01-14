@@ -41,7 +41,7 @@ public class NotificationsFrame extends JFrame implements  ActionListener {
                 Connection conn = jdbcHolder.getConnection();
                 try {
                     // query for selectiing notofocation that belong to the person who is logged in
-                    ResultSet rs = conn.prepareStatement("Select Count(*) from table").executeQuery();
+                    ResultSet rs = conn.prepareStatement("Select Count(*) from notification").executeQuery();
                     int count = rs.getInt(1);
 
                     // here update the display of the notification list or table

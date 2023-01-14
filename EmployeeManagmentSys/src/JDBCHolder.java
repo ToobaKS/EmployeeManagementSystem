@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -73,6 +74,8 @@ public class JDBCHolder {
      * @return
      * @throws SQLException
      */
+
+    // used to get info from any table using the primary key
     public String getValue(int id, String primaryKey, String attribute, String tableName) throws SQLException {
         ResultSet rs = stmt.executeQuery("SELECT " + attribute + " FROM " + tableName +
                 " WHERE " + primaryKey + "= '" + id + "';");
@@ -82,16 +85,50 @@ public class JDBCHolder {
         return rs.getString(1);
     }
 
+    // used to get any inforamtion form any table with using the forgin key only
+    public String getEmpInfo(int id, String tableName, String attribute) throws SQLException {
+        ResultSet rs = stmt.executeQuery("SELECT " + attribute + " FROM " + tableName +  " WHERE Employee_idEmployee = " + id);
 
-    public int getEmpID(int id, String tableName, String name, String empName) throws SQLException {
-        ResultSet rs = stmt.executeQuery("SELECT " + id + " FROM " + tableName +  " WHERE " + name + "= '" + empName + "';");
+        if (rs.next()){
+            return rs.getString(1);
+        }else {
+            return "";
+        }
 
-        //" WHERE " + primaryKey + "= '" + id + "';");
-
-        rs.next();
-
-        return rs.getRow();
     }
+
+    public int getLeaveLatest(int empID ) throws SQLException {
+        ResultSet rs = stmt.executeQuery("select max(LeaveNo) from `Leave` where Employee_idEmployee = " + empID);
+        rs.next();
+        return rs.getInt(1);
+    }
+
+    public int getEQLatest(int empID ) throws SQLException {
+        ResultSet rs = stmt.executeQuery("select max(EquipmentNo) from  Equipment where Employee_idEmployee = " + empID);
+        rs.next();
+        return rs.getInt(1);
+    }
+
+    public ArrayList<String> getAvailableEqType() throws SQLException {
+        ResultSet rs = stmt.executeQuery("select distinct EquipmentType from Equipment where isnull (Employee_idEmployee)" );
+        ArrayList<String> eq = new ArrayList();
+        while (rs.next()){
+            eq.add(rs.getString("EquipmentType"));
+        }
+
+        return eq;
+    }
+
+    public ArrayList<String> getAvailableEqVer(String eqType) throws SQLException {
+        ResultSet rs = stmt.executeQuery("select distinct EquipmentVersion from Equipment where isnull (Employee_idEmployee) and EquipmentType = " + "'" + eqType + "'");
+        ArrayList<String> eq = new ArrayList();
+        while (rs.next()){
+            eq.add(rs.getString("EquipmentVersion"));
+        }
+
+        return eq;
+    }
+
 
     public boolean verifyID(int id) throws SQLException {
         ResultSet rs = stmt.executeQuery("SELECT idEmployee from Employee where idEmployee = " + id);
@@ -101,21 +138,27 @@ public class JDBCHolder {
         return false;
     }
 
-    public void fillEmpJList(JList jList)
+    // this is for filling the address textfiled in employee details page
+    public void filltextField(JTextField textField, int ID )
             throws SQLException {
 
         stmt = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        ResultSet rs = stmt.executeQuery("select * from Employee");
-        DefaultListModel listModel = new DefaultListModel();
+        ResultSet rs = stmt.executeQuery("SELECT StreetNo, StreetName, City, Province FROM Address where Employee_idEmployee = " + ID);
+        // SELECT StreetNo + ' ' + StreetName + ' ' as StreetAddress FROM adress.....
 
         while(rs.next()) {
-            String FirstName = rs.getString("FirstName");
-            String LastName  = rs.getString("LastName");
-            String result = FirstName + " " + LastName;
-            listModel.addElement(result);
+            int streetNum = Integer.parseInt(rs.getString("StreetNo"));
+            String streetName  = rs.getString("StreetName");
+            String city  = rs.getString("City");
+            String province  = rs.getString("Province");
+            String result = streetNum + " " + streetName + " "+ city + " " + province;
+            textField.setText(result);
         }
-        jList.setModel(listModel);
+
     }
+
+
+
 
     // inserting data from program to sql database
     public static void insertData(String sql) throws Exception{

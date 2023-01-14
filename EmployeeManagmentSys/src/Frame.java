@@ -4,6 +4,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -79,6 +81,10 @@ public class Frame extends JFrame implements View {
     private JTextField StartTextField;
     private JTextField TotalDaysTextField;
     private JTextField endTextField;
+    private JTable empListTable;
+    private JPanel typePanel;
+    private JPanel versionPanel;
+    private JPanel reasonPanel;
     private JTextField totalDaysText;
     private JTextField EqVerText;
     private JTable linksTable;
@@ -106,6 +112,7 @@ public class Frame extends JFrame implements View {
     private Model model;
     private Table table;
     private Table table2;
+    private Table table3;
     private JDBCHolder jdbcHolder;
     private List list;
     private Controller control;
@@ -125,6 +132,7 @@ public class Frame extends JFrame implements View {
         jdbcHolder.initializer();
         table = new Table(jdbcHolder.getConnection());
         table2 = new Table(jdbcHolder.getConnection());
+        table3 = new Table(jdbcHolder.getConnection());
         //table.buildTableModel("select * from Employee");  // select firstName as 'First Name' from Employee
         //T4Table = new JTable(table);
         //T4Table.setModel(table);
@@ -137,7 +145,7 @@ public class Frame extends JFrame implements View {
         // did not work!
 
         //testing populating list of employees from database
-        jdbcHolder.fillEmpJList(empList);
+        //jdbcHolder.fillEmpJList(empList);
 
 
         //To communicate with the model
@@ -170,27 +178,39 @@ public class Frame extends JFrame implements View {
         cardlayoutHolder.add(newEmpPage, ADD);
 
 
-        //listSelection Listener
-        empList.addListSelectionListener(new ListSelectionListener() {
+        // need to keep the list open
+        empListTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {
-                //when you click on any element name it will take you to the employee frame
-                // problem here when you click on it it displays two frames instead of one
-                if (!e.getValueIsAdjusting()) {
-                    int empNumber = empList.getSelectedIndex();
-                    System.out.println(empNumber);
-                    if (empNumber >= 0) {
-                        try {
-                            EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model, (String)(empList.getSelectedValue()));
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                        }
-                        //myEmpFrame.setName();
-                    }
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                //JTable target = (JTable)e.getSource();
+                int row = empListTable.getSelectedRow();
+                int column  = empListTable.getSelectedColumn();
+                String value2 = String.valueOf(empListTable.getModel().getValueAt(row ,2));
+                int value3 = Integer.parseInt(value2);
+                try {
+                    EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model, value3);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
             }
         });
 
+
+        EquipmentType.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EqVersionComboBox.removeAllItems();
+                EqVersionComboBox.addItem("");
+                try {
+                    ArrayList<String> eq = jdbcHolder.getAvailableEqVer(String.valueOf(EquipmentType.getSelectedItem()));
+                    for (String e2: eq){
+                        EqVersionComboBox.addItem(e2);
+                    }
+                } catch(Exception e3){System.err.println("cannot get versions");}
+
+            }
+        });
 
 
 
@@ -199,6 +219,7 @@ public class Frame extends JFrame implements View {
         this.setSize(500, 500);
         this.setContentPane(FramePage);
         this.setVisible(true);
+
 
 
     }
@@ -213,19 +234,21 @@ public class Frame extends JFrame implements View {
     public String getName(){
         return name;
     }
-
+/*
     public int getlistID() throws SQLException {
 
-        int idEmployee=0;
+        //int idEmployee=0;
         //int result = 0;
-        String[] temp2 = ((String)(empList.getSelectedValue())).split(" ");
-        int temp = jdbcHolder.getEmpID(idEmployee, "Employee","FirstName",temp2[1]);
+        String row = String.valueOf(empListTable.getSelectedRow());
+        int row2 = empListTable.getSelectedRow();
+1        int id = (int) empListTable.getModel().getValueAt(Integer.parseInt(row) ,3 );
+        int temp = jdbcHolder.getEmpID(id, "Employee","FirstName", row);
 
         return temp;
 
     }
 
-
+*/
 
 
 /*
@@ -256,6 +279,14 @@ public class Frame extends JFrame implements View {
         vacationComboBox.addItem("Unpaid leave");
 
         // adding items to EquipmentType
+        EquipmentType.addItem("");
+        try {
+            ArrayList<String> eq = jdbcHolder.getAvailableEqType();
+            for (String e: eq){
+                EquipmentType.addItem(e);
+            }
+        } catch(Exception e){System.err.println("cannot get types");}
+        /*
         EquipmentType.addItem("Microsoft surface book");
         EquipmentType.addItem("Tablet");
         EquipmentType.addItem("Mouse");
@@ -268,6 +299,18 @@ public class Frame extends JFrame implements View {
         EquipmentType.addItem("Tablet Charger");
         EquipmentType.addItem("Phone Charger");
         EquipmentType.addItem("Other");
+*/
+
+
+        /*
+        // adding versions to equipment
+        EqVersionComboBox.addItem(1.0);
+        EqVersionComboBox.addItem(2.0);
+        EqVersionComboBox.addItem(3.0);
+        EqVersionComboBox.addItem(4.0);
+
+
+         */
 
 
     }
@@ -358,6 +401,19 @@ public class Frame extends JFrame implements View {
 
 
     public void showListEmp(ActionEvent event) {
+        try {
+            table3.buildTableModel("select FirstName as 'First Name', LastName as 'Last Name', idEmployee as 'Employee Number' from Employee");  // select firstName as 'First Name' from Employee
+            empListTable.setModel(table3);
+            empListTable.setFillsViewportHeight(true);
+            empListTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            empListTable.setVisible(true);
+
+
+            System.out.println("IN Show T4");
+        } catch (Exception e) {
+            System.out.println("something happened.");
+        }
+
         showView(SHOW_LIST);
     }
 
@@ -447,6 +503,10 @@ public class Frame extends JFrame implements View {
 
     public String getEquipmentType(){
         return String.valueOf(EquipmentType.getSelectedItem());
+    }
+
+    public String getEquipmentVer(){
+        return String.valueOf(EqVersionComboBox.getSelectedItem());
     }
 
     @Override

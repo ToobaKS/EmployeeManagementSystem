@@ -3,7 +3,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
 
 public class Model {
 
@@ -30,6 +29,7 @@ public class Model {
     private String requestType;
     private int reciver;
     private String EquipmentType;
+    private String EquipmentVersion;
 
 
 
@@ -110,7 +110,6 @@ public class Model {
      */
 
     // logic to insert data into both leave and notification table
-    //not working
     public void saveToLeaveTable(String LeaveType, int LeaveDays, Date StartDate,Date endDate,  int employeeID){
 
         this.LeaveType = LeaveType;
@@ -126,18 +125,14 @@ public class Model {
         this.employeeID = employeeID;
 
 
-
-
         try{
 
 
             String temp = "insert into `Leave`(LeaveType, LeaveDays, LeaveStartDate, LeaveEndDate, LeaveStatus, Employee_idEmployee )"+
                     " Values ('"+ LeaveType+ "',"+ LeaveDays +",'" + StartDate + "','"+ endDate + "','"+ LeaveStatus +"',"+ employeeID +")";
-
             jdbc.insertData(temp);
-
-            notificationContent = employeeID + " has requested " + requestType+ " for" + LeaveDays + " from" + StartDate + " to " + endDate + "Status of request" + LeaveStatus;
-            //reciver is the manager
+            int leaveIDReader = jdbc.getLeaveLatest(employeeID);
+            notificationContent = employeeID + "  has requested a " + requestType+ " for " + LeaveDays + " days " + " from " + StartDate + " to " + endDate + " the request number is  " + leaveIDReader;
             String reciver1 = jdbc.getValue(employeeID, "idEmployee","Employee_idEmployee", "Employee");
             int reciver = Integer.parseInt(reciver1);
             String temp2 = "insert into Notification(NotificationStatus, NotificationDate, NotificationTitle, NotificationContent, RequestType, Receiver, Employee_idEmployee)"+
@@ -156,21 +151,25 @@ public class Model {
 
 
 
-    public void saveToEquipmentTable(String EquipmentType,int employeeID){
+    public void saveToEquipmentTable(String EquipmentType,int employeeID, String EquipmentVersion){
         this.employeeID = employeeID;
         this.EquipmentType = EquipmentType;
+        this.EquipmentVersion = EquipmentVersion;
+        java.sql.Date notificationDate = getNotificationDate();
         String requestType = "Equipment";
         String notificationTitle = "Equipment Request";
         String notificationStatus ="unread";
 
         try{
 
-            String temp3 = "update Equipment " + "set Employee_idEmployee = " + employeeID + " where EquipmentType = " + "'"+ EquipmentType + "'";
+            String temp3 = "update Equipment " + "set Employee_idEmployee = " + employeeID + " where EquipmentType = " + "'"+ EquipmentType + "' and EquipmentVersion = '" + EquipmentVersion + "'" ;
             jdbc.insertData(temp3);
 
-            System.out.println(temp3);
+            //System.out.println(temp3);
 
-            notificationContent = employeeID + "has requested" + requestType + "For Equipment" + EquipmentType;
+            int eqIDReader = jdbc.getEQLatest(employeeID);
+            //int eqID = Integer.parseInt(eqIDReader);
+            notificationContent = employeeID + "  has requested a " + requestType+ " the equipment type is " +  EquipmentType + " of version " + EquipmentVersion  + " the request number is  " + eqIDReader;
             String reciver1 = jdbc.getValue(employeeID, "idEmployee","Employee_idEmployee", "Employee");
             int reciver = Integer.parseInt(reciver1);
             String temp2 = "insert into Notification(NotificationStatus, NotificationDate, NotificationTitle, NotificationContent, RequestType, Receiver, Employee_idEmployee)"+
@@ -183,6 +182,7 @@ public class Model {
 
         }catch (Exception e){
             JOptionPane.showMessageDialog(null,e);
+            e.printStackTrace();
         }
     }
 

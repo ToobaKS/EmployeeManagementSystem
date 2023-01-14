@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 public class EmployeeDetailsFrame extends JFrame implements ActionListener {
-
+    private int ID;
     private JButton notes;
     private JButton details;
     private JButton schedule;
@@ -81,9 +81,10 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
     private Frame frame;
 
 
-    public EmployeeDetailsFrame(Model model, String name) throws SQLException {
+    public EmployeeDetailsFrame(Model model, int ID) throws SQLException {
         super("Employee Information");
-
+        System.out.println(ID);
+        this.ID = ID;
         this.model = model;
         employeeName.setText(name);
         jdbcHolder = new JDBCHolder();
@@ -123,16 +124,18 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
     private void fillEmPDetails() throws SQLException {
 
 
-
-        firstNametextField.setText(jdbcHolder.getValue(1, "idEmployee","FirstName", "Employee"));
-        //middleNameTextField.setText(jdbcHolder.getValue(idEmployee, "idEmployee","MiddleName", "Employee"));
-        //LastNametextField.setText(jdbcHolder.getValue(, "idEmployee","LastName", "Employee"));
-
-
-        // get the first, midde,  and last name from the jlist
-
-        // use one of the names to find the id
-        // use the id to get the rest of the information
+        firstNametextField.setText(jdbcHolder.getValue(this.ID, "idEmployee","FirstName", "Employee"));
+        middleNameTextField.setText(jdbcHolder.getValue(this.ID, "idEmployee","MiddleName", "Employee"));
+        LastNametextField.setText(jdbcHolder.getValue(this.ID, "idEmployee","LastName", "Employee"));
+        empNumTextField.setText(jdbcHolder.getValue(this.ID, "idEmployee","idEmployee", "Employee"));
+        DepartmentTestField.setText(jdbcHolder.getValue(this.ID, "idEmployee","DepartmentNum", "Employee"));
+        PositiontextField.setText(jdbcHolder.getValue(this.ID, "idEmployee","Position", "Employee"));
+        EmailtextField.setText(jdbcHolder.getValue(this.ID, "idEmployee","Email", "Employee"));
+        phoneNumtextField.setText(jdbcHolder.getValue(this.ID, "idEmployee","PhoneNum", "Employee"));
+        jdbcHolder.filltextField(AddresstextField, this.ID);
+        BirthdaytextField.setText(jdbcHolder.getValue(this.ID, "idEmployee","DateofBirth", "Employee"));
+        hireDatetextField.setText(jdbcHolder.getValue(this.ID, "idEmployee","HireDate", "Employee"));
+        SalarytextField.setText(jdbcHolder.getEmpInfo(this.ID, "Salary", "HourlyRate"));
 
 
     }
@@ -166,7 +169,7 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) throws SQLException {
-        EmployeeDetailsFrame start = new EmployeeDetailsFrame(new Model(), "");
+        EmployeeDetailsFrame start = new EmployeeDetailsFrame(new Model(), -1);
     }
 
 }
