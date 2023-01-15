@@ -2,6 +2,7 @@ import javax.management.NotificationBroadcaster;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -15,6 +16,8 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
     private JLabel notifType;
     private JLabel notifDate;
     private JLabel status;
+
+    private String reason = "";
 
     private Model model;
     private Controller controller;
@@ -31,9 +34,8 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
         model.addView(this);
 
         approveButton.addActionListener(controller);
-        approveButton.setActionCommand(approveButton.getText() + " " + notifNo);
-        rejectButton.addActionListener(controller);
-        rejectButton.setActionCommand(rejectButton.getText() + " " + notifNo);
+        //approveButton.setActionCommand(approveButton.getText() + " " + notifNo);
+        rejectButton.addActionListener(this::actionPerformed);
 
         approveButton.enable();
         rejectButton.enable();
@@ -75,17 +77,15 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
 
         }else{
             String attribute = info.get("RequestType") + "Status";
-            String keyAtrributeName = info.get("RequestType") + "No";;
+            String keyAttributeName = info.get("RequestType") + "No";;
 
             String tableName = info.get("RequestType");
 
             if(tableName.equals("Leave")){
-                tableName = "'Leave'";
-            } else if(tableName.equals("WFO")){
-                keyAtrributeName = "CubicleID";
+                tableName = "`Leave`";
             }
 
-            String requestS = model.getAttributeValue(requestNo, keyAtrributeName, attribute, tableName);
+            String requestS = model.getAttributeValue(requestNo, keyAttributeName, attribute, tableName);
 
             status.setText(requestS);
 
@@ -113,12 +113,62 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
         disableButtons();
     }
 
+    @Override
+    public String getCubicleCombo() {
+        return null;
+    }
+
+    @Override
+    public String getDateCombo() {
+        return null;
+    }
+
+    @Override
+    public int getNotifNo() {
+        return notifNo;
+    }
+
+    @Override
+    public String getLeaveType() {
+        return null;
+    }
+
+    @Override
+    public String getEquipmentType() {
+        return null;
+    }
+
+    @Override
+    public String getEquipmentVer() {
+        return null;
+    }
+
+    @Override
+    public Date getStartDate() {
+        return null;
+    }
+
+    @Override
+    public Date getEndDate() {
+        return null;
+    }
+
+    @Override
+    public int getLeaveDays() {
+        return 0;
+    }
+
     public static void main(String[] args) {
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+         reason = JOptionPane.showInputDialog(this, "Enter reason for rejection: ");
+        try {
+            controller.caseReject(String.valueOf(notifNo), reason);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

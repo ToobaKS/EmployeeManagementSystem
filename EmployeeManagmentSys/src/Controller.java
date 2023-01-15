@@ -2,50 +2,70 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Date;
 import java.time.LocalDate;
 
 public class Controller implements ActionListener{
 
     private Model model;
     private View view;
-    private View loginView;
 
     public Controller(Model model, View view){
         this.model = model;
         this.view = view;
     }
 
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
 
-        switch (command.split(" ")[0]){
+        System.out.println(command);
+
+        switch (command){
             case "Approve":
                 try {
-                    model.approveRequest(command.split(" ")[1]);
+                    model.approveRequest(String.valueOf(view.getNotifNo()));
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
                 break;
-            case "Reject":
+            case "Submit WFO":
                 try {
-                    model.rejectRequest(command.split(" ")[1]);
+                    model.sendWFONotification(view.getCubicleCombo(), view.getDateCombo());
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
                 break;
-            case "submit":
-                System.out.println(command.split(" ")[0]);
-
-                try {
-                    model.sendWFONotification("2", String.valueOf(LocalDate.now()));
-                } catch (SQLException ex) {
-                    System.out.println("Here");
-                    throw new RuntimeException(ex);
-                }
+            case "Submit Vacation":
+                System.out.println("Here");
+                vacationRequest();
+                break;
+            case "Submit Equipment":
+                EquipmentRequest();
                 break;
             default:
                 break;
         }
+    }
+
+    public void caseReject(String notifNo, String reason) throws SQLException {
+        model.rejectRequest(notifNo, reason);
+    }
+
+    private void vacationRequest(){
+        String LeaveType = view.getLeaveType();
+        Date StartDate = view.getStartDate();
+        Date endDate = view.getEndDate();
+        int  LeaveDays = view.getLeaveDays();
+        int employeeID = model.getEmployeeID();
+        model.saveToLeaveTable(LeaveType, LeaveDays, StartDate, endDate,employeeID );
+    }
+
+    private void EquipmentRequest(){
+        String EquipmentType = view.getEquipmentType();
+        int employeeID = model.getEmployeeID();
+        String EquipmentVersion = view.getEquipmentVer();
+        model.saveToEquipmentTable(EquipmentType,employeeID,EquipmentVersion);
     }
 }
