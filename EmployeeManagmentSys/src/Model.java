@@ -2,10 +2,26 @@ import javax.swing.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class Model {
+
+
+    private String LeaveType;
+    private int LeaveDays;
+    private Date StartDate;
+    private Date endDate;
+    private String vacationStatus;
+    private String notificationStatus;
+    private java.sql.Date notificationDate;
+    private String notificationTitle;
+    private String notificationContent;
+    private String requestType;
+    private int reciver;
+    private String EquipmentType;
+    private String EquipmentVersion;
 
     private final List<View> views;
     private final List<LoginView> loginViews;
@@ -32,6 +48,9 @@ public class Model {
         cubicles = new ArrayList<>();
         dateList = new ArrayList<>();
 
+        long millis = System.currentTimeMillis();
+        this.notificationDate = new java.sql.Date(millis);
+
         for(int i = 1; i<= NUMOFCUBICLES; i++){
             cubicles.add(i);
         }
@@ -48,14 +67,14 @@ public class Model {
             ArrayList<Integer> t = new ArrayList<>();
             Boolean b = jdbc.verifyDate(String.valueOf(temp), employeeID);
             if(!b){
-               cbm.addElement(temp);
-               for(int c : cubicles){
-                   Boolean d = jdbc.verifyCubicle(c, String.valueOf(temp));
-                   if(!d){
-                       t.add(c);
-                   }
-               }
-               dateCubiclePairs.put(String.valueOf(temp), t);
+                cbm.addElement(temp);
+                for(int c : cubicles){
+                    Boolean d = jdbc.verifyCubicle(c, String.valueOf(temp));
+                    if(!d){
+                        t.add(c);
+                    }
+                }
+                dateCubiclePairs.put(String.valueOf(temp), t);
             }
             temp = incrementDate(temp);
         }
@@ -283,6 +302,96 @@ public class Model {
         return value;
     }
 
+    /*
+     private String LeaveType;
+    private int LeaveDays;
+    private Date StartDate;
+    private Date endDate;
+    private String vacationStatus;
+    private String notificationStatus;
+    private Date notificationDate;
+    private String notificationTitle;
+    private String notificationContent;
+    private String requestType;
+     */
+
+    // logic to insert data into both leave and notification table
+    public void saveToLeaveTable(String LeaveType, int LeaveDays, Date StartDate,Date endDate,  int employeeID){
+
+        this.LeaveType = LeaveType;
+        this.LeaveDays = LeaveDays;
+        this.StartDate = StartDate;
+        this.endDate = endDate;
+        String LeaveStatus = "Pending";
+        String notificationStatus ="unread";
+        java.sql.Date notificationDate = getNotificationDate();
+        String notificationTitle = "Leave Request";
+        String notificationContent;
+        String requestType = "Leave";
+        this.employeeID = employeeID;
+
+
+        try{
+
+
+            String temp = "insert into `Leave`(LeaveType, LeaveDays, LeaveStartDate, LeaveEndDate, LeaveStatus, Employee_idEmployee )"+
+                    " Values ('"+ LeaveType+ "',"+ LeaveDays +",'" + StartDate + "','"+ endDate + "','"+ LeaveStatus +"',"+ employeeID +")";
+            jdbc.insertData(temp);
+            int leaveIDReader = jdbc.getLeaveLatest(employeeID);
+            notificationContent = employeeID + "  has requested a " + requestType+ " for " + LeaveDays + " days " + " from " + StartDate + " to " + endDate + " the request number is  " + leaveIDReader;
+            String reciver1 = jdbc.getValue(employeeID, "idEmployee","Employee_idEmployee", "Employee");
+            int reciver = Integer.parseInt(reciver1);
+            String temp2 = "insert into Notification(NotificationStatus, NotificationDate, NotificationTitle, NotificationContent, RequestType, Receiver, Employee_idEmployee)"+
+                    " Values ('" + notificationStatus + "','" + notificationDate + "','"+ notificationTitle + "','" + notificationContent + "','"+ requestType + "',"+ reciver + "," + employeeID + ")";
+
+            jdbc.insertData(temp2);
+            System.out.println("submitted to database");
+
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null,e);
+        }
+
+        notifyView();
+
+    }
+
+
+
+    public void saveToEquipmentTable(String EquipmentType,int employeeID, String EquipmentVersion){
+        this.employeeID = employeeID;
+        this.EquipmentType = EquipmentType;
+        this.EquipmentVersion = EquipmentVersion;
+        java.sql.Date notificationDate = getNotificationDate();
+        String requestType = "Equipment";
+        String notificationTitle = "Equipment Request";
+        String notificationStatus ="unread";
+
+        try{
+
+            String temp3 = "update Equipment " + "set Employee_idEmployee = " + employeeID + " where EquipmentType = " + "'"+ EquipmentType + "' and EquipmentVersion = '" + EquipmentVersion + "'" ;
+            jdbc.insertData(temp3);
+
+            //System.out.println(temp3);
+
+            int eqIDReader = jdbc.getEQLatest(employeeID);
+            //int eqID = Integer.parseInt(eqIDReader);
+            notificationContent = employeeID + "  has requested a " + requestType+ " the equipment type is " +  EquipmentType + " of version " + EquipmentVersion  + " the request number is  " + eqIDReader;
+            String reciver1 = jdbc.getValue(employeeID, "idEmployee","Employee_idEmployee", "Employee");
+            int reciver = Integer.parseInt(reciver1);
+            String temp2 = "insert into Notification(NotificationStatus, NotificationDate, NotificationTitle, NotificationContent, RequestType, Receiver, Employee_idEmployee)"+
+                    " Values ('" + notificationStatus + "','" + notificationDate + "','"+ notificationTitle + "','" + notificationContent + "','"+ requestType + "',"+ reciver + "," + employeeID + ")";
+
+            jdbc.insertData(temp2);
+            System.out.println("submitted to database");
+
+
+
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null,e);
+            e.printStackTrace();
+        }
+    }
+
     private void notifyView(String info){
         for (View view : views) {
             view.systemUpdate(info);
@@ -330,6 +439,15 @@ public class Model {
         this.employeeID = employeeID;
     }
 
+    public void setNotificationDate(java.sql.Date notificationDate){
+        this.notificationDate = notificationDate;
+
+    }
+
+    public java.sql.Date getNotificationDate (){
+        return notificationDate;
+    }
+
     public static void main(String[] args) throws SQLException {
         Model m = new Model();
         m.getReceiver(1);
@@ -338,3 +456,4 @@ public class Model {
     }
 
 }
+

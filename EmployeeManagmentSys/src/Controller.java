@@ -2,6 +2,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Date;
 import java.time.LocalDate;
 
 public class Controller implements ActionListener{
@@ -14,10 +15,6 @@ public class Controller implements ActionListener{
         this.view = view;
     }
 
-
-    public void caseReject(String notifNo, String reason) throws SQLException {
-        model.rejectRequest(notifNo, reason);
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -40,8 +37,34 @@ public class Controller implements ActionListener{
                     throw new RuntimeException(ex);
                 }
                 break;
+            case "Submit":
+                vacationRequest();
+                break;
+            case "Submit Equipment":
+                EquipmentRequest();
+                break;
             default:
                 break;
         }
+    }
+
+    public void caseReject(String notifNo, String reason) throws SQLException {
+        model.rejectRequest(notifNo, reason);
+    }
+
+    private void vacationRequest(){
+        String LeaveType = view.getLeaveType();
+        Date StartDate = view.getStartDate();
+        Date endDate = view.getEndDate();
+        int  LeaveDays = view.getLeaveDays();
+        int employeeID = model.getEmployeeID();
+        model.saveToLeaveTable(LeaveType, LeaveDays, StartDate, endDate,employeeID );
+    }
+
+    private void EquipmentRequest(){
+        String EquipmentType = view.getEquipmentType();
+        int employeeID = model.getEmployeeID();
+        String EquipmentVersion = view.getEquipmentVer();
+        model.saveToEquipmentTable(EquipmentType,employeeID,EquipmentVersion);
     }
 }

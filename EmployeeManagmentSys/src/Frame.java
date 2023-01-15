@@ -11,9 +11,10 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-
-public class Frame extends JFrame implements View, ActionListener{
+public class Frame extends JFrame implements View, ActionListener {
     private JPanel FramePage;
     private JPanel MainPage;
     private JPanel menubarPanel;
@@ -127,11 +128,35 @@ public class Frame extends JFrame implements View, ActionListener{
     final static String CONTACTINFO = "Next: Contact Details";
     final static String HIREDETAILS = "Next: Hire Details";
 
+    private String name;
+
+    private JTextField startDateText;
+    private JTextField endDateText;
+    private JTextField ReasonTextField;
+    private JLabel totalDaysLabel;
+    private JComboBox EquipmentType;
+    private JButton SubmitButtonEq;
+    private JButton EqSubmitButton;
+    private JTextField textField5;
+    private JComboBox EqVersionComboBox;
+    private JTextField StartTextField;
+    private JTextField TotalDaysTextField;
+    private JTextField endTextField;
+    private JTable empListTable;
+    private JPanel typePanel;
+    private JPanel versionPanel;
+    private JPanel reasonPanel;
+    private JTextField totalDaysText;
+    private JTextField EqVerText;
+    private JTable linksTable;
+
 
     //The models
     private Controller control;
     private Model model;
     private Table table;
+    private Table table2;
+    private Table table3;
     private JDBCHolder jdbcHolder;
     private List list;
 
@@ -145,17 +170,22 @@ public class Frame extends JFrame implements View, ActionListener{
         model.addView(this);
         this.control = new Controller(model, this);
 
-       // testing populating table from the schema -> failed
+        // testing populating table from the schema -> failed
         jdbcHolder = new JDBCHolder();
         jdbcHolder.initializer();
         table = new Table(jdbcHolder.getConnection());
-        try {
-            table.buildTableModel("select * from Employee");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        table2 = new Table(jdbcHolder.getConnection());
+        table3 = new Table(jdbcHolder.getConnection());
+
         T4Table = new JTable(table);
         // did not work!
+
+        // creates instance of JButton
+        //login.addActionListener(this);
+        submitButton.addActionListener(control);
+        EqSubmitButton.addActionListener(control);
+
+        int idEmployee = 0;
 
         //testing populating list of employees from database
         try {
@@ -166,6 +196,7 @@ public class Frame extends JFrame implements View, ActionListener{
 
         //initializing the drop-down menues
         initMainMenu();
+        initComboBox();
 
         // adding components to the panel
         cardlayoutHolder.add(dashboardPage, DASHBOARD);
@@ -185,8 +216,8 @@ public class Frame extends JFrame implements View, ActionListener{
         cardlayoutHolder.add(addNewEmpPage, ADD);
 
         addEmpCardLayout.add(background, BACKGROUND);
-        addEmpCardLayout.add(contactInfo,CONTACTINFO);
-        addEmpCardLayout.add(hireDetails,HIREDETAILS);
+        addEmpCardLayout.add(contactInfo, CONTACTINFO);
+        addEmpCardLayout.add(hireDetails, HIREDETAILS);
 
         hireDetailsButton.addActionListener(this::showHireDetails);
         contactDetailsButton.addActionListener(this::showContactDetails);
@@ -200,22 +231,35 @@ public class Frame extends JFrame implements View, ActionListener{
         this.setContentPane(FramePage);
         this.setVisible(true);
 
-        empList.addListSelectionListener(new ListSelectionListener() {
+        // need to keep the list open
+        empListTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {
-                //when you click on any element name it will take you to the employee frame
-                // problem here when you click on it displays two frames instead of one
-                if (!e.getValueIsAdjusting()) {
-                    int empNumber = empList.getSelectedIndex();
-                    System.out.println(empNumber);
-                    if (empNumber >= 0) {
-                        try {
-                            EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model);
-                        } catch (SQLException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                //JTable target = (JTable)e.getSource();
+                int row = empListTable.getSelectedRow();
+                int column = empListTable.getSelectedColumn();
+                String value2 = String.valueOf(empListTable.getModel().getValueAt(row, 2));
+                int value3 = Integer.parseInt(value2);
+                try {
+                    EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model, value3);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
+            }
+        });
+        EquipmentType.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EqVersionComboBox.removeAllItems();
+                EqVersionComboBox.addItem("");
+                try {
+                    ArrayList<String> eq = jdbcHolder.getAvailableEqVer(String.valueOf(EquipmentType.getSelectedItem()));
+                    for (String e2: eq){
+                        EqVersionComboBox.addItem(e2);
+                    }
+                } catch(Exception e3){System.err.println("cannot get versions");}
+
             }
         });
         Notifications.addActionListener(new ActionListener() {
@@ -235,10 +279,10 @@ public class Frame extends JFrame implements View, ActionListener{
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
                     String data = unreadNotesList.getSelectedValue().toString();
-                    String t = String.valueOf(data.charAt(data.length()-2));
+                    String t = String.valueOf(data.charAt(data.length() - 2));
 
-                    for(HashMap h : notificationAttributes){
-                        if(h.get("NotificationNo").equals(t)){
+                    for (HashMap h : notificationAttributes) {
+                        if (h.get("NotificationNo").equals(t)) {
                             try {
                                 new NotificationDetailFrame(model, control, h, t);
                             } catch (SQLException ex) {
@@ -247,9 +291,9 @@ public class Frame extends JFrame implements View, ActionListener{
                         }
                     }
 
-                    try{
+                    try {
                         unreadNotesList.clearSelection();
-                    } catch (NullPointerException exception){
+                    } catch (NullPointerException exception) {
 
                     }
                 }
@@ -258,6 +302,13 @@ public class Frame extends JFrame implements View, ActionListener{
         submitWFO.addActionListener(control);
     }
 
+    public void setName(String name){
+        this.name = (String)empList.getSelectedValue();
+    }
+
+    public String getName(){
+        return name;
+    }
 
     private void initWFOPage() throws SQLException {
         dateCombo.setModel(model.getDateList());
@@ -279,18 +330,18 @@ public class Frame extends JFrame implements View, ActionListener{
         notificationAttributes = model.getHolderArray();
         try {
 
-            HashMap<String,String> temp = new HashMap<>();
+            HashMap<String, String> temp = new HashMap<>();
 
             DefaultListModel listModel = new DefaultListModel();
             String data = "";
 
-            if (notificationAttributes.size() == 0){
+            if (notificationAttributes.size() == 0) {
                 data = "Nothing to show here";
                 listModel.addElement(data);
-            }else{
-                for (int i = 0; i < notificationAttributes.size(); i++){
+            } else {
+                for (int i = 0; i < notificationAttributes.size(); i++) {
                     temp = notificationAttributes.get(i);
-                    if(temp.get("NotificationStatus").equals("unread")){
+                    if (temp.get("NotificationStatus").equals("unread")) {
                         data = temp.get("NotificationTitle");
                         data += " from ";
                         data += model.getEmployeeName(Integer.parseInt(temp.get("Employee_idEmployee")));
@@ -309,13 +360,12 @@ public class Frame extends JFrame implements View, ActionListener{
     }
 
 
-    private void initMainMenu(){
+    private void initMainMenu() {
 
         dashboard.addActionListener(this::showDashboard);
 
         //Initializing the Employee DropDown Menu
         //Employees = new JMenu("Employees");
-
 
 
         listEmp = new JMenuItem("List of Employees");
@@ -387,28 +437,91 @@ public class Frame extends JFrame implements View, ActionListener{
         Salary.add(benefits);
     }
 
+    private void initComboBox() {
+        //adding items to the vacation combobox
+        vacationComboBox.addItem("Paid time off leave");
+        vacationComboBox.addItem("Sick leave");
+        vacationComboBox.addItem("Maternity leave");
+        vacationComboBox.addItem("Paternity leave");
+        vacationComboBox.addItem("Bereavement leave");
+        vacationComboBox.addItem("Compensatory leave");
+        vacationComboBox.addItem("Sabbatical leave");
+        vacationComboBox.addItem("Unpaid leave");
+
+        // adding items to EquipmentType
+        EquipmentType.addItem("");
+        try {
+            ArrayList<String> eq = jdbcHolder.getAvailableEqType();
+            for (String e: eq){
+                EquipmentType.addItem(e);
+            }
+        } catch(Exception e){System.err.println("cannot get types");}
+        /*
+        EquipmentType.addItem("Microsoft surface book");
+        EquipmentType.addItem("Tablet");
+        EquipmentType.addItem("Mouse");
+        EquipmentType.addItem("Keyboard");
+        EquipmentType.addItem("Headset");
+        EquipmentType.addItem("Phone");
+        EquipmentType.addItem("USB Cabel");
+        EquipmentType.addItem("Adapter");
+        EquipmentType.addItem("surface book Battery");
+        EquipmentType.addItem("Tablet Charger");
+        EquipmentType.addItem("Phone Charger");
+        EquipmentType.addItem("Other");
+*/
+
+
+        /*
+        // adding versions to equipment
+        EqVersionComboBox.addItem(1.0);
+        EqVersionComboBox.addItem(2.0);
+        EqVersionComboBox.addItem(3.0);
+        EqVersionComboBox.addItem(4.0);
+
+
+         */
+
+
+    }
+
     private void showView(String name) {
-        ((CardLayout)cardlayoutHolder.getLayout()).show(cardlayoutHolder, name);
+        ((CardLayout) cardlayoutHolder.getLayout()).show(cardlayoutHolder, name);
     }
 
     private void showNewEmpView(String name) {
-        ((CardLayout)addEmpCardLayout.getLayout()).show(addEmpCardLayout, name);
+        ((CardLayout) addEmpCardLayout.getLayout()).show(addEmpCardLayout, name);
     }
 
     public void showContactDetails(ActionEvent event) {
         showNewEmpView(CONTACTINFO);
     }
+
     public void showBackground(ActionEvent event) {
         showNewEmpView(BACKGROUND);
     }
+
     public void showHireDetails(ActionEvent event) {
         showNewEmpView(HIREDETAILS);
     }
+
     public void showDashboard(ActionEvent event) {
         showView(DASHBOARD);
     }
 
     public void showListEmp(ActionEvent event) {
+        try {
+            table3.buildTableModel("select FirstName as 'First Name', LastName as 'Last Name', idEmployee as 'Employee Number' from Employee");  // select firstName as 'First Name' from Employee
+            empListTable.setModel(table3);
+            empListTable.setFillsViewportHeight(true);
+            empListTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            empListTable.setVisible(true);
+
+
+            System.out.println("IN Show T4");
+        } catch (Exception e) {
+            System.out.println("something happened.");
+        }
         showView(SHOW_LIST);
     }
 
@@ -441,7 +554,7 @@ public class Frame extends JFrame implements View, ActionListener{
         showView(VACATION_REQUESTS);
     }
 
-    public void showWFO(ActionEvent event){
+    public void showWFO(ActionEvent event) {
         showView(WFO_REQUESTS);
         try {
             initWFOPage();
@@ -455,6 +568,22 @@ public class Frame extends JFrame implements View, ActionListener{
     }
 
     public void showT4(ActionEvent event) {
+        // this is to make sure that we reload the table everythime we click the menu item to get the latest data not when we open the frame
+        try {
+            table.buildTableModel("select FormType as 'Type of Form', FormYar from Forms");  // select firstName as 'First Name' from Employee
+            T4Table.setModel(table);
+            table2.buildTableModel("select FormAttachment as 'Link' from Forms");
+            linksTable.setModel(table2);
+            T4Table.setFillsViewportHeight(true);
+            T4Table.setVisible(true);
+            linksTable.setFillsViewportHeight(true);
+            linksTable.setVisible(true);
+
+            System.out.println("IN Show T4");
+        } catch (Exception e) {
+            System.out.println("something happened.");
+        }
+
         showView(T4_FORM);
     }
 
@@ -491,7 +620,7 @@ public class Frame extends JFrame implements View, ActionListener{
 
     @Override
     public void systemUpdate(String info) {
-        if(info.contains("WFO")){
+        if (info.contains("WFO")) {
             JOptionPane.showMessageDialog(this, info);
             try {
                 initWFOPage();
@@ -501,4 +630,43 @@ public class Frame extends JFrame implements View, ActionListener{
         }
     }
 
+    @Override
+    public String getLeaveType() {
+        return String.valueOf(vacationComboBox.getSelectedItem());
+    }
+
+    public String getEquipmentType(){
+        return String.valueOf(EquipmentType.getSelectedItem());
+    }
+
+    public String getEquipmentVer(){
+        return String.valueOf(EqVersionComboBox.getSelectedItem());
+    }
+
+    @Override
+    public Date getStartDate() {
+        return Date.valueOf(StartTextField.getText());
+    }
+
+    @Override
+    public Date getEndDate() {
+        return Date.valueOf(endTextField.getText());
+    }
+
+    @Override
+    public int getLeaveDays() {
+        return Integer.parseInt(TotalDaysTextField.getText());
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+

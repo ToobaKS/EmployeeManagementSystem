@@ -29,7 +29,7 @@ public class Table extends DefaultTableModel {
         int c = rsmd.getColumnCount();
         Vector column = new Vector(c);
         for(int i = 1; i<=c; i++){
-            column.add(rsmd.getColumnName(i));
+            column.add(rsmd.getColumnLabel(i));
         }
         Vector data = new Vector();
         Vector row = new Vector(c);
@@ -39,13 +39,20 @@ public class Table extends DefaultTableModel {
                 row.add(rs.getString(i));
             }
             data.add(row);
+           // row.clear();
+            row = new Vector(c);
         }
-
-        return new DefaultTableModel(data, column);// returning a new table with rows and coulmns populated from the schema
+        this.columnIdentifiers= column;
+        this.dataVector = data;
+        //this.addColumn("Hello");
+        //this.insertRow(0, new Object[]{"x"});
+        return null;
+        //return new DefaultTableModel(data, column);// returning a new table with rows and coulmns populated from the schema
 
     }
 
-
+   // function int f(x){ return 5;}
+    // f(2)
 
 
 }
