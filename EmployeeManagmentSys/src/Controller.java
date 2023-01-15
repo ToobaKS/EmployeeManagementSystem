@@ -8,16 +8,22 @@ public class Controller implements ActionListener{
 
     private Model model;
     private View view;
-    private View loginView;
 
     public Controller(Model model, View view){
         this.model = model;
         this.view = view;
     }
 
+
+    public void caseReject(String notifNo, String reason) throws SQLException {
+        model.rejectRequest(notifNo, reason);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
+
+        System.out.println(command);
 
         switch (command.split(" ")[0]){
             case "Approve":
@@ -27,20 +33,10 @@ public class Controller implements ActionListener{
                     throw new RuntimeException(ex);
                 }
                 break;
-            case "Reject":
+            case "Submit":
                 try {
-                    model.rejectRequest(command.split(" ")[1]);
+                    model.sendWFONotification(view.getCubicleCombo(), view.getDateCombo());
                 } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-                break;
-            case "submit":
-                System.out.println(command.split(" ")[0]);
-
-                try {
-                    model.sendWFONotification("2", String.valueOf(LocalDate.now()));
-                } catch (SQLException ex) {
-                    System.out.println("Here");
                     throw new RuntimeException(ex);
                 }
                 break;

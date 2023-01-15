@@ -108,4 +108,14 @@ public class NotificationsFrame extends JFrame implements View, ActionListener {
     public void systemUpdate(String info) {
 
     }
+
+    @Override
+    public String getCubicleCombo() {
+        return null;
+    }
+
+    @Override
+    public String getDateCombo() {
+        return null;
+    }
 }

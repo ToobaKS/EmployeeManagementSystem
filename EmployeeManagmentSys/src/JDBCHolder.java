@@ -147,8 +147,6 @@ public class JDBCHolder {
         System.out.println(sql);
         ResultSet rs = stmt.executeQuery(sql);
 
-
-
         rs.next();
 
         return rs.getString(1);
@@ -174,6 +172,31 @@ public class JDBCHolder {
         if(rs.next() != false)
             return true;
         return false;
+    }
+
+    public boolean verifyDate(String date, int employeeID) throws SQLException {
+        ResultSet rs = stmt.executeQuery("SELECT WFONo from WFO where Employee_idEmployee = " + employeeID + " AND WFODate = '" + date + "';");
+
+        if(rs.next() != false)
+            return true;
+        return false;
+    }
+
+    public boolean verifyCubicle(int c, String date) throws SQLException {
+        ResultSet rs = stmt.executeQuery("SELECT WFONo from WFO where CubicleNo = " + c + " AND WFODate = '" + date + "';");
+
+        if(rs.next() != false)
+            return true;
+        return false;
+    }
+    public String getCustomValue(String sql) throws SQLException {
+
+        System.out.println(sql);
+        ResultSet rs = stmt.executeQuery(sql);
+
+        rs.next();
+
+        return rs.getString(1);
     }
 
     public boolean insertIntoTable(String sql) throws SQLException {
@@ -208,7 +231,8 @@ public class JDBCHolder {
 
     public static void main(String[] args) throws SQLException {
         JDBCHolder j = new JDBCHolder();
-        String[][] tempTable = j.getTable("'Leave'");
+        System.out.println("'Leave'");
+        String[][] tempTable = j.getTable("`Leave`");
         System.out.println(Arrays.deepToString(tempTable));
 
         boolean temp2= j.verifyID(1);

@@ -16,6 +16,8 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
     private JLabel notifDate;
     private JLabel status;
 
+    private String reason = "";
+
     private Model model;
     private Controller controller;
     private HashMap<String, String> info;
@@ -32,8 +34,7 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
 
         approveButton.addActionListener(controller);
         approveButton.setActionCommand(approveButton.getText() + " " + notifNo);
-        rejectButton.addActionListener(controller);
-        rejectButton.setActionCommand(rejectButton.getText() + " " + notifNo);
+        rejectButton.addActionListener(this::actionPerformed);
 
         approveButton.enable();
         rejectButton.enable();
@@ -75,17 +76,15 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
 
         }else{
             String attribute = info.get("RequestType") + "Status";
-            String keyAtrributeName = info.get("RequestType") + "No";;
+            String keyAttributeName = info.get("RequestType") + "No";;
 
             String tableName = info.get("RequestType");
 
             if(tableName.equals("Leave")){
-                tableName = "'Leave'";
-            } else if(tableName.equals("WFO")){
-                keyAtrributeName = "CubicleID";
+                tableName = "`Leave`";
             }
 
-            String requestS = model.getAttributeValue(requestNo, keyAtrributeName, attribute, tableName);
+            String requestS = model.getAttributeValue(requestNo, keyAttributeName, attribute, tableName);
 
             status.setText(requestS);
 
@@ -113,12 +112,27 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
         disableButtons();
     }
 
+    @Override
+    public String getCubicleCombo() {
+        return null;
+    }
+
+    @Override
+    public String getDateCombo() {
+        return null;
+    }
+
     public static void main(String[] args) {
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+         reason = JOptionPane.showInputDialog(this, "Enter reason for rejection: ");
+        try {
+            controller.caseReject(String.valueOf(notifNo), reason);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

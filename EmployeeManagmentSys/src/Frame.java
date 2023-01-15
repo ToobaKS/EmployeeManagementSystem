@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class Frame extends JFrame implements View, ActionListener{
     private JPanel FramePage;
     private JPanel MainPage;
@@ -163,7 +164,7 @@ public class Frame extends JFrame implements View, ActionListener{
             throw new RuntimeException(e);
         }
 
-        //initializing the drop down menues
+        //initializing the drop-down menues
         initMainMenu();
 
         // adding components to the panel
@@ -208,7 +209,11 @@ public class Frame extends JFrame implements View, ActionListener{
                     int empNumber = empList.getSelectedIndex();
                     System.out.println(empNumber);
                     if (empNumber >= 0) {
-                        EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model);
+                        try {
+                            EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model);
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 }
             }
@@ -225,8 +230,6 @@ public class Frame extends JFrame implements View, ActionListener{
         });
 
         fillDashboardNotificationList();
-        initWFOPage();
-
         unreadNotesList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -253,33 +256,20 @@ public class Frame extends JFrame implements View, ActionListener{
             }
         });
         submitWFO.addActionListener(control);
-        submitWFO.addActionListener(this);
     }
 
 
-    private void initWFOPage(){
-        ArrayList<Integer> cubicles = model.getCubicles();
-        LocalDate date = LocalDate.now();
-
-        for(int i = 1; i < 7; i++){
-            dateCombo.addItem(date);
-            date = model.incrementDate(date);
-        }
-
-        for(Integer i : cubicles){
-            cubicleCombo.addItem(i);
-        }
+    private void initWFOPage() throws SQLException {
+        dateCombo.setModel(model.getDateList());
+        cubicleCombo.setModel(model.getCubicles(String.valueOf(LocalDate.now())));
 
         dateCombo.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
+                String selectedDate = "";
+                selectedDate = String.valueOf(dateCombo.getSelectedItem());
 
-            }
-        });
-        cubicleCombo.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-
+                cubicleCombo.setModel(model.getCubicles(selectedDate));
             }
         });
     }
@@ -451,8 +441,13 @@ public class Frame extends JFrame implements View, ActionListener{
         showView(VACATION_REQUESTS);
     }
 
-    public void showWFO(ActionEvent event) {
+    public void showWFO(ActionEvent event){
         showView(WFO_REQUESTS);
+        try {
+            initWFOPage();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void showEquipment(ActionEvent event) {
@@ -477,8 +472,17 @@ public class Frame extends JFrame implements View, ActionListener{
 
 
     @Override
+    public String getCubicleCombo() {
+        return String.valueOf(cubicleCombo.getSelectedItem());
+    }
+
+    @Override
+    public String getDateCombo() {
+        return String.valueOf(dateCombo.getSelectedItem());
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
-        submitWFO.setActionCommand("submit " + "2 " + String.valueOf(LocalDate.now()));
     }
 
     public static void main(String[] args) throws SQLException {
@@ -489,6 +493,12 @@ public class Frame extends JFrame implements View, ActionListener{
     public void systemUpdate(String info) {
         if(info.contains("WFO")){
             JOptionPane.showMessageDialog(this, info);
+            try {
+                initWFOPage();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
+
 }

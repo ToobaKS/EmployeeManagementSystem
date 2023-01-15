@@ -1,7 +1,9 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 public class EmployeeDetailsFrame extends JFrame implements ActionListener {
 
@@ -38,10 +40,11 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
     private JPanel thur;
     private JPanel fri;
     private JPanel sat;
-    private JTable table1;
-    private JComboBox comboBox1;
+    private JTable timeCardsTable;
     private JComboBox comboBox3;
     private JButton filter;
+    private JButton back;
+    private JButton next;
 
 
     //Constants
@@ -51,13 +54,17 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
     final static String TIMEP = "Time Cards";
     final static String BENEFITSP = "Benefits";
 
-    public EmployeeDetailsFrame(Model model) {
+    public EmployeeDetailsFrame(Model model) throws SQLException {
         super("Employee Information");
 
         this.model = model;
 
         initMenu();
         initPage();
+
+        initNotesPage();
+        initSchedulePage();
+        initTimeCardsPage();
 
         this.add(mainPanel);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -93,6 +100,17 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
     private void initSchedulePage() {
     }
 
+    private void initNotesPage(){
+
+    }
+
+    private void initTimeCardsPage() throws SQLException {
+       Table t = new Table(model.getJdbc().getConnection());
+       DefaultTableModel ttm = t.buildTableModel("select Employee_idEmployee from TimeTracking where DateWorked between date_sub(now(),INTERVAL 1 WEEK) and now() AND Employee_idEmployee = 2");
+       timeCardsTable.setModel(ttm);
+
+    }
+
     private void showPage(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
         ((CardLayout)page.getLayout()).show(page, command);
@@ -104,7 +122,7 @@ public class EmployeeDetailsFrame extends JFrame implements ActionListener {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         EmployeeDetailsFrame start = new EmployeeDetailsFrame(new Model());
     }
 

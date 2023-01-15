@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,13 +15,14 @@ public class Model {
     private String receiver = "";
     private String employeeLevel = "";
     private int employeeID = 2;
+
     private JDBCHolder jdbc;
 
     private ArrayList<HashMap> holderArray;
 
-    private HashMap<HashMap, String> dataPairs = new HashMap<>();
+    private HashMap<String, ArrayList> dateCubiclePairs = new HashMap<>();
     ArrayList<Integer> cubicles;
-
+    ArrayList<LocalDate> dateList;
     private LocalDate todayDate;
 
     public Model(){
@@ -28,20 +30,50 @@ public class Model {
         loginViews = new ArrayList<>();
         jdbc = new JDBCHolder();
         cubicles = new ArrayList<>();
+        dateList = new ArrayList<>();
 
-        initCubicles();
+        for(int i = 1; i<= NUMOFCUBICLES; i++){
+            cubicles.add(i);
+        }
 
         todayDate = LocalDate.now();
     }
 
-    public void initCubicles(){
-        for(int i = 1; i<= NUMOFCUBICLES; i++){
-            cubicles.add(i);
+
+    public ComboBoxModel getDateList() throws SQLException {
+        DefaultComboBoxModel cbm = new DefaultComboBoxModel();
+        LocalDate temp = todayDate;
+
+        for(int i = 1; i <= 7; i++){
+            ArrayList<Integer> t = new ArrayList<>();
+            Boolean b = jdbc.verifyDate(String.valueOf(temp), employeeID);
+            if(!b){
+               cbm.addElement(temp);
+               for(int c : cubicles){
+                   Boolean d = jdbc.verifyCubicle(c, String.valueOf(temp));
+                   if(!d){
+                       t.add(c);
+                   }
+               }
+               dateCubiclePairs.put(String.valueOf(temp), t);
+            }
+            temp = incrementDate(temp);
         }
+        return cbm;
     }
 
-    public ArrayList<Integer> getCubicles(){
-       return cubicles;
+
+
+    public ComboBoxModel getCubicles(String selectedDate) {
+        DefaultComboBoxModel cbm = new DefaultComboBoxModel();
+
+        ArrayList<Integer> temp = dateCubiclePairs.get(selectedDate);
+
+        for(int t: temp){
+            cbm.addElement(t);
+        }
+
+        return cbm;
     }
 
     public void login(String info) throws SQLException {
@@ -119,9 +151,7 @@ public class Model {
         String tableName = notificationRow.get("RequestType");
 
         if(tableName.equals("Leave")){
-            tableName = "'Leave'";
-        } else if(tableName.equals("WFO")){
-            keyAtrributeName = "CubicleID";
+            tableName = "`Leave`";
         }
 
         boolean b = jdbc.updateStringAttributes(tableName, attribute, "Approved", requestNo, keyAtrributeName);
@@ -132,11 +162,11 @@ public class Model {
             System.out.println(b);
         }
 
-        sendNotificationResponse(notificationRow, "Approved");
+        sendNotificationResponse(notificationRow, "Approved", "");
 
     }
 
-    public void rejectRequest(String notifNo) throws SQLException {
+    public void rejectRequest(String notifNo, String reason) throws SQLException {
         HashMap<String, String> notificationRow = jdbc.getOneRow("Notification", "NotificationNo", Integer.parseInt(notifNo));
         int requestNo = getRequestNo(notificationRow);
 
@@ -146,14 +176,12 @@ public class Model {
         String tableName = notificationRow.get("RequestType");
 
         if(tableName.equals("Leave")){
-            tableName = "'Leave'";
-        } else if(tableName.equals("WFO")){
-            keyAtrributeName = "CubicleID";
+            tableName = "`Leave`";
         }
 
         boolean b = jdbc.updateStringAttributes(tableName, attribute, "Rejected", requestNo, keyAtrributeName);
 
-        if(!notificationRow.get("RequestType").equals("Leave")){
+        if(notificationRow.get("RequestType").equals("Equipment")){
             attribute = "Employee_idEmployee";
             jdbc.updateStringAttributes(tableName, attribute, null, requestNo, keyAtrributeName);
         }
@@ -164,17 +192,19 @@ public class Model {
             System.out.println(b);
         }
 
-        sendNotificationResponse(notificationRow, "Rejected");
+        sendNotificationResponse(notificationRow, "Rejected", reason);
     }
 
-    private void sendNotificationResponse(HashMap<String, String> notificationRow, String Status) throws SQLException {
+    private void sendNotificationResponse(HashMap<String, String> notificationRow, String Status, String reason) throws SQLException {
         String NotificationStatus = "unread";
         LocalDate NotificationDate = LocalDate.now();
         String NotificationTitle = "Response to " + notificationRow.get("RequestType") + " Request";
-        String NotificationContent = "The following Request has been " + Status + ": " + notificationRow.get("NotificationContent") + " 0";
         String RequestType = "Request Update";
         String Receiver = notificationRow.get("Employee_idEmployee");
         String Employee_idEmployee = notificationRow.get("Receiver");
+        String content = notificationRow.get("NotificationContent");
+        content = content.substring(0, content.length() - 2);
+        String NotificationContent = "The following Request has been " + Status + ": " + content + "\nReason: " + reason + " 0";
 
         String sql = "INSERT INTO Notification(NotificationStatus, NotificationDate, NotificationTitle, NotificationContent, RequestType, Receiver, Employee_idEmployee) VALUES ('" + NotificationStatus + "', '"
                 + NotificationDate + "', '" + NotificationTitle + "', '" + NotificationContent + "', '"
@@ -200,18 +230,20 @@ public class Model {
         String WFOStatus = "Pending";
         LocalDate WFODate = LocalDate.parse(date);
         int cub = Integer.parseInt(CubicleNo);
-
-        String sql = "INSERT INTO WFO(CubicleId, WFODate, WFOStatus, Employee_idEmployee) VALUES (" + cub + ", '"
-                + WFODate + "', '" + WFOStatus + "', " + employeeID + ")";
+        String sql = "INSERT INTO WFO(CubicleNo, WFODate, WFOStatus, Employee_idEmployee) VALUES (" + cub + ", '"
+                + WFODate + "', '" + WFOStatus + "', " + employeeID+ ")";
 
         System.out.println(sql);
 
         jdbc.insertIntoTable(sql);
 
+        sql = "SELECT WFONo FROM WFO WHERE CubicleNo = " + CubicleNo + " AND WFODate = '"  + WFODate + "' AND Employee_idEmployee = " + employeeID +";";
+        String wfoId = jdbc.getCustomValue(sql);
+
         String NotificationStatus = "unread";
         LocalDate NotificationDate = LocalDate.now();
         String NotificationTitle = "Work From Office Request";
-        String NotificationContent = "Requesting Cubicle " + cub + " on " + WFODate + " " + cub;
+        String NotificationContent = "Requesting Cubicle " + cub + " on " + WFODate + " " + wfoId;
         String RequestType = "WFO";
         int Receiver = Integer.parseInt(jdbc.getValue(employeeID, "idEmployee","Employee_idEmployee", "Employee"));
         int Employee_idEmployee = employeeID;
@@ -244,7 +276,7 @@ public class Model {
 
     public String getAttributeValue(int id, String primaryKeyAttribute, String attribute, String tableName) throws SQLException {
         if(tableName.equals("Leave")){
-            tableName = "'Leave'";
+            tableName = "`Leave`";
         }
 
         String value = jdbc.getValue(id, primaryKeyAttribute, attribute, tableName);
@@ -286,6 +318,10 @@ public class Model {
         this.employeeLevel = employeeLevel;
     }
 
+    public JDBCHolder getJdbc() {
+        return jdbc;
+    }
+
     public int getEmployeeID() {
         return employeeID;
     }
@@ -300,7 +336,5 @@ public class Model {
 
         m.sendWFONotification("2", String.valueOf(LocalDate.now().plusDays(1)));
     }
-
-
 
 }
