@@ -152,6 +152,12 @@ public class JDBCHolder {
         return rs.getString(1);
     }
 
+    // inserting data from program to sql database
+    public static void insertData(String sql) throws Exception{
+        getConnection().createStatement().executeUpdate(sql);
+
+    }
+
     public String getNameFromDB(int id) throws SQLException {
         String name = "";
 

@@ -49,11 +49,7 @@ public class Frame extends JFrame implements View, ActionListener {
     private JMenu Schedule;
     private JList empList;
     private JLabel listEmpLabel;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField4;
     private JButton submitButton;
-    private JTextField textField3;
     private JLabel startDateLabel;
     private JLabel endDateLabel;
     private JLabel totalHoursLabel;
@@ -63,9 +59,6 @@ public class Frame extends JFrame implements View, ActionListener {
     private JPanel headlinePanel;
     private JPanel componentsPanel;
     private JPanel addNewEmpPage;
-    private JComboBox comboBox1;
-    private JComboBox comboBox2;
-    private JButton SubmitButton;
     private JLabel typeLabel;
     private JPanel equipmentLabel;
     private JLabel versionLabel;
@@ -137,7 +130,7 @@ public class Frame extends JFrame implements View, ActionListener {
     private JComboBox EquipmentType;
     private JButton SubmitButtonEq;
     private JButton EqSubmitButton;
-    private JTextField textField5;
+    //private JTextField textField5;
     private JComboBox EqVersionComboBox;
     private JTextField StartTextField;
     private JTextField TotalDaysTextField;
@@ -186,13 +179,6 @@ public class Frame extends JFrame implements View, ActionListener {
         EqSubmitButton.addActionListener(control);
 
         int idEmployee = 0;
-
-        //testing populating list of employees from database
-        try {
-            jdbcHolder.fillEmpJList(empList);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
         //initializing the drop-down menues
         initMainMenu();
@@ -311,8 +297,9 @@ public class Frame extends JFrame implements View, ActionListener {
     }
 
     private void initWFOPage() throws SQLException {
-        dateCombo.setModel(model.getDateList());
-        cubicleCombo.setModel(model.getCubicles(String.valueOf(LocalDate.now())));
+        DefaultComboBoxModel cbm = model.getDateList();
+        dateCombo.setModel(cbm);
+        cubicleCombo.setModel(model.getCubicles(String.valueOf(cbm.getElementAt(0))));
 
         dateCombo.addItemListener(new ItemListener() {
             @Override
@@ -611,6 +598,11 @@ public class Frame extends JFrame implements View, ActionListener {
     }
 
     @Override
+    public int getNotifNo() {
+        return 0;
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
     }
 
@@ -657,6 +649,7 @@ public class Frame extends JFrame implements View, ActionListener {
     public int getLeaveDays() {
         return Integer.parseInt(TotalDaysTextField.getText());
     }
+
 }
 
 

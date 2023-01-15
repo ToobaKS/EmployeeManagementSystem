@@ -3,17 +3,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.TimerTask;
-import java.util.Date;
 import java.util.Timer;
 
-public class NotificationsFrame extends JFrame implements  ActionListener {
+public class NotificationsFrame extends JFrame implements View, ActionListener {
 
     private JList notifList;
     private JPanel mainPanel;
@@ -47,7 +43,8 @@ public class NotificationsFrame extends JFrame implements  ActionListener {
                 Connection conn = jdbcHolder.getConnection();
                 try {
                     // query for selectiing notofocation that belong to the person who is logged in
-                    ResultSet rs = conn.prepareStatement("Select Count(*) from notification").executeQuery();
+                    ResultSet rs = conn.prepareStatement("Select Count(*) from Notification").executeQuery();
+                    rs.next();
                     int count = rs.getInt(1);
 
                     // here update the display of the notification list or table
@@ -157,6 +154,41 @@ public class NotificationsFrame extends JFrame implements  ActionListener {
     @Override
     public String getDateCombo() {
         return null;
+    }
+
+    @Override
+    public int getNotifNo() {
+        return 0;
+    }
+
+    @Override
+    public String getLeaveType() {
+        return null;
+    }
+
+    @Override
+    public String getEquipmentType() {
+        return null;
+    }
+
+    @Override
+    public String getEquipmentVer() {
+        return null;
+    }
+
+    @Override
+    public Date getStartDate() {
+        return null;
+    }
+
+    @Override
+    public Date getEndDate() {
+        return null;
+    }
+
+    @Override
+    public int getLeaveDays() {
+        return 0;
     }
 }
 

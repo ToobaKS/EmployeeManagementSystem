@@ -59,7 +59,7 @@ public class Model {
     }
 
 
-    public ComboBoxModel getDateList() throws SQLException {
+    public DefaultComboBoxModel getDateList() throws SQLException {
         DefaultComboBoxModel cbm = new DefaultComboBoxModel();
         LocalDate temp = todayDate;
 
@@ -78,13 +78,14 @@ public class Model {
             }
             temp = incrementDate(temp);
         }
+
         return cbm;
     }
 
-
-
-    public ComboBoxModel getCubicles(String selectedDate) {
+    public DefaultComboBoxModel getCubicles(String selectedDate) {
         DefaultComboBoxModel cbm = new DefaultComboBoxModel();
+
+        System.out.println(selectedDate);
 
         ArrayList<Integer> temp = dateCubiclePairs.get(selectedDate);
 
@@ -332,8 +333,6 @@ public class Model {
 
 
         try{
-
-
             String temp = "insert into `Leave`(LeaveType, LeaveDays, LeaveStartDate, LeaveEndDate, LeaveStatus, Employee_idEmployee )"+
                     " Values ('"+ LeaveType+ "',"+ LeaveDays +",'" + StartDate + "','"+ endDate + "','"+ LeaveStatus +"',"+ employeeID +")";
             jdbc.insertData(temp);
@@ -350,9 +349,6 @@ public class Model {
         }catch (Exception e){
             JOptionPane.showMessageDialog(null,e);
         }
-
-        notifyView();
-
     }
 
 

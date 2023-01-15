@@ -1,12 +1,9 @@
-import java.util.Date;
-
 public interface View {
     void systemUpdate(String info);
 
     String getCubicleCombo();
     String getDateCombo();
-
-
+    int getNotifNo();
     String getLeaveType();
     String getEquipmentType();
     String getEquipmentVer();

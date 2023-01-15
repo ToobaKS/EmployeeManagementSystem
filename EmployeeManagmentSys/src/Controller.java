@@ -22,22 +22,23 @@ public class Controller implements ActionListener{
 
         System.out.println(command);
 
-        switch (command.split(" ")[0]){
+        switch (command){
             case "Approve":
                 try {
-                    model.approveRequest(command.split(" ")[1]);
+                    model.approveRequest(String.valueOf(view.getNotifNo()));
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
                 break;
-            case "Submit":
+            case "Submit WFO":
                 try {
                     model.sendWFONotification(view.getCubicleCombo(), view.getDateCombo());
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
                 break;
-            case "Submit":
+            case "Submit Vacation":
+                System.out.println("Here");
                 vacationRequest();
                 break;
             case "Submit Equipment":

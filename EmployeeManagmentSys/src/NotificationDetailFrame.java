@@ -2,6 +2,7 @@ import javax.management.NotificationBroadcaster;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -33,7 +34,7 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
         model.addView(this);
 
         approveButton.addActionListener(controller);
-        approveButton.setActionCommand(approveButton.getText() + " " + notifNo);
+        //approveButton.setActionCommand(approveButton.getText() + " " + notifNo);
         rejectButton.addActionListener(this::actionPerformed);
 
         approveButton.enable();
@@ -120,6 +121,41 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
     @Override
     public String getDateCombo() {
         return null;
+    }
+
+    @Override
+    public int getNotifNo() {
+        return notifNo;
+    }
+
+    @Override
+    public String getLeaveType() {
+        return null;
+    }
+
+    @Override
+    public String getEquipmentType() {
+        return null;
+    }
+
+    @Override
+    public String getEquipmentVer() {
+        return null;
+    }
+
+    @Override
+    public Date getStartDate() {
+        return null;
+    }
+
+    @Override
+    public Date getEndDate() {
+        return null;
+    }
+
+    @Override
+    public int getLeaveDays() {
+        return 0;
     }
 
     public static void main(String[] args) {
