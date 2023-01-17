@@ -1,0 +1,54 @@
+Suggested Outline for Oral Presentation
+
+1. Introduction (Tooba)(1 Slide)
+ - Purpose/Objectives
+
+2. Background (Zinah)(1 Slide)
+ - How we came up with it
+ - Why we chose it
+
+3. Requirements(Tooba)(Asking Lynn)(1 Slide)
+ - Lucid Charts
+ - Database Sql - Amazon RDS
+ - SQL Workbench
+ - Java - IntelliJ
+
+4. Design (Both)(2 Slide)
+ - Hala, Yousef (Visual Charts, automation, design of the tabs, gave us feedback on our first design to make it more userdfriendly - WFO, equipment, tabs)
+ - Terrance, Kim (duplication, databse, HR, feedback automation, payStubbs, benefits)
+
+5. Implementation (Zinah)(1 Slide)
+ - MVC
+ - JDBC
+ - GUI Designer Tool
+
+6. Demonstration (Both)(1 Slide)
+
+7. Future Work and Timeline (Discuss with Lynn)(Slide 5)
+ - We are almost caught up on the timeline we made for ourselves
+Slide:(Tooba)
+ - Tabs allocated per view 
+Slide: (Zinah) 
+ - Charts 
+Slide: (Tooba) 
+ - Automation 
+Slide: (Zinah)
+ - Setting
+ - Profile
+ - Project
+ - Benefits Page 
+
+8. Reflections/Conclusions (Zinah)(1) 
+ - All in all the project is progressing very well. We are looking foward to finishing the final product and having different people test it. 
+ - This project was a good oppurtunity to build our own application and learn the different aspects of project management and design.   
+ - We hope to come back to it and build on it as we progress in our careers and develope new skills. 
+
+9. Questions (3-5min per person)
+
+about 1 slide / min
+30 min
+ - 10 minutes to demo
+ - 10 minutes for question
+ - 10 minutes presetation
+    - 5 mins/person
+ 

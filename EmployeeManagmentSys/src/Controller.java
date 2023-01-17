@@ -38,11 +38,17 @@ public class Controller implements ActionListener{
                 }
                 break;
             case "Submit Vacation":
-                System.out.println("Here");
                 vacationRequest();
                 break;
             case "Submit Equipment":
                 EquipmentRequest();
+                break;
+            case "Submit Note":
+                try {
+                    model.createNote(view.getNote());
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
                 break;
             default:
                 break;
@@ -68,4 +74,9 @@ public class Controller implements ActionListener{
         String EquipmentVersion = view.getEquipmentVer();
         model.saveToEquipmentTable(EquipmentType,employeeID,EquipmentVersion);
     }
+
+    public void setView(View view){
+        this.view = view;
+    }
+
 }

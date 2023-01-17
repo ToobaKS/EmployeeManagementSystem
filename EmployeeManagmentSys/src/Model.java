@@ -34,8 +34,6 @@ public class Model {
 
     private JDBCHolder jdbc;
 
-    private ArrayList<HashMap> holderArray;
-
     private HashMap<String, ArrayList> dateCubiclePairs = new HashMap<>();
     ArrayList<Integer> cubicles;
     ArrayList<LocalDate> dateList;
@@ -149,16 +147,28 @@ public class Model {
         return receiver;
     }
 
-    public void setListNotifications() throws SQLException {
-        holderArray = jdbc.getPreciseTable("Notification", "Receiver", employeeID);
+    private ArrayList<HashMap> setList(String tableName, String AttributeName, int id) throws SQLException {
+        ArrayList<HashMap> temp = jdbc.getPreciseTable(tableName, AttributeName, id);
+        return temp;
     }
 
     public String getEmployeeName(int employeeIdEmployee) throws SQLException {
         return jdbc.getNameFromDB(employeeIdEmployee);
     }
 
-    public ArrayList<HashMap> getHolderArray() {
-        return holderArray;
+
+    public ArrayList<HashMap> getNotesList(int employeeID) throws RuntimeException,SQLException {
+        ArrayList<HashMap> notesList = new ArrayList<>();
+        notesList = setList("Notes", "Employee_idEmployee", employeeID);
+
+        return notesList;
+    }
+
+    public ArrayList<HashMap> getNotificationList() throws RuntimeException, SQLException {
+        ArrayList<HashMap> notificationList = new ArrayList<>();
+        notificationList = setList("Notification", "Receiver", employeeID);
+
+        return notificationList;
     }
 
     public void approveRequest(String notifNo) throws SQLException {
@@ -279,11 +289,24 @@ public class Model {
         notifyView("WFO Request Successfully Submitted");
     }
 
+    public void createNote(String note) throws SQLException {
+        System.out.println(note);
+        String[] newNote = note.split(" ");
+
+        String sql = "INSERT INTO Notes(WrittenBy, NotesTitle, NotesContent, NotesDate, Employee_idEmployee) VALUES (" + employeeID + ", '"
+                + newNote[0]  + "', '" + newNote[1]  + "', '" + newNote[2]  + "', " + newNote[3] + ")";
+
+        System.out.println(sql);
+
+        jdbc.insertIntoTable(sql);
+
+        notifyView("Note Successfully Created");
+
+    }
+
     public LocalDate incrementDate(LocalDate date){
         return date.plusDays(1);
     }
-
-
 
     public HashMap<String, String> getRow(String tableName, String keyAttributeName, int key) throws SQLException {
         HashMap<String, String> row = jdbc.getOneRow(tableName, keyAttributeName, key);
@@ -450,6 +473,5 @@ public class Model {
 
         m.sendWFONotification("2", String.valueOf(LocalDate.now().plusDays(1)));
     }
-
 }
 

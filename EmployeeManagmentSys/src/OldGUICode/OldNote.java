@@ -1,4 +1,6 @@
-public class Note {
+package OldGUICode;
+
+public class OldNote {
 
     private String createdby;
     private String createdfor;
@@ -6,7 +8,7 @@ public class Note {
     private String title;
     private String note;
 
-    public Note(String createdby, String createdfor, String date, String title, String note) {
+    public OldNote(String createdby, String createdfor, String date, String title, String note) {
         this.createdby = createdby;
         this.createdfor = createdfor;
         this.date = date;
