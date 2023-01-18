@@ -257,7 +257,6 @@ public class JDBCHolder {
         return eq;
     }
 
-
     public void fillEmpJList(JList jList)
             throws SQLException {
 

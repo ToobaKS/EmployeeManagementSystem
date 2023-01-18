@@ -1,13 +1,16 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
+import java.sql.SQLOutput;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class Model {
-
 
     private String LeaveType;
     private int LeaveDays;
@@ -136,6 +139,65 @@ public class Model {
         }else{
             this.employeeLevel= "employee";
         }
+    }
+
+    public HashMap<String, DefaultTableModel> setTimeCards(int id) throws SQLException {
+        HashMap<String, DefaultTableModel> weeklyTimeCards = new HashMap<>();
+        ArrayList<HashMap> employeeTimeCards = jdbc.getPreciseTable("TimeTracking", "Employee_idEmployee", id);
+
+        if(employeeTimeCards.size() == 0){
+            DefaultTableModel dtm = new DefaultTableModel();
+            dtm.addColumn("Date");
+            dtm.addColumn("Hours");
+            dtm.addColumn("Start Time");
+            dtm.addColumn("End Time");
+
+            LocalDate previousMonday = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+            weeklyTimeCards.put(String.valueOf(previousMonday), dtm);
+
+            return weeklyTimeCards;
+        }
+        LocalDate date = LocalDate.parse((CharSequence) (employeeTimeCards.get(0)).get("DateWorked"));
+        LocalDate previousMonday = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+        DefaultTableModel dtm = new DefaultTableModel();
+        dtm.addColumn("Date");
+        dtm.addColumn("Hours");
+        dtm.addColumn("Start Time");
+        dtm.addColumn("End Time");
+
+        for(int i = 0; i < employeeTimeCards.size(); i++){
+            HashMap<String, String> temp = employeeTimeCards.get(i);
+
+            LocalDate currentSelected = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+            if(previousMonday.equals(currentSelected)){
+                dtm.addRow(new Object[]{temp.get("DateWorked"), temp.get("HoursWork"), temp.get("StartTime"), temp.get("endTime")});
+                if(i == employeeTimeCards.size()-1){
+                    weeklyTimeCards.put(String.valueOf(previousMonday), dtm);
+                }
+            }else{
+                weeklyTimeCards.put(String.valueOf(previousMonday), dtm);
+
+                dtm = new DefaultTableModel();
+                dtm.addColumn("Date");
+                dtm.addColumn("Hours");
+                dtm.addColumn("Start Time");
+                dtm.addColumn("End Time");
+
+                dtm.addRow(new Object[]{temp.get("DateWorked"), temp.get("HoursWork"), temp.get("StartTime"), temp.get("endTime")});
+
+                LocalDate tempDate = LocalDate.parse(String.valueOf((employeeTimeCards.get(i+1).get("DateWorked"))));
+                previousMonday = tempDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            }
+
+            if(i != employeeTimeCards.size()-1){
+                date =  LocalDate.parse(String.valueOf((employeeTimeCards.get(i+1).get("DateWorked"))));
+            }
+        }
+
+        return weeklyTimeCards;
     }
 
     public String getReceiver(int tempID) throws SQLException {
@@ -469,9 +531,7 @@ public class Model {
 
     public static void main(String[] args) throws SQLException {
         Model m = new Model();
-        m.getReceiver(1);
-
-        m.sendWFONotification("2", String.valueOf(LocalDate.now().plusDays(1)));
+        m.setTimeCards(2);
     }
 }
 

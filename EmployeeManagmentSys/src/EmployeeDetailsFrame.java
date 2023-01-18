@@ -7,7 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -39,7 +41,7 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
     private JList notesList;
     private JButton previousW;
     private JButton nextW;
-    private JLabel week;
+    private JLabel weekSchedule;
     private JPanel sun;
     private JPanel mon;
     private JPanel tue;
@@ -47,11 +49,10 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
     private JPanel thur;
     private JPanel fri;
     private JPanel sat;
-    private JTable timeCardsTable;
-    private JComboBox comboBox3;
+    private JComboBox timeCardDates;
     private JButton filter;
-    private JButton back;
-    private JButton next;
+    private JButton backTimeCards;
+    private JButton nextTimeCards;
 
     private JTextField firstNametextField;
     private JTextField empNumTextField;
@@ -77,6 +78,8 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
     private JLabel birthdayLabel;
     private JLabel hireDateLabel;
     private JLabel salaryLabel;
+    private JTable timeCardsTable;
+    private JLabel weekTimeCards;
     private String name;
 
     //Constants
@@ -89,16 +92,18 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
     private ArrayList<HashMap> notesAttributes;
     private Controller controller;
 
+    private HashMap<String, DefaultTableModel> weeklyTimeCards;
+
     private JDBCHolder jdbcHolder;
 
     public EmployeeDetailsFrame(Model model, Controller controller, int ID) throws SQLException {
         super("Employee Information");
 
-        this.ID = ID;
-
         this.model = model;
         model.addView(this);
         this.controller = controller;
+
+        this.ID = ID;
 
         employeeName.setText(name);
         jdbcHolder = new JDBCHolder();
@@ -106,6 +111,11 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
 
         notesAttributes = new ArrayList<>();
         notesAttributes = model.getNotesList(ID);
+        weeklyTimeCards = model.setTimeCards(ID);
+
+        for ( String key : weeklyTimeCards.keySet() ) {
+            timeCardDates.addItem(key);
+        }
 
         initMenu();
         initPage();
@@ -113,12 +123,44 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
 
         initNotesPage();
         initSchedulePage();
-        initTimeCardsPage();
+        initTimeCardsPage(LocalDate.now());
 
         this.add(mainPanel);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setSize(600,500);
+        this.setSize(700,700);
         this.setVisible(true);
+
+        backTimeCards.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String[] cur = weekTimeCards.getText().split(" ");
+                LocalDate currentDate = LocalDate.parse(cur[cur.length - 1]);
+
+                LocalDate previousMonday = currentDate.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+                try {
+                    initTimeCardsPage(previousMonday);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        nextTimeCards.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String[] cur = weekTimeCards.getText().split(" ");
+                LocalDate currentDate = LocalDate.parse(cur[cur.length - 1]);
+
+                LocalDate nextMonday = currentDate.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+                try {
+                    initTimeCardsPage(nextMonday);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+
         create.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -152,6 +194,18 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
                     } catch (NullPointerException exception){
 
                     }
+                }
+            }
+        });
+
+        filter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LocalDate selected = LocalDate.parse((CharSequence) timeCardDates.getSelectedItem());
+                try {
+                    initTimeCardsPage(selected);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
         });
@@ -221,10 +275,21 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
 
     }
 
-    private void initTimeCardsPage() throws SQLException {
-       //Table t = new Table(model.getJdbc().getConnection());
-       //DefaultTableModel ttm = t.buildTableModel("select Employee_idEmployee from TimeTracking where DateWorked between date_sub(now(),INTERVAL 1 WEEK) and now() AND Employee_idEmployee = 2");
-       //timeCardsTable.setModel(ttm);
+    private void initTimeCardsPage(LocalDate date) throws SQLException {
+        LocalDate previousMonday = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        DefaultTableModel dtm = weeklyTimeCards.get(String.valueOf(previousMonday));
+        if(dtm == null){
+            dtm = new DefaultTableModel();
+            dtm.addColumn("Date");
+            dtm.addColumn("Hours");
+            dtm.addColumn("Start Time");
+            dtm.addColumn("End Time");
+
+        }
+
+        weekTimeCards.setText("Week of: " + previousMonday);
+        timeCardsTable.setModel(dtm);
+
     }
 
     private void showPage(ActionEvent actionEvent) {
