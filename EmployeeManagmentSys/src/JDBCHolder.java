@@ -200,9 +200,11 @@ public class JDBCHolder {
         System.out.println(sql);
         ResultSet rs = stmt.executeQuery(sql);
 
-        rs.next();
+        if(rs.next()){
+            return rs.getString(1);
+        }
 
-        return rs.getString(1);
+        return "empty";
     }
 
     public boolean insertIntoTable(String sql) throws SQLException {

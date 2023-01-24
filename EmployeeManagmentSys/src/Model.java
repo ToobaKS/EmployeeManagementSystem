@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
-import java.sql.SQLOutput;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -200,10 +199,45 @@ public class Model {
         return weeklyTimeCards;
     }
 
+    public DefaultTableModel setSchedule(int id, LocalDate monday) throws SQLException {
+        DefaultTableModel dtm = new DefaultTableModel();
+        ArrayList<HashMap> employeeSchedule = jdbc.getPreciseTable("DailySchedule", "Employee_idEmployee", id);
+
+        dtm.addColumn("Sunday");
+        dtm.addColumn("Monday");
+        dtm.addColumn("Tuesday");
+        dtm.addColumn("Wednesday");
+        dtm.addColumn("Thursday");
+        dtm.addColumn("Friday");
+        dtm.addColumn("Saturday");
+
+        String[] wS = addWeeklyDates(monday, id);
+
+        dtm.addRow(new Object[]{wS[0], wS[1], wS[2], wS[3], wS[4], wS[5], wS[6]});
+
+        return dtm;
+    }
+
+    private String[] addWeeklyDates(LocalDate monday, int empId) throws SQLException {
+
+        String[] weeklySchedule = new String[7];
+        LocalDate date = monday;
+
+        for(int i = 0; i < 7; i++){
+            weeklySchedule[i] = "<html>" + String.valueOf(date.getDayOfMonth());
+            String addOn = jdbc.getCustomValue("SELECT StartT FROM DailySchedule WHERE DateToWork = '" + date + "' AND Employee_idEmployee = " + empId +";");
+            String addOn2 = jdbc.getCustomValue("SELECT EndT FROM DailySchedule WHERE DateToWork = '" + date + "' AND Employee_idEmployee = " + empId +";");
+            if(!addOn.equals("empty")){
+                weeklySchedule[i] += "<br><br>" + addOn + " - " + addOn2;
+            }
+            weeklySchedule[i] += "</html>";
+            date = incrementDate(date);
+        }
+        return weeklySchedule;
+    }
+
     public String getReceiver(int tempID) throws SQLException {
-
         receiver = jdbc.getValue(tempID, "Employee_idEmployee", "Receiver", "Notification");
-
         System.out.println(receiver);
 
         return receiver;
@@ -531,7 +565,7 @@ public class Model {
 
     public static void main(String[] args) throws SQLException {
         Model m = new Model();
-        m.setTimeCards(2);
+        m.setSchedule(2, LocalDate.now());
     }
 }
 

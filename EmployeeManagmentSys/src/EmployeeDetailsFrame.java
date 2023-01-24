@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -42,13 +43,6 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
     private JButton previousW;
     private JButton nextW;
     private JLabel weekSchedule;
-    private JPanel sun;
-    private JPanel mon;
-    private JPanel tue;
-    private JPanel wed;
-    private JPanel thur;
-    private JPanel fri;
-    private JPanel sat;
     private JComboBox timeCardDates;
     private JButton filter;
     private JButton backTimeCards;
@@ -80,7 +74,11 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
     private JLabel salaryLabel;
     private JTable timeCardsTable;
     private JLabel weekTimeCards;
+    private JTable weeklySchedule;
     private String name;
+
+
+    final JTextArea textArea = new JTextArea();
 
     //Constants
     final static String DETAILS = "Employee Details";
@@ -122,12 +120,12 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
         fillEmPDetails();
 
         initNotesPage();
-        initSchedulePage();
+        initSchedulePage(LocalDate.now());
         initTimeCardsPage(LocalDate.now());
 
         this.add(mainPanel);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setSize(700,700);
+        this.setSize(700,600);
         this.setVisible(true);
 
         backTimeCards.addActionListener(new ActionListener() {
@@ -209,6 +207,33 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
                 }
             }
         });
+        previousW.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String[] cur = weekSchedule.getText().split(" ");
+                LocalDate currentDate = LocalDate.parse(cur[cur.length - 1]);
+
+                LocalDate previousMonday = currentDate.with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+                try {
+                    initSchedulePage(previousMonday);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+        nextW.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String[] cur = weekSchedule.getText().split(" ");
+                LocalDate currentDate = LocalDate.parse(cur[cur.length - 1]);
+                LocalDate nextMonday = currentDate.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+                try {
+                    initSchedulePage(nextMonday);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
     private void initMenu() {
 
@@ -248,7 +273,23 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
         page.add(benefitsPage, BENEFITSP);
     }
 
-    private void initSchedulePage() {
+    private void initSchedulePage(LocalDate date) throws SQLException {
+        LocalDate previousMonday = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        DefaultTableModel dtm = model.setSchedule(ID, date);
+
+        weekSchedule.setText("Week of: " + previousMonday);
+        weeklySchedule.setModel(dtm);
+
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
+
+        for(int i = 0; i < 7; i++) {
+            weeklySchedule.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
+        }
+
+        weeklySchedule.setRowHeight(100);
+
+
     }
 
     private void initNotesPage(){
