@@ -33,7 +33,7 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
 
         model.addView(this);
 
-        approveButton.addActionListener(controller);
+        approveButton.addActionListener(this::actionPerformed);
         //approveButton.setActionCommand(approveButton.getText() + " " + notifNo);
         rejectButton.addActionListener(this::actionPerformed);
 
@@ -92,6 +92,9 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
             if(!requestS.equals("Pending")){
                 disableButtons();
             }
+//            if(!requestS.equals("available")){
+//                disableButtons();
+//            }
         }
     }
 
@@ -169,11 +172,19 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
 
     @Override
     public void actionPerformed(ActionEvent e) {
-         reason = JOptionPane.showInputDialog(this, "Enter reason for rejection: ");
-        try {
-            controller.caseReject(String.valueOf(notifNo), reason);
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+        if(e.getActionCommand().equals("Reject")){
+            reason = JOptionPane.showInputDialog(this, "Enter reason for rejection: ");
+            try {
+                controller.caseReject(String.valueOf(notifNo), reason);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        } else if (e.getActionCommand().equals("Approve")) {
+            try {
+                controller.caseApprove(String.valueOf(notifNo));
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 }

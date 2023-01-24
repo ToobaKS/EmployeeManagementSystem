@@ -265,6 +265,7 @@ public class Frame extends JFrame implements View, ActionListener {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
                     String data = unreadNotesList.getSelectedValue().toString();
+                    System.out.println(unreadNotesList.getSelectedValue().toString());
                     String t = String.valueOf(data.charAt(data.length() - 2));
 
                     for (HashMap h : notificationAttributes) {
