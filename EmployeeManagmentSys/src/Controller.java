@@ -23,13 +23,6 @@ public class Controller implements ActionListener{
         System.out.println(command);
 
         switch (command){
-            case "Approve":
-                try {
-                    model.approveRequest(String.valueOf(view.getNotifNo()));
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-                break;
             case "Submit WFO":
                 try {
                     model.sendWFONotification(view.getCubicleCombo(), view.getDateCombo());
@@ -57,6 +50,9 @@ public class Controller implements ActionListener{
 
     public void caseReject(String notifNo, String reason) throws SQLException {
         model.rejectRequest(notifNo, reason);
+    }
+    public void caseApprove(String notifNo) throws SQLException {
+        model.approveRequest(notifNo);
     }
 
     private void vacationRequest(){

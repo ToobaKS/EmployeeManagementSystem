@@ -274,7 +274,10 @@ public class Model {
      */
     public void approveRequest(String notifNo) throws SQLException {
         HashMap<String, String> notificationRow = jdbc.getOneRow("Notification", "NotificationNo", Integer.parseInt(notifNo));
+        System.out.println(notifNo);
         int requestNo = getRequestNo(notificationRow);
+
+        System.out.println(requestNo);
 
         String attribute = notificationRow.get("RequestType") + "Status";
         String keyAtrributeName = notificationRow.get("RequestType") + "No";
@@ -347,6 +350,7 @@ public class Model {
     }
     private int getRequestNo(HashMap<String, String> notificationRow){
         String content = notificationRow.get("NotificationContent");
+        System.out.println(notificationRow.get("NotificationContent"));
         String temp[] = notificationRow.get("NotificationContent").split(" ");
 
         String substring = content.substring(content.length() - 1, content.length());
@@ -461,11 +465,11 @@ public class Model {
                     " Values ('"+ LeaveType+ "',"+ LeaveDays +",'" + StartDate + "','"+ endDate + "','"+ LeaveStatus +"',"+ employeeID +")";
             jdbc.insertData(temp);
             int leaveIDReader = jdbc.getLeaveLatest(employeeID);
-            notificationContent = employeeID + "  has requested a " + requestType+ " for " + LeaveDays + " days " + " from " + StartDate + " to " + endDate + " the request number is  " + leaveIDReader;
+            notificationContent = jdbc.getNameFromDB(employeeID) + "  has requested a " + requestType+ " for " + LeaveDays + " days.\n" + " From " + StartDate + " to " + endDate + " " + leaveIDReader;
             String reciver1 = jdbc.getValue(employeeID, "idEmployee","Employee_idEmployee", "Employee");
             int reciver = Integer.parseInt(reciver1);
             String temp2 = "insert into Notification(NotificationStatus, NotificationDate, NotificationTitle, NotificationContent, RequestType, Receiver, Employee_idEmployee)"+
-                    " Values ('" + notificationStatus + "','" + notificationDate + "','"+ notificationTitle + "','" + notificationContent + "','"+ requestType + "',"+ reciver + "," + employeeID + ")";
+                    " Values ('" + notificationStatus + "','" + LocalDate.now() + "','"+ notificationTitle + "','" + notificationContent + "','"+ requestType + "',"+ reciver + "," + employeeID + ")";
 
             jdbc.insertData(temp2);
             System.out.println("submitted to database");
@@ -495,11 +499,11 @@ public class Model {
 
             int eqIDReader = jdbc.getEQLatest(employeeID);
             //int eqID = Integer.parseInt(eqIDReader);
-            notificationContent = employeeID + "  has requested a " + requestType+ " the equipment type is " +  EquipmentType + " of version " + EquipmentVersion  + " the request number is  " + eqIDReader;
+            notificationContent = jdbc.getNameFromDB(employeeID) + " has requested a " + requestType+ "\nThe equipment type is " +  EquipmentType + " of version " + EquipmentVersion  + " " + eqIDReader;
             String reciver1 = jdbc.getValue(employeeID, "idEmployee","Employee_idEmployee", "Employee");
             int reciver = Integer.parseInt(reciver1);
             String temp2 = "insert into Notification(NotificationStatus, NotificationDate, NotificationTitle, NotificationContent, RequestType, Receiver, Employee_idEmployee)"+
-                    " Values ('" + notificationStatus + "','" + notificationDate + "','"+ notificationTitle + "','" + notificationContent + "','"+ requestType + "',"+ reciver + "," + employeeID + ")";
+                    " Values ('" + notificationStatus + "','" + LocalDate.now() + "','"+ notificationTitle + "','" + notificationContent + "','"+ requestType + "',"+ reciver + "," + employeeID + ")";
 
             jdbc.insertData(temp2);
             System.out.println("submitted to database");
