@@ -267,6 +267,11 @@ public class Model {
         return notificationList;
     }
 
+
+    /**
+     * @param notifNo
+     * @throws SQLException
+     */
     public void approveRequest(String notifNo) throws SQLException {
         HashMap<String, String> notificationRow = jdbc.getOneRow("Notification", "NotificationNo", Integer.parseInt(notifNo));
         int requestNo = getRequestNo(notificationRow);
