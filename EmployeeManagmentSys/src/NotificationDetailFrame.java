@@ -129,6 +129,11 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
     }
 
     @Override
+    public String getNote() {
+        return null;
+    }
+
+    @Override
     public String getLeaveType() {
         return null;
     }

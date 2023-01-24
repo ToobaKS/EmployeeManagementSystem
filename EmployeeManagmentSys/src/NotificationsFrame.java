@@ -64,9 +64,7 @@ public class NotificationsFrame extends JFrame implements View, ActionListener {
         // put an order where newest notification on top using  reverse order
 
         notificationAttributes = new ArrayList<>();
-        model.setListNotifications();
-        notificationAttributes = model.getHolderArray();
-
+        notificationAttributes = model.getNotificationList();
         init();
 
         notifList.addListSelectionListener(new ListSelectionListener() {
@@ -159,6 +157,11 @@ public class NotificationsFrame extends JFrame implements View, ActionListener {
     @Override
     public int getNotifNo() {
         return 0;
+    }
+
+    @Override
+    public String getNote() {
+        return null;
     }
 
     @Override

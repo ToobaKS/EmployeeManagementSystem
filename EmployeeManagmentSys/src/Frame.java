@@ -225,10 +225,10 @@ public class Frame extends JFrame implements View, ActionListener {
                 //JTable target = (JTable)e.getSource();
                 int row = empListTable.getSelectedRow();
                 int column = empListTable.getSelectedColumn();
-                String value2 = String.valueOf(empListTable.getModel().getValueAt(row, 2));
-                int value3 = Integer.parseInt(value2);
+                String stringId = String.valueOf(empListTable.getModel().getValueAt(row, 2));
+                int id = Integer.parseInt(stringId);
                 try {
-                    EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model, value3);
+                    EmployeeDetailsFrame myEmpFrame = new EmployeeDetailsFrame(model, control, id);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -310,11 +310,11 @@ public class Frame extends JFrame implements View, ActionListener {
                 cubicleCombo.setModel(model.getCubicles(selectedDate));
             }
         });
+
     }
 
     private void fillDashboardNotificationList() throws SQLException {
-        model.setListNotifications();
-        notificationAttributes = model.getHolderArray();
+        notificationAttributes = model.getNotificationList();
         try {
 
             HashMap<String, String> temp = new HashMap<>();
@@ -600,6 +600,11 @@ public class Frame extends JFrame implements View, ActionListener {
     @Override
     public int getNotifNo() {
         return 0;
+    }
+
+    @Override
+    public String getNote() {
+        return null;
     }
 
     @Override

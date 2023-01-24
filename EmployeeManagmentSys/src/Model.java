@@ -1,13 +1,15 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 public class Model {
-
 
     private String LeaveType;
     private int LeaveDays;
@@ -33,8 +35,6 @@ public class Model {
     private int employeeID = 2;
 
     private JDBCHolder jdbc;
-
-    private ArrayList<HashMap> holderArray;
 
     private HashMap<String, ArrayList> dateCubiclePairs = new HashMap<>();
     ArrayList<Integer> cubicles;
@@ -140,27 +140,138 @@ public class Model {
         }
     }
 
+    public HashMap<String, DefaultTableModel> setTimeCards(int id) throws SQLException {
+        HashMap<String, DefaultTableModel> weeklyTimeCards = new HashMap<>();
+        ArrayList<HashMap> employeeTimeCards = jdbc.getPreciseTable("TimeTracking", "Employee_idEmployee", id);
+
+        if(employeeTimeCards.size() == 0){
+            DefaultTableModel dtm = new DefaultTableModel();
+            dtm.addColumn("Date");
+            dtm.addColumn("Hours");
+            dtm.addColumn("Start Time");
+            dtm.addColumn("End Time");
+
+            LocalDate previousMonday = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+            weeklyTimeCards.put(String.valueOf(previousMonday), dtm);
+
+            return weeklyTimeCards;
+        }
+        LocalDate date = LocalDate.parse((CharSequence) (employeeTimeCards.get(0)).get("DateWorked"));
+        LocalDate previousMonday = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+        DefaultTableModel dtm = new DefaultTableModel();
+        dtm.addColumn("Date");
+        dtm.addColumn("Hours");
+        dtm.addColumn("Start Time");
+        dtm.addColumn("End Time");
+
+        for(int i = 0; i < employeeTimeCards.size(); i++){
+            HashMap<String, String> temp = employeeTimeCards.get(i);
+
+            LocalDate currentSelected = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+            if(previousMonday.equals(currentSelected)){
+                dtm.addRow(new Object[]{temp.get("DateWorked"), temp.get("HoursWork"), temp.get("StartTime"), temp.get("endTime")});
+                if(i == employeeTimeCards.size()-1){
+                    weeklyTimeCards.put(String.valueOf(previousMonday), dtm);
+                }
+            }else{
+                weeklyTimeCards.put(String.valueOf(previousMonday), dtm);
+
+                dtm = new DefaultTableModel();
+                dtm.addColumn("Date");
+                dtm.addColumn("Hours");
+                dtm.addColumn("Start Time");
+                dtm.addColumn("End Time");
+
+                dtm.addRow(new Object[]{temp.get("DateWorked"), temp.get("HoursWork"), temp.get("StartTime"), temp.get("endTime")});
+
+                LocalDate tempDate = LocalDate.parse(String.valueOf((employeeTimeCards.get(i+1).get("DateWorked"))));
+                previousMonday = tempDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            }
+
+            if(i != employeeTimeCards.size()-1){
+                date =  LocalDate.parse(String.valueOf((employeeTimeCards.get(i+1).get("DateWorked"))));
+            }
+        }
+
+        return weeklyTimeCards;
+    }
+
+    public DefaultTableModel setSchedule(int id, LocalDate monday) throws SQLException {
+        DefaultTableModel dtm = new DefaultTableModel();
+        ArrayList<HashMap> employeeSchedule = jdbc.getPreciseTable("DailySchedule", "Employee_idEmployee", id);
+
+        dtm.addColumn("Sunday");
+        dtm.addColumn("Monday");
+        dtm.addColumn("Tuesday");
+        dtm.addColumn("Wednesday");
+        dtm.addColumn("Thursday");
+        dtm.addColumn("Friday");
+        dtm.addColumn("Saturday");
+
+        String[] wS = addWeeklyDates(monday, id);
+
+        dtm.addRow(new Object[]{wS[0], wS[1], wS[2], wS[3], wS[4], wS[5], wS[6]});
+
+        return dtm;
+    }
+
+    private String[] addWeeklyDates(LocalDate monday, int empId) throws SQLException {
+
+        String[] weeklySchedule = new String[7];
+        LocalDate date = monday;
+
+        for(int i = 0; i < 7; i++){
+            weeklySchedule[i] = "<html>" + String.valueOf(date.getDayOfMonth());
+            String addOn = jdbc.getCustomValue("SELECT StartT FROM DailySchedule WHERE DateToWork = '" + date + "' AND Employee_idEmployee = " + empId +";");
+            String addOn2 = jdbc.getCustomValue("SELECT EndT FROM DailySchedule WHERE DateToWork = '" + date + "' AND Employee_idEmployee = " + empId +";");
+            if(!addOn.equals("empty")){
+                weeklySchedule[i] += "<br><br>" + addOn + " - " + addOn2;
+            }
+            weeklySchedule[i] += "</html>";
+            date = incrementDate(date);
+        }
+        return weeklySchedule;
+    }
+
     public String getReceiver(int tempID) throws SQLException {
-
         receiver = jdbc.getValue(tempID, "Employee_idEmployee", "Receiver", "Notification");
-
         System.out.println(receiver);
 
         return receiver;
     }
 
-    public void setListNotifications() throws SQLException {
-        holderArray = jdbc.getPreciseTable("Notification", "Receiver", employeeID);
+    private ArrayList<HashMap> setList(String tableName, String AttributeName, int id) throws SQLException {
+        ArrayList<HashMap> temp = jdbc.getPreciseTable(tableName, AttributeName, id);
+        return temp;
     }
 
     public String getEmployeeName(int employeeIdEmployee) throws SQLException {
         return jdbc.getNameFromDB(employeeIdEmployee);
     }
 
-    public ArrayList<HashMap> getHolderArray() {
-        return holderArray;
+
+    public ArrayList<HashMap> getNotesList(int employeeID) throws RuntimeException,SQLException {
+        ArrayList<HashMap> notesList = new ArrayList<>();
+        notesList = setList("Notes", "Employee_idEmployee", employeeID);
+
+        return notesList;
     }
 
+    public ArrayList<HashMap> getNotificationList() throws RuntimeException, SQLException {
+        ArrayList<HashMap> notificationList = new ArrayList<>();
+        notificationList = setList("Notification", "Receiver", employeeID);
+
+        return notificationList;
+    }
+
+
+    /**
+     * @param notifNo
+     * @throws SQLException
+     */
     public void approveRequest(String notifNo) throws SQLException {
         HashMap<String, String> notificationRow = jdbc.getOneRow("Notification", "NotificationNo", Integer.parseInt(notifNo));
         int requestNo = getRequestNo(notificationRow);
@@ -279,11 +390,24 @@ public class Model {
         notifyView("WFO Request Successfully Submitted");
     }
 
+    public void createNote(String note) throws SQLException {
+        System.out.println(note);
+        String[] newNote = note.split(" ");
+
+        String sql = "INSERT INTO Notes(WrittenBy, NotesTitle, NotesContent, NotesDate, Employee_idEmployee) VALUES (" + employeeID + ", '"
+                + newNote[0]  + "', '" + newNote[1]  + "', '" + newNote[2]  + "', " + newNote[3] + ")";
+
+        System.out.println(sql);
+
+        jdbc.insertIntoTable(sql);
+
+        notifyView("Note Successfully Created");
+
+    }
+
     public LocalDate incrementDate(LocalDate date){
         return date.plusDays(1);
     }
-
-
 
     public HashMap<String, String> getRow(String tableName, String keyAttributeName, int key) throws SQLException {
         HashMap<String, String> row = jdbc.getOneRow(tableName, keyAttributeName, key);
@@ -446,10 +570,7 @@ public class Model {
 
     public static void main(String[] args) throws SQLException {
         Model m = new Model();
-        m.getReceiver(1);
-
-        m.sendWFONotification("2", String.valueOf(LocalDate.now().plusDays(1)));
+        m.setSchedule(2, LocalDate.now());
     }
-
 }
 

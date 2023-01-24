@@ -4,6 +4,7 @@ public interface View {
     String getCubicleCombo();
     String getDateCombo();
     int getNotifNo();
+    String getNote();
     String getLeaveType();
     String getEquipmentType();
     String getEquipmentVer();
