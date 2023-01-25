@@ -1,4 +1,4 @@
-Suggested Outline for Oral Presentation
+Suggested Outline for Oral Presentation (Demonstartion more important)
 
 1. Introduction (Tooba)(1 Slide)
  - Purpose/Objectives
@@ -7,24 +7,25 @@ Suggested Outline for Oral Presentation
  - How we came up with it
  - Why we chose it
 
-3. Requirements(Tooba)(Asking Lynn)(1 Slide)
- - Lucid Charts
- - Database Sql - Amazon RDS
- - SQL Workbench
- - Java - IntelliJ
+3. Requirements (Tooba)(Asking Lynn)(1 Slide) -
+ - what the project needs to do
 
 4. Design (Both)(2 Slide)
  - Hala, Yousef (Visual Charts, automation, design of the tabs, gave us feedback on our first design to make it more userdfriendly - WFO, equipment, tabs)
  - Terrance, Kim (duplication, databse, HR, feedback automation, payStubbs, benefits)
 
 5. Implementation (Zinah)(1 Slide)
+ - Lucid Charts
+ - Database Sql - Amazon RDS
+ - SQL Workbench
+ - Java - IntelliJ 
  - MVC
  - JDBC
  - GUI Designer Tool
 
 6. Demonstration (Both)(1 Slide)
 
-7. Future Work and Timeline (Discuss with Lynn)(Slide 5)
+7. Future Work and Timeline (Discuss with Lynn)(Slide 4) - Don't need to got through details
  - We are almost caught up on the timeline we made for ourselves
 Slide:(Tooba)
  - Tabs allocated per view 
@@ -51,4 +52,3 @@ about 1 slide / min
  - 10 minutes for question
  - 10 minutes presetation
     - 5 mins/person
- 
