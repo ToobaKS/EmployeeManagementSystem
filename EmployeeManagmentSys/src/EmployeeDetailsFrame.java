@@ -103,7 +103,7 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
 
         this.ID = ID;
 
-        employeeName.setText(name);
+        employeeName.setText(model.getEmployeeName(ID));
         jdbcHolder = new JDBCHolder();
         jdbcHolder.initializer();
 
@@ -235,9 +235,9 @@ public class EmployeeDetailsFrame extends JFrame implements View, ActionListener
             }
         });
     }
-    private void initMenu() {
+    private void initMenu() throws SQLException {
 
-        employeeName.setText("Tooba");
+        employeeName.setText(model.getEmployeeName(ID));
 
         details.addActionListener(this::showPage);
         notes.addActionListener(this::showPage);

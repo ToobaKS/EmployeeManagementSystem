@@ -1,0 +1,101 @@
+Slide 1: Tooba
+
+Good afternoon professors, 
+
+My name is Tooba and this is my partner Zinah on the screen with me. 
+We will be going over our project, the employee management system.
+
+Slide 2: Tooba
+The preseantation wuill be structured to explain what and why we are doing the project 
+in the objective and background. This will be followed by the requiremnets, 
+design and implementation details of our project. We also have a short demonstration video
+that will show what we have complteted so far. We will finish off the presentation by 
+going over our plan for the future work.  
+
+Slide 3: Tooba
+
+Our objective is to build an Enterprise resource planning system, ERP for short. 
+An ERP is a system that is used to manage many different aspects of a business.
+Zinah and I have both used ERP's at our respective workplaces and ran into many issues 
+on the employee aspects of these systems. Because of this, we have chosen to focus
+on the employee management aspect of the system to comabt issues we have faced while 
+using other systems. 
+
+Slide 4: Zinah
+Handing it over Zinah 
+
+Slide 5: Tooba
+I will be going over the functional requirements of our system.
+
+I'll start with main requiremnts or features we have included in our ERP. 
+The first one is the three levels of access. As mentioned earlier we want to have a dedicated
+employee portal, and have decided to include a portal for employee, HR and managers. 
+Each portal will have access to only the features dedicated to thier level of access.
+
+The system shall also have a real time generating reports page or feature. 
+These reports will use the stored company data to generate a chart similar to
+the picture. We will be including two charts, one for tracking pay distribution and 
+one tracking employee work time also refered to as time cards.
+ 
+The next requirement is a notification system. This system will take requests from employees 
+regarding vacation, equipment and work from office and send a notification to thier 
+respective managers. Managers desicion to approve or reject these requests will also be 
+sent to the employees as a notification.
+ 
+Another requirement is automation. We will be automating the process of adding 
+new employees to the system. This is to reduce the paperwork required by HR when hiring a 
+new employee. 
+
+The next requiremnt is ensuring that the interface is user friendly and intuitive. This is
+included as a requirement, because other systems, specifically pheonix have a difficult 
+to navigate interface.    
+
+Slide 6: Tooba
+
+I will now go over some of our general requirements. These are the requirments that 
+usually vary company to company based on what they need. 
+We have come up with a list of required features that are generally available in any ERP. 
+To better understand these requirements, I will go over the general look of our system. 
+Our erp is going to be a desktop application that includes navigation tabs for employees 
+to access what they need. The requirements mentioned below will be 
+included in the form of a navgation tab. 
+
+Starting with the administrative features, we are including salary information such as 
+T4 and paystubbs. Then we HR requirements which include features such as 
+add new employees, as well as remove employees, edit thier information and change thier 
+level of access. For manager requirements we are adding in viewing a list employees,
+adding note in employee files, project tabs. For general employee requirements we are 
+including tabs to view shedule, benefits and time punches.    
+
+Slide 7: Zinah
+
+Slide 8: Tooba
+We include a notification system in our application as we felt that it was a very important 
+tool to provide communication and updates to employees. In our research phase, we had 
+decided to use sockets to send data back and forth between different computers to update
+the notifications in real - time. While creating a database, we found an easier solution. 
+Our dtatbase is designed to store notifications every time one is sent out, and we are
+including a timer function which will update the notification page every few seconds. 
+And this will simulate a real - time update for the notifications. 
+
+Moving on to automation. We are automating the process of adding a new employee to the
+system. This idea was developed after speaking to Terrance, the head of Hr and technologies 
+at carleton, who explained that a new employee had to be manually entered and thier 
+paperwork needed to manually maintained in the system as well. In our system, Hr will only 
+need to enter a new employees basic information, contact and hiring details. After enetring 
+this information, the system will generate and ID, password and orientation forms for the 
+new employee. The new employee can then login to the application and fill out the forms 
+which will automatically be added into the database.  
+  
+Slide 9: Zinah
+
+Slide 10: Zinah
+
+Slide 11: Demo
+
+Slide 12: Tooba
+
+
+Slide 13: Zinah
+
+Slide 14: Zinah
