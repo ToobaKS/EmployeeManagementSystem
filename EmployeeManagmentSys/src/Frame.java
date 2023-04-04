@@ -184,6 +184,9 @@ public class Frame extends JFrame implements View, ActionListener {
         initMainMenu();
         initComboBox();
 
+        //Setting the views
+        setView();
+
         // adding components to the panel
         cardlayoutHolder.add(dashboardPage, DASHBOARD);
         cardlayoutHolder.add(listofEmployees, SHOW_LIST);
@@ -287,6 +290,30 @@ public class Frame extends JFrame implements View, ActionListener {
             }
         });
         submitWFO.addActionListener(control);
+        dashboard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    fillDashboardNotificationList();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    public void setView(){
+        String employeeLevel = model.getEmployeeLevel();
+
+        if(employeeLevel.contains("HR")){
+            Projects.setVisible(false);
+        }else if(employeeLevel.contains("manager")){
+            addEmp.setVisible(false);
+        }else{
+            Employees.setVisible(false);
+            Reports.setVisible(false);
+
+        }
     }
 
     public void setName(String name){

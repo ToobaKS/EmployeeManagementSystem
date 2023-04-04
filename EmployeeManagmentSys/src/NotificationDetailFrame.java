@@ -49,8 +49,6 @@ public class NotificationDetailFrame extends JFrame implements View, ActionListe
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setSize(600,500);
         this.setVisible(true);
-
-
     }
 
     private void init() throws SQLException {

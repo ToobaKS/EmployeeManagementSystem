@@ -32,7 +32,7 @@ public class Model {
 
     private String receiver = "";
     private String employeeLevel = "";
-    private int employeeID = 2;
+    private int employeeID = -1;
 
     private JDBCHolder jdbc;
 
@@ -139,6 +139,7 @@ public class Model {
             this.employeeLevel= "employee";
         }
     }
+
 
     public HashMap<String, DefaultTableModel> setTimeCards(int id) throws SQLException {
         HashMap<String, DefaultTableModel> weeklyTimeCards = new HashMap<>();
@@ -397,9 +398,17 @@ public class Model {
     public void createNote(String note) throws SQLException {
         System.out.println(note);
         String[] newNote = note.split(" ");
+        String content = "";
+        int i = 0;
+        for(String n : newNote){
+            if(i >= 3){
+                content += n + " ";
+            }
+            i++;
+        }
 
         String sql = "INSERT INTO Notes(WrittenBy, NotesTitle, NotesContent, NotesDate, Employee_idEmployee) VALUES (" + employeeID + ", '"
-                + newNote[0]  + "', '" + newNote[1]  + "', '" + newNote[2]  + "', " + newNote[3] + ")";
+                + newNote[0]  + "', '" + content  + "', '" + newNote[1]  + "', " + newNote[2] + ")";
 
         System.out.println(sql);
 

@@ -96,7 +96,7 @@ public class CreateNoteFrame extends JFrame implements View {
     @Override
     public String getNote() {
         String newNote = "";
-        newNote = noteTitle.getText() + " " + noteText.getText() + " " + date.getText() + " " + employeeId;
+        newNote = noteTitle.getText() + " " + date.getText() + " " + employeeId + " " + noteText.getText();
 
         return newNote;
     }
