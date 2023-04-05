@@ -1,4 +1,11 @@
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -35,7 +42,7 @@ public class Frame extends JFrame implements View, ActionListener {
     private JPanel newEmpPage;
     private JPanel timeTrackingPage;
     private JPanel listofEmployees;
-    private JPanel payScalePage;
+    private JPanel payScalePage = new JPanel();
     private JPanel timeChartPage;
     private JPanel historyPage;
     private JPanel tasksPage;
@@ -550,6 +557,30 @@ public class Frame extends JFrame implements View, ActionListener {
     }
 
     public void showPayScale(ActionEvent event) {
+        DefaultCategoryDataset data = new DefaultCategoryDataset();
+
+        data.setValue(81000,"Salary","Sam");
+        data.setValue(90000,"Salary","Sara");
+        data.setValue(65000,"Salary","Ali");
+        data.setValue(85000,"Salary","Tooba");
+        data.setValue(70000,"Salary","Amber");
+        data.setValue(81000,"Salary","Sam");
+        data.setValue(90000,"Salary","Sara");
+        data.setValue(65000,"Salary","Ali");
+        data.setValue(85000,"Salary","Tooba");
+        data.setValue(70000,"Salary","Amber");
+        data.setValue(95000,"Salary","Lynn");
+        data.setValue(75000,"Salary","Jane");
+
+        JFreeChart chart = ChartFactory.createBarChart("Salary Distribution", "Employee Name", "Salary", data, PlotOrientation.VERTICAL, false, true, false);
+        CategoryPlot p = chart.getCategoryPlot();
+        p.setRangeGridlinePaint(Color.black);
+
+        ChartPanel cPanel = new ChartPanel(chart);
+        cPanel.setSize(200, 200);
+
+        payScalePage.add(cPanel);
+
         showView(PAYSCALE);
     }
 
